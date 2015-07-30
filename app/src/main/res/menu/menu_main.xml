@@ -3,18 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/action_todo"
+        android:id="@+id/action_bill"
         android:orderInCategory="1"
+        android:title="@string/action_bill"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_todo"
+        android:orderInCategory="2"
         android:title="@string/action_todo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_add_todo"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="@string/action_add_todo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_center"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/action_center"
         app:showAsAction="never" />
 </menu>

@@ -71,12 +71,14 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_todo) {
+        if (id == R.id.action_bill) {
             replaceFragment(curFragment, fragments[0]);
             curFragment = fragments[0];
-        }else if (id == R.id.action_add_todo){
+        }else if (id == R.id.action_todo) {
             replaceFragment(curFragment, fragments[1]);
             curFragment = fragments[1];
+        }else if (id == R.id.action_add_todo){
+            startActivity(new Intent(this, AddTodoActivity.class));
         }else if (id == R.id.action_center){
             startActivity(new Intent(this, CenterActivity.class));
         }
