@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">GHouse</string>
+    <string name="app_name">干房子</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_todo">待办事项</string>
+    <string name="action_add_todo">添加记录</string>
+    <string name="action_center">个人中心</string>
 </resources>
