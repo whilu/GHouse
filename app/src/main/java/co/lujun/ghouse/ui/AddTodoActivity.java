@@ -1,7 +1,6 @@
 package co.lujun.ghouse.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,11 +8,12 @@ import android.widget.Toast;
 
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.ui.widget.SlidingActivity;
 
 /**
  * Created by lujun on 2015/7/30.
  */
-public class AddTodoActivity extends ActionBarActivity {
+public class AddTodoActivity extends SlidingActivity {
 
     private Toolbar mToolbar;
 

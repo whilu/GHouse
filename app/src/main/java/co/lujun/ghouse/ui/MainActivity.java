@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.fragment.HomeFragment;
 import co.lujun.ghouse.ui.fragment.TodoListFragment;
+import co.lujun.ghouse.util.IntentUtils;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -78,9 +79,9 @@ public class MainActivity extends ActionBarActivity {
             replaceFragment(curFragment, fragments[1]);
             curFragment = fragments[1];
         }else if (id == R.id.action_add_todo){
-            startActivity(new Intent(this, AddTodoActivity.class));
+            IntentUtils.startPreviewActivity(this, new Intent(this, AddTodoActivity.class));
         }else if (id == R.id.action_center){
-            startActivity(new Intent(this, CenterActivity.class));
+            IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
