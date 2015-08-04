@@ -63,6 +63,14 @@ public class Bill extends DataSupport {
         this.extra = extra;
     }
 
+    public String getSecurityCode() {
+        return securityCode;
+    }
+
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
+
     public long getLatesttime() {
         return latesttime;
     }
@@ -116,6 +124,8 @@ public class Bill extends DataSupport {
     private float total;
 
     private String extra;
+
+    private String securityCode;
 
     private long latesttime;
 

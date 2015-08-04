@@ -20,7 +20,7 @@ import co.lujun.ghouse.R;
 
 import static co.lujun.ghouse.util.IntentUtils.KEY_PREVIEW_IMAGE;
 
-public class SlidingActivity extends ActionBarActivity {//TODO ÐÞ¸ÄFragmengActivityÎªActionBarActivity
+public class SlidingActivity extends ActionBarActivity {
 
     private static final float MIN_SCALE = 0.85f;
 
