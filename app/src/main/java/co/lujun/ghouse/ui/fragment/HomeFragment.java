@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.rv_home);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.list_divider)));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.list_divider)));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         List<String> list = new ArrayList<String>();

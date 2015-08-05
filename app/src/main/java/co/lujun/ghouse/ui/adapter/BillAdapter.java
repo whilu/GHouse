@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,10 +68,10 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
                 notifyItemRemoved(i);
 //                notifyItemRangeChanged(i, mList.size());
                 mItemManger.closeAllItems();
-                Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvPosition.getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
             }
         });
-        viewHolder.tvPosition.setText(mList.get(i) + "");
+        viewHolder.tvType.setText(mList.get(i) + "");
         mItemManger.bindView(viewHolder.itemView, i);
     }
 
@@ -79,17 +79,17 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
             implements View.OnClickListener{
 
         SwipeLayout mSwipeLayout;
-        Button btnConfirm, btnModify, btnDelete;
-        TextView tvPosition;
+        ImageButton btnConfirm, btnModify, btnDelete;
+        TextView tvType;
         ItemClickListener mItemClickListener;
 
         public BillItemViewHolder(View view, ItemClickListener listener){
             super(view);
             mSwipeLayout = (SwipeLayout) view.findViewById(R.id.swipe_bill_item);
-            btnConfirm = (Button) view.findViewById(R.id.btn_bi_confirm);
-            btnModify = (Button) view.findViewById(R.id.btn_bi_modify);
-            btnDelete = (Button) view.findViewById(R.id.btn_bi_delete);
-            tvPosition = (TextView) view.findViewById(R.id.tv_bi_position);
+            btnConfirm = (ImageButton) view.findViewById(R.id.btn_bi_confirm);
+            btnModify = (ImageButton) view.findViewById(R.id.btn_bi_modify);
+            btnDelete = (ImageButton) view.findViewById(R.id.btn_bi_delete);
+            tvType = (TextView) view.findViewById(R.id.tv_bi_type);
             mItemClickListener = listener;
             view.setOnClickListener(this);
         }

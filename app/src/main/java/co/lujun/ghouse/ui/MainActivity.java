@@ -2,12 +2,14 @@ package co.lujun.ghouse.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.fragment.HomeFragment;
@@ -21,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
     private Fragment[] fragments;
     private Fragment curFragment;
     private Toolbar mToolbar;
+    private FloatingActionButton fabAddBill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,14 @@ public class MainActivity extends ActionBarActivity {
     private void init(Bundle savedInstanceState){
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(mToolbar);
+        fabAddBill = (FloatingActionButton) findViewById(R.id.fab_add_bill);
+        fabAddBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentUtils.startPreviewActivity(MainActivity.this,
+                        new Intent(MainActivity.this, AddTodoActivity.class));
+            }
+        });
         fragmentManager = getSupportFragmentManager();
         fragments = new Fragment[]{
             new HomeFragment(),
@@ -78,8 +89,6 @@ public class MainActivity extends ActionBarActivity {
         }else if (id == R.id.action_todo) {
             replaceFragment(curFragment, fragments[1]);
             curFragment = fragments[1];
-        }else if (id == R.id.action_add_todo){
-            IntentUtils.startPreviewActivity(this, new Intent(this, AddTodoActivity.class));
         }else if (id == R.id.action_center){
             IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
         }

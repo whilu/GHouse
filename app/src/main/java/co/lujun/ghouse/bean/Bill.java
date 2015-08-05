@@ -111,6 +111,14 @@ public class Bill extends DataSupport {
         this.invoice = invoice;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     private long id;
 
     private String content;
@@ -136,4 +144,6 @@ public class Bill extends DataSupport {
     private long confirmperson;
 
     private String invoice;
+
+    private int type;
 }

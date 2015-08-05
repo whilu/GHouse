@@ -11,6 +11,15 @@
     <color name="transparent">#00000000</color>
     <color name="half_transparent_bg">#80000000</color>
 
+    <!--material design color-->
+    <color name="material_red">#F44336</color>
+    <color name="material_yellow">#FFEB3B</color>
+    <color name="material_blue">#2196F3</color>
+    <color name="material_green">#4CAF50</color>
+    <color name="material_orange">#FF9800</color>
+    <color name="material_brown">#795548</color>
+    <color name="material_grey">#9E9E9E</color>
+
     <!-- zxing -->
     <color name="bg_color">#EDEDED</color>
     <color name="contents_text">#ff000000</color>
