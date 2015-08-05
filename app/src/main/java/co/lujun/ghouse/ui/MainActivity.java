@@ -81,8 +81,7 @@ public class MainActivity extends ActionBarActivity {
         }else if (id == R.id.action_add_todo){
             IntentUtils.startPreviewActivity(this, new Intent(this, AddTodoActivity.class));
         }else if (id == R.id.action_center){
-//            IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
-            startActivity(new Intent(this, RecyclerViewExample.class));
+            IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

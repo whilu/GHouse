@@ -18,6 +18,7 @@ import java.util.List;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
+import co.lujun.ghouse.util.DividerItemDecoration;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -57,19 +58,20 @@ public class HomeFragment extends Fragment {
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.rv_home);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.list_divider)));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < 10; i++){
             list.add(i + "");
         }
-        mAdapter = new BillAdapter(getActivity(), list);
-        /*mAdapter.setItemClickListener(new BillAdapter.BillItemViewHolder.ItemClickListener() {
+        mAdapter = new BillAdapter(list);
+        mAdapter.setItemClickListener(new BillAdapter.BillItemViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
             }
-        });*/
+        });
         mAdapter.setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
     }
