@@ -103,11 +103,11 @@ public class Bill extends DataSupport {
         this.confirmperson = confirmperson;
     }
 
-    public String getInvoice() {
+    public String[] getInvoice() {
         return invoice;
     }
 
-    public void setInvoice(String invoice) {
+    public void setInvoice(String[] invoice) {
         this.invoice = invoice;
     }
 
@@ -117,6 +117,14 @@ public class Bill extends DataSupport {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getMoneyFlag() {
+        return moneyFlag;
+    }
+
+    public void setMoneyFlag(int moneyFlag) {
+        this.moneyFlag = moneyFlag;
     }
 
     private long id;
@@ -143,7 +151,9 @@ public class Bill extends DataSupport {
 
     private long confirmperson;
 
-    private String invoice;
+    private String[] invoice;//max size is 2, if the size exceed 2, will get the first two
 
-    private int type;
+    private int type;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
+
+    private int moneyFlag;//0-RMB, 1-Dollar
 }

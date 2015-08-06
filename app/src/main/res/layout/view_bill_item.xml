@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="95dp">
+    android:layout_height="wrap_content">
 
     <com.daimajia.swipe.SwipeLayout xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipe_bill_item"
@@ -57,7 +57,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -68,7 +68,7 @@
                     android:id="@+id/tv_bi_type"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/brown_circle"
+                    android:background="@drawable/red_circle"
                     android:gravity="center"
                     android:text="T"
                     android:textColor="@color/white"
@@ -77,7 +77,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
@@ -135,12 +135,40 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_bi_invoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:paddingLeft="74dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_bi_invoice_l"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:background="@color/material_red"
+                    android:scaleType="fitCenter"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_bi_invoice_r"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:background="@color/material_blue"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0.8dp"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginTop="-0.8dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@drawable/list_divider" />
         </LinearLayout>
     </com.daimajia.swipe.SwipeLayout>
