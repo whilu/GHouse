@@ -1,8 +1,10 @@
 package co.lujun.ghouse.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
@@ -26,6 +28,14 @@ public class CenterActivity extends SlidingActivity {
         setTitle(getString(R.string.action_center));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        TextInputLayout textInputLayout = (TextInputLayout) findViewById(R.id.til_uname);
+        EditText editText = textInputLayout.getEditText();
+        textInputLayout.setHint("请输入用户名");
+
+        TextInputLayout textInputLayout2 = (TextInputLayout) findViewById(R.id.til_pwd);
+        EditText editText2 = textInputLayout2.getEditText();
+        textInputLayout2.setHint("请输入密码");
     }
 
     @Override

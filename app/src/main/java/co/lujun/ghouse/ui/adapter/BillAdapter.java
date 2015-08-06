@@ -1,5 +1,6 @@
 package co.lujun.ghouse.ui.adapter;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +100,15 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(GlApplication.getContext(), "Modify:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Modify:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
+                            .setAction("知道了", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            })
+                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark))
+                            .show();
                 }
             });
             viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {

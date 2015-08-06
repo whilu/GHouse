@@ -25,10 +25,11 @@
         <!--Window color-->
         <item name="android:windowBackground">@color/background_material_light</item>
         <!--菜单item文字颜色-->
-        <item name="android:textColor">@color/background_material_dark</item>
+        <item name="android:textColor">@color/button_material_dark</item>
 
         <!--up icon另一种模式-->
         <item name="drawerArrowStyle">@style/AppTheme.TwoDrawerArrowStyle</item>
+
     </style>
 
     <!--navigation drarwer另一种风格-->
