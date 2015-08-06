@@ -80,11 +80,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
         viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
-//                mList.remove(i);
-//                notifyItemRemoved(i);
-//                notifyItemRangeChanged(i, mList.size());
-//                mItemManger.closeAllItems();
+                mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
+                mList.remove(i);
+                notifyItemRemoved(i);
+                notifyItemRangeChanged(i, mList.size());
+                mItemManger.closeAllItems();
                 Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
             }
         });

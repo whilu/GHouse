@@ -60,9 +60,13 @@ public class MainActivity extends ActionBarActivity {
         }
         if (curFragment != to) {
             if (!to.isAdded()) {
-                fragmentManager.beginTransaction().hide(from).add(R.id.content_frame, to).commit();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .hide(from).add(R.id.content_frame, to).commit();
             } else {
-                fragmentManager.beginTransaction().hide(from).show(to).commit();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .hide(from).show(to).commit();
             }
             curFragment = to;
         }
@@ -85,9 +89,11 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bill) {
             replaceFragment(curFragment, fragments[0]);
+            setTitle(R.string.app_name);
             curFragment = fragments[0];
         }else if (id == R.id.action_todo) {
             replaceFragment(curFragment, fragments[1]);
+            setTitle(R.string.action_todo);
             curFragment = fragments[1];
         }else if (id == R.id.action_center){
             IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));

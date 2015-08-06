@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.daimajia.swipe.util.Attributes;
 
@@ -92,7 +93,7 @@ public class HomeFragment extends Fragment {
         mAdapter.setItemClickListener(new BillAdapter.BillItemViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Toast.makeText(getActivity(), mBills.get(position).getTotal() + "", Toast.LENGTH_SHORT).show();
             }
         });
         mAdapter.setMode(Attributes.Mode.Single);
