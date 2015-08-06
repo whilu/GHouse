@@ -26,7 +26,10 @@ import co.lujun.ghouse.bean.Bill;
 /**
  * Created by lujun on 2015/8/4.
  */
-public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHolder> {
+public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
+
+    private final static int TYPE_0 = 0;
+    private final static int TYPE_1 = TYPE_0 + 1;
 
     private BillItemViewHolder.ItemClickListener mItemClickListener;
     protected SwipeItemRecyclerMangerImpl mItemManger;
@@ -44,111 +47,135 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList.size() + 1;
     }
 
     @Override
-    public BillItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_bill_item, viewGroup, false);
-        view.setTag(mList.get(i));
-        return new BillItemViewHolder(view, mItemClickListener);
+    public int getItemViewType(int position) {
+        if (position == mList.size()){
+            return TYPE_1;
+        }else {
+            return TYPE_0;
+        }
     }
 
     @Override
-    public void onBindViewHolder(final BillItemViewHolder viewHolder, final int i) {
-        viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        viewHolder.mSwipeLayout.addSwipeListener(new SimpleSwipeListener() {
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 
-            @Override
-            public void onOpen(SwipeLayout layout) {
-                super.onOpen(layout);
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view;
+        if (i == TYPE_0){
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_bill_item, viewGroup, false);
+            view.setTag(mList.get(i));
+            return new BillItemViewHolder(view, mItemClickListener);
+        }else {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_rv_footer, viewGroup, false);
+            return new RvFooterViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder recyclerViewHolder, final int i) {
+        if (getItemViewType(i) == TYPE_0){
+            final BillItemViewHolder viewHolder = (BillItemViewHolder) recyclerViewHolder;
+            viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            viewHolder.mSwipeLayout.addSwipeListener(new SimpleSwipeListener() {
+
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    super.onOpen(layout);
 //                Toast.makeText(GlApplication.getContext(), mList.get(i) + "--Open", Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(GlApplication.getContext(), "Modify:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
+                    mList.remove(i);
+                    notifyItemRemoved(i);
+                    notifyItemRangeChanged(i, mList.size());
+                    mItemManger.closeAllItems();
+                    Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
+            String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
+            String type, bgDrawableType;
+            if (mList.get(i).getType() >= 0 && mList.get(i).getMoneyFlag() < types.length){
+                type = types[mList.get(i).getType()];
+                bgDrawableType = bgDrawableTypes[mList.get(i).getType()];
+            }else {
+                type = types[0];
+                bgDrawableType = bgDrawableTypes[0];
             }
-        });
-        viewHolder.btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+            try {
+                Field field = R.drawable.class.getField(bgDrawableType);
+                int j = field.getInt(new R.drawable());
+                viewHolder.tvType.setBackgroundResource(j);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        });
-        viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GlApplication.getContext(), "Modify:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
-                mList.remove(i);
-                notifyItemRemoved(i);
-                notifyItemRangeChanged(i, mList.size());
-                mItemManger.closeAllItems();
-                Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
-        String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
-        String type, bgDrawableType;
-        if (mList.get(i).getType() >= 0 && mList.get(i).getMoneyFlag() < types.length){
-            type = types[mList.get(i).getType()];
-            bgDrawableType = bgDrawableTypes[mList.get(i).getType()];
-        }else {
-            type = types[0];
-            bgDrawableType = bgDrawableTypes[0];
-        }
-        try {
-            Field field = R.drawable.class.getField(bgDrawableType);
-            int j = field.getInt(new R.drawable());
-            viewHolder.tvType.setBackgroundResource(j);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
-        viewHolder.tvType.setText(type);
-        viewHolder.tvSummary.setText(mList.get(i).getSummary());
-        String[] moneyFlags = GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
-        String moneyFlag;
-        if (mList.get(i).getMoneyFlag() >= 0 && mList.get(i).getMoneyFlag() < moneyFlags.length){
-            moneyFlag = moneyFlags[mList.get(i).getMoneyFlag()];
-        }else {
-            moneyFlag = moneyFlags[0];
-        }
-        viewHolder.tvTotal.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_total)
-                        + moneyFlag + mList.get(i).getTotal());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        viewHolder.tvTime.setText(format.format(mList.get(i).getTime()));
-        viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurityCode().substring(0, 7));
-        int voliceLength = mList.get(i).getInvoice().length;
-        if (voliceLength > 0){
-            viewHolder.llInvoice.setVisibility(View.VISIBLE);
-            switch (voliceLength){
-                case 2:
-                    viewHolder.ivInvoiceR.setVisibility(View.VISIBLE);
-                    viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
-                    break;
-
-                case 1:
-                    viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
-                    viewHolder.ivInvoiceR.setVisibility(View.GONE);
-                    break;
-
-                default:
-                    viewHolder.ivInvoiceL.setVisibility(View.GONE);
-                    viewHolder.ivInvoiceR.setVisibility(View.GONE);
-                    break;
+            viewHolder.tvType.setText(type);
+            viewHolder.tvSummary.setText(mList.get(i).getSummary());
+            String[] moneyFlags = GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
+            String moneyFlag;
+            if (mList.get(i).getMoneyFlag() >= 0 && mList.get(i).getMoneyFlag() < moneyFlags.length){
+                moneyFlag = moneyFlags[mList.get(i).getMoneyFlag()];
+            }else {
+                moneyFlag = moneyFlags[0];
             }
-        }else {
-            viewHolder.llInvoice.setVisibility(View.GONE);
+            viewHolder.tvTotal.setText(
+                    GlApplication.getContext().getResources().getString(R.string.tv_total)
+                            + moneyFlag + mList.get(i).getTotal());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            viewHolder.tvTime.setText(format.format(mList.get(i).getTime()));
+            viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurityCode().substring(0, 7));
+            int voliceLength = mList.get(i).getInvoice().length;
+            if (voliceLength > 0){
+                viewHolder.llInvoice.setVisibility(View.VISIBLE);
+                switch (voliceLength){
+                    case 2:
+                        viewHolder.ivInvoiceR.setVisibility(View.VISIBLE);
+                        viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
+                        break;
+
+                    case 1:
+                        viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
+                        viewHolder.ivInvoiceR.setVisibility(View.GONE);
+                        break;
+
+                    default:
+                        viewHolder.ivInvoiceL.setVisibility(View.GONE);
+                        viewHolder.ivInvoiceR.setVisibility(View.GONE);
+                        break;
+                }
+            }else {
+                viewHolder.llInvoice.setVisibility(View.GONE);
+            }
+            mItemManger.bindView(viewHolder.itemView, i);
         }
-        mItemManger.bindView(viewHolder.itemView, i);
     }
 
     public static class BillItemViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
 
+        LinearLayout llBillItem;
         SwipeLayout mSwipeLayout;
         ImageButton btnConfirm, btnModify, btnDelete;
         TextView tvType, tvSummary, tvTotal, tvTime, tv7SecurityCode;
@@ -158,6 +185,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
 
         public BillItemViewHolder(View view, ItemClickListener listener){
             super(view);
+            llBillItem = (LinearLayout) view.findViewById(R.id.ll_bi);
             mSwipeLayout = (SwipeLayout) view.findViewById(R.id.swipe_bill_item);
             btnConfirm = (ImageButton) view.findViewById(R.id.btn_bi_confirm);
             btnModify = (ImageButton) view.findViewById(R.id.btn_bi_modify);
@@ -171,7 +199,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
             ivInvoiceL = (ImageView) view.findViewById(R.id.iv_bi_invoice_l);
             ivInvoiceR = (ImageView) view.findViewById(R.id.iv_bi_invoice_r);
             mItemClickListener = listener;
-            view.setOnClickListener(this);
+            llBillItem.setOnClickListener(this);
         }
 
         @Override
@@ -183,6 +211,13 @@ public class BillAdapter extends RecyclerSwipeAdapter<BillAdapter.BillItemViewHo
 
         public interface ItemClickListener{
             void onItemClick(View view, int position);
+        }
+    }
+
+    static class RvFooterViewHolder extends RecyclerView.ViewHolder{
+
+        public RvFooterViewHolder(View view){
+            super(view);
         }
     }
 

@@ -71,7 +71,7 @@ public class TodoListFragment extends Fragment {
             bill.setType((int) (Math.random() * 10 / 2));
             bill.setSummary("xxxxxxxxxx晚上合伙请客吃饭+唱歌+打桌球家吃烧烤");
             bill.setTotal((float) ((Math.random() * 10000)));
-            bill.setTime(1438832421);
+            bill.setTime(System.currentTimeMillis());
             try {
                 bill.setSecurityCode(MD5.getMD5(String.valueOf(Math.random() * 10)));
             }catch (NoSuchAlgorithmException e){
@@ -97,5 +97,11 @@ public class TodoListFragment extends Fragment {
         });
         mAdapter.setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
     }
 }
