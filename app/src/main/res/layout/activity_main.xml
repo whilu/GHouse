@@ -34,7 +34,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
-        android:src="@drawable/ic_note_add_white_48dp"
+        android:src="@drawable/ic_add_white_48dp"
         app:borderWidth="0dp"
         app:fabSize="normal" />
 

@@ -18,6 +18,8 @@
     <color name="material_orange">#FF9800</color>
     <color name="material_brown">#795548</color>
     <color name="material_grey">#9E9E9E</color>
+    <color name="material_teal">#009688</color>
+    <color name="material_deep_teal">#00796B</color>
 
     <!-- zxing -->
     <color name="bg_color">#EDEDED</color>

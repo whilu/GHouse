@@ -5,6 +5,10 @@
     <string name="action_todo">待办事项</string>
     <string name="action_add_todo">添加记录</string>
     <string name="action_center">个人中心</string>
+    <string name="action_login">登录</string>
+
+    <string name="tli_hint_uname">请输入用户名</string>
+    <string name="tli_hint_pwd">请输入密码</string>
 
     <string name="tv_total">统计:</string>
 

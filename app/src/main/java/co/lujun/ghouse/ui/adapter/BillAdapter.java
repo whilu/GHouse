@@ -100,15 +100,16 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, "Modify:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
+                    Snackbar snackbar = Snackbar.make(v, "Modify:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
                             .setAction("知道了", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 
                                 }
                             })
-                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark))
-                            .show();
+                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark));
+                    snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
+                    snackbar.show();
                 }
             });
             viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {

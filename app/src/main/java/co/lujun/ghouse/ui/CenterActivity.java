@@ -28,14 +28,6 @@ public class CenterActivity extends SlidingActivity {
         setTitle(getString(R.string.action_center));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        TextInputLayout textInputLayout = (TextInputLayout) findViewById(R.id.til_uname);
-        EditText editText = textInputLayout.getEditText();
-        textInputLayout.setHint("请输入用户名");
-
-        TextInputLayout textInputLayout2 = (TextInputLayout) findViewById(R.id.til_pwd);
-        EditText editText2 = textInputLayout2.getEditText();
-        textInputLayout2.setHint("请输入密码");
     }
 
     @Override

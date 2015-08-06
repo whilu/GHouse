@@ -5,4 +5,59 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:title="@string/action_center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_uname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/deep_gray" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/deep_gray" />
+        </android.support.design.widget.TextInputLayout>
+
+        <com.github.whilu.library.CustomRippleButton xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/action_login"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:ripple_color="@color/material_grey"
+            app:ripple_duration="1000"
+            app:round_radius="5dp"
+            app:shape_type="rectangle"
+            app:unpressed_color="@color/material_teal" />
+
+    </LinearLayout>
+
 </LinearLayout>

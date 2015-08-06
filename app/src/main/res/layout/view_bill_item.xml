@@ -35,7 +35,7 @@
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_system_update_tv_white_24dp" />
+                android:src="@drawable/ic_mode_edit_white_24dp" />
 
             <ImageButton
                 android:id="@+id/btn_bi_delete"
