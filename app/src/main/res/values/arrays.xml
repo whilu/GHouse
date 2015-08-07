@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bill_drawable_type">
+        <item>red_circle</item>
+        <item>yellow_circle</item>
+        <item>blue_circle</item>
+        <item>green_circle</item>
+        <item>brown_circle</item>
+        <item>grey_circle</item>
+    </string-array>
+    <string-array name="money_flag">
+        <item>￥</item>
+        <item>$</item>
+    </string-array>
+    <string-array name="bill_type">
+        <item>E</item>
+        <item>W</item>
+        <item>L</item>
+        <item>T</item>
+        <item>P</item>
+        <item>O</item>
+    </string-array>
+</resources>

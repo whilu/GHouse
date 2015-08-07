@@ -13,42 +13,29 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_vertical_margin">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_bill_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/deep_gray" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_bill_total"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/deep_gray" />
-        </android.support.design.widget.TextInputLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_bill_code"
+                android:id="@+id/til_bill_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/deep_gray" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_bill_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -59,84 +46,155 @@
                     android:textColor="@color/deep_gray" />
             </android.support.design.widget.TextInputLayout>
 
-            <com.github.whilu.library.CustomRippleButton
-                android:id="@+id/btn_bill_camera_code"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til_bill_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/deep_gray" />
+                </android.support.design.widget.TextInputLayout>
+
+                <com.github.whilu.library.CustomRippleButton
+                    android:id="@+id/btn_bill_camera_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="3"
+                    android:text="@string/action_scan"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="14sp"
+                    app:ripple_color="@color/material_grey"
+                    app:ripple_duration="1000"
+                    app:round_radius="5dp"
+                    app:shape_type="rectangle"
+                    app:unpressed_color="@color/material_teal" />
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_bill_extra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/deep_gray" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/action_login"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:ripple_color="@color/material_grey"
-                app:ripple_duration="1000"
-                app:round_radius="5dp"
-                app:shape_type="rectangle"
-                app:unpressed_color="@color/material_teal" />
-        </LinearLayout>
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_bill_extra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_money_type"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="16sp" />
 
-            <EditText
+                <com.rey.material.widget.RadioButton
+                    style="@style/Material.Drawable.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="￥RMB" />
+
+                <com.rey.material.widget.RadioButton
+                    style="@style/Material.Drawable.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="$Dollar" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/deep_gray" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_cost_type"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="16sp" />
 
-            <com.rey.material.widget.RadioButton
-                style="@style/Material.Drawable.RadioButton"
-                android:layout_width="wrap_content"
+                <com.rey.material.widget.CheckBox
+                    style="@style/Material.Drawable.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+                <com.rey.material.widget.CheckBox
+                    style="@style/Material.Drawable.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+                <com.rey.material.widget.CheckBox
+                    style="@style/Material.Drawable.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+                <com.rey.material.widget.CheckBox
+                    style="@style/Material.Drawable.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="￥RMB" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-            <com.rey.material.widget.RadioButton
-                style="@style/Material.Drawable.RadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$Dollar" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_add_images"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="16sp" />
 
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:background="@color/material_blue"
+                    android:scaleType="fitCenter" />
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:background="@color/material_red"
+                    android:scaleType="fitCenter" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.rey.material.widget.CheckBox
-                style="@style/Material.Drawable.CheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:background="@color/material_blue"
-                android:scaleType="fitCenter" />
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:background="@color/material_red"
-                android:scaleType="fitCenter" />
-        </LinearLayout>
-    </LinearLayout>
-
+    </ScrollView>
 
 </LinearLayout>

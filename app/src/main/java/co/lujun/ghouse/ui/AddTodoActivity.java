@@ -1,6 +1,7 @@
 package co.lujun.ghouse.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,8 @@ public class AddTodoActivity extends SlidingActivity {
 
     private Toolbar mToolbar;
 
+    private TextInputLayout tilBillContent, tilBillTotal, tilBillCode, tilBillExtra;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,16 @@ public class AddTodoActivity extends SlidingActivity {
         setTitle(getString(R.string.action_add_todo));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        tilBillContent = (TextInputLayout) findViewById(R.id.til_bill_content);
+        tilBillTotal = (TextInputLayout) findViewById(R.id.til_bill_total);
+        tilBillCode = (TextInputLayout) findViewById(R.id.til_bill_code);
+        tilBillExtra = (TextInputLayout) findViewById(R.id.til_bill_extra);
+
+        tilBillContent.setHint(getString(R.string.til_hint_bill_content));
+        tilBillTotal.setHint(getString(R.string.til_hint_bill_total));
+        tilBillCode.setHint(getString(R.string.til_hint_bill_code));
+        tilBillExtra.setHint(getString(R.string.til_hint_bill_extra));
     }
 
     @Override

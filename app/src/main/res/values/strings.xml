@@ -6,30 +6,17 @@
     <string name="action_add_todo">添加记录</string>
     <string name="action_center">个人中心</string>
     <string name="action_login">登录</string>
+    <string name="action_scan">扫码</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
+    <string name="til_hint_bill_content">账单内容</string>
+    <string name="til_hint_bill_total">合计</string>
+    <string name="til_hint_bill_code">条码</string>
+    <string name="til_hint_bill_extra">其它说明</string>
 
     <string name="tv_total">统计:</string>
-
-    <string-array name="bill_drawable_type">
-        <item>red_circle</item>
-        <item>yellow_circle</item>
-        <item>blue_circle</item>
-        <item>green_circle</item>
-        <item>brown_circle</item>
-        <item>grey_circle</item>
-    </string-array>
-    <string-array name="money_flag">
-        <item>￥</item>
-        <item>$</item>
-    </string-array>
-    <string-array name="bill_type">
-        <item>E</item>
-        <item>W</item>
-        <item>L</item>
-        <item>T</item>
-        <item>P</item>
-        <item>O</item>
-    </string-array>
+    <string name="tv_money_type">币种:</string>
+    <string name="tv_cost_type">消费类型:</string>
+    <string name="tv_add_images">添加照片:</string>
 </resources>
