@@ -27,4 +27,5 @@ dependencies {
     compile 'org.litepal.android:core:1.2.1'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.github.whilu.CustomButton:library:1.0.0'
+    compile 'com.github.rey5137:material:1.2.1'
 }
