@@ -96,8 +96,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(R.string.action_todo);
             curFragment = fragments[1];
         }else if (id == R.id.action_center){
-//            IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
-            IntentUtils.startPreviewActivity(this, new Intent(this, LoginActivity.class));
+            IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

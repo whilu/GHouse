@@ -17,6 +17,17 @@
 
     <string name="tv_total">统计:</string>
     <string name="tv_money_type">币种:</string>
-    <string name="tv_cost_type">消费类型:</string>
-    <string name="tv_add_images">添加照片:</string>
+    <string name="tv_cost_type">类型:</string>
+    <string name="tv_add_images">照片:</string>
+
+    <string name="rb_mt_hint_rmb">RMB</string>
+    <string name="rb_mt_hint_dollar">Dollars</string>
+    <string name="rb_mt_hint_other">Other</string>
+
+    <string name="hint_ct_eat">吃</string>
+    <string name="hint_ct_wear">穿</string>
+    <string name="hint_ct_live">住</string>
+    <string name="hint_ct_travel">行</string>
+    <string name="hint_ct_play">玩</string>
+    <string name="hint_ct_other">其他</string>
 </resources>
