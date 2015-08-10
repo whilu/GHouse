@@ -9,6 +9,8 @@
     <color name="gray_text">#ffaaaaaa</color>
     <color name="transparent">#00000000</color>
     <color name="half_transparent_bg">#80000000</color>
+    <color name="mycenter_avatar_circle1">#ff9d70ff</color>
+    <color name="mycenter_avatar_circle2">#ff844cff</color>
 
     <!--material design color-->
     <color name="material_red">#F44336</color>

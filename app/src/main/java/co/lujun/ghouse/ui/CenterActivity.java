@@ -1,13 +1,17 @@
 package co.lujun.ghouse.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.github.whilu.library.CustomRippleButton;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
+import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -15,6 +19,10 @@ import co.lujun.ghouse.ui.widget.SlidingActivity;
 public class CenterActivity extends SlidingActivity {
 
     private Toolbar mToolbar;
+    private RoundedImageView ivAvatar;
+    private TextView tvUName, tvPhone, tvHouseId;
+    private RelativeLayout llPhone, llHouseId;
+    private CustomRippleButton btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +33,35 @@ public class CenterActivity extends SlidingActivity {
 
     private void init(){
         mToolbar = (Toolbar) findViewById(R.id.tb_center);
-        setTitle(getString(R.string.action_center));
+        setTitle("");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ivAvatar = (RoundedImageView) findViewById(R.id.iv_set_avatar);
+        tvUName = (TextView) findViewById(R.id.tv_set_uname);
+        tvPhone = (TextView) findViewById(R.id.tv_set_phone);
+        tvHouseId = (TextView) findViewById(R.id.tv_set_house_id);
+        llPhone = (RelativeLayout) findViewById(R.id.ll_set_phone);
+        llHouseId = (RelativeLayout) findViewById(R.id.ll_set_house_id);
+
+        llPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        llHouseId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override

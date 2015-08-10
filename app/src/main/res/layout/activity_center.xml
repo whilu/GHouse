@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -13,11 +14,187 @@
         android:minHeight="?attr/actionBarSize"
         android:title="@string/action_center" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@color/theme_primary">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="95.67dp"
+                    android:layout_alignParentBottom="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mine_bg" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/activity_vertical_margin">
+
+                    <RelativeLayout
+                        android:layout_width="91.67dp"
+                        android:layout_height="91.67dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/avatar_circle2">
+
+                        <co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView
+                            android:layout_width="81.67dp"
+                            android:layout_height="81.67dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/avatar_circle1" />
+
+                        <co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView
+                            android:layout_width="71.67dp"
+                            android:layout_height="71.67dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/avatar_circle0" />
+
+                        <co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView
+                            android:id="@+id/iv_set_avatar"
+                            android:layout_width="66.67dp"
+                            android:layout_height="66.67dp"
+                            android:layout_centerInParent="true"
+                            android:background="@null"
+                            android:src="@drawable/ic_timer_auto_grey600_48dp"
+                            app:riv_border_width="0dp"
+                            app:riv_corner_radius="0dp"
+                            app:riv_mutate_background="true"
+                            app:riv_oval="true" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_set_uname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/tv_set_uname"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_vertical_margin">
+
+                <com.andexert.library.RippleView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:rv_color="@color/material_grey"
+                    app:rv_rippleDuration="800">
+
+                    <RelativeLayout
+                        android:id="@+id/ll_set_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/tv_phone"
+                            android:textColor="@color/material_grey"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_set_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawablePadding="2dp"
+                            android:drawableRight="@drawable/ic_chevron_right_grey600_24dp"
+                            android:gravity="center_vertical|right"
+                            android:text="13762098087"
+                            android:textColor="@color/material_grey"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/gray" />
+                    </RelativeLayout>
+
+                </com.andexert.library.RippleView>
+
+                <com.andexert.library.RippleView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:rv_color="@color/material_grey"
+                    app:rv_rippleDuration="800">
+
+                    <RelativeLayout
+                        android:id="@+id/ll_set_house_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/tv_house_id"
+                            android:textColor="@color/material_grey"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_set_house_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawablePadding="2dp"
+                            android:drawableRight="@drawable/ic_chevron_right_grey600_24dp"
+                            android:gravity="center_vertical|right"
+                            android:text="20098"
+                            android:textColor="@color/material_grey"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/gray" />
+                    </RelativeLayout>
+
+                </com.andexert.library.RippleView>
+
+                <com.github.whilu.library.CustomRippleButton
+                    android:id="@+id/btn_set_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="3"
+                    android:text="@string/action_logout"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="14sp"
+                    app:ripple_color="@color/material_grey"
+                    app:ripple_duration="1000"
+                    app:round_radius="5dp"
+                    app:shape_type="rectangle"
+                    app:unpressed_color="@color/material_teal" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

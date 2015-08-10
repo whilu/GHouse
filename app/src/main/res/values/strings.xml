@@ -7,6 +7,8 @@
     <string name="action_center">个人中心</string>
     <string name="action_login">登录</string>
     <string name="action_scan">扫码</string>
+    <string name="action_logout">退出登录</string>
+    <string name="action_house">House view</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -19,6 +21,13 @@
     <string name="tv_money_type">币种:</string>
     <string name="tv_cost_type">类型:</string>
     <string name="tv_add_images">照片:</string>
+    <string name="tv_set_uname">用户名:</string>
+    <string name="tv_phone">手机号</string>
+    <string name="tv_house_id">房子编号</string>
+    <string name="tv_house_address">地址</string>
+    <string name="tv_house_intro">描述</string>
+    <string name="tv_house_owner">拥有者</string>
+    <string name="tv_house_member">入住成员</string>
 
     <string name="rb_mt_hint_rmb">RMB</string>
     <string name="rb_mt_hint_dollar">Dollars</string>
