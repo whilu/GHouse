@@ -44,6 +44,8 @@ public class CenterActivity extends SlidingActivity {
         llPhone = (RelativeLayout) findViewById(R.id.ll_set_phone);
         llHouseId = (RelativeLayout) findViewById(R.id.ll_set_house_id);
 
+        btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
+
         llPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
