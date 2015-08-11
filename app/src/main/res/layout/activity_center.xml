@@ -105,27 +105,44 @@
                     <RelativeLayout
                         android:id="@+id/ll_set_phone"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="55dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="@string/tv_phone"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tv_set_phone"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:drawablePadding="2dp"
-                            android:drawableRight="@drawable/ic_chevron_right_grey600_24dp"
-                            android:gravity="center_vertical|right"
-                            android:text="13762098087"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="@string/tv_phone"
+                                android:textColor="@color/material_grey"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tv_set_phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="4dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|right"
+                                android:text="13762098087"
+                                android:textColor="@color/material_grey"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="7dp"
+                                android:background="@drawable/ic_chevron_right_grey600_18dp"
+                                android:scaleType="fitCenter"
+                                android:src="@null" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -138,7 +155,7 @@
 
                 <com.andexert.library.RippleView
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="55dp"
                     app:rv_color="@color/material_grey"
                     app:rv_rippleDuration="800">
 
@@ -148,24 +165,42 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="@string/tv_house_id"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/tv_set_house_id"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:drawablePadding="2dp"
-                            android:drawableRight="@drawable/ic_chevron_right_grey600_24dp"
-                            android:gravity="center_vertical|right"
-                            android:text="20098"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="@string/tv_house_id"
+                                android:textColor="@color/material_grey"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tv_set_house_id"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="4dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|right"
+                                android:text="20098"
+                                android:textColor="@color/material_grey"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="7dp"
+                                android:background="@drawable/ic_chevron_right_grey600_18dp"
+                                android:scaleType="fitCenter"
+                                android:src="@null" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="match_parent"

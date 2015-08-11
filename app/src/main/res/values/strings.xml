@@ -25,6 +25,7 @@
     <string name="tv_phone">手机号</string>
     <string name="tv_house_id">房子编号</string>
     <string name="tv_house_address">地址</string>
+    <string name="tv_house_money_surplus">剩余资金</string>
     <string name="tv_house_intro">描述</string>
     <string name="tv_house_owner">拥有者</string>
     <string name="tv_house_member">入住成员</string>
