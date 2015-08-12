@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">干房子</string>
+    <string name="app_name_en">G.House</string>
 
     <string name="action_bill">账单</string>
     <string name="action_todo">待办事项</string>
@@ -8,7 +9,10 @@
     <string name="action_login">登录</string>
     <string name="action_scan">扫码</string>
     <string name="action_logout">退出登录</string>
+    <string name="action_reg">注册</string>
+    <string name="action_reg_house">注册房子</string>
     <string name="action_house">House view</string>
+    <string name="action_back">返回</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -16,6 +20,13 @@
     <string name="til_hint_bill_total">合计</string>
     <string name="til_hint_bill_code">条码</string>
     <string name="til_hint_bill_extra">其它说明</string>
+    <string name="dialog_welcome">欢迎干Houser</string>
+    <string name="cb_hint_iam_owner">我是拥有者</string>
+    <string name="til_hint_rhouse_name">(新)用户名</string>
+    <string name="til_hint_rhouse_pwd">密码</string>
+    <string name="til_hint_rhouse_phone">手机号码</string>
+    <string name="til_hint_rhouse_address">详细地址</string>
+    <string name="til_hint_rhouse_intro">房子介绍</string>
 
     <string name="tv_total">统计:</string>
     <string name="tv_money_type">币种:</string>

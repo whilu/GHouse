@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical">
 
-</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name_en"
+        android:textSize="40sp"
+        android:textStyle="italic" />
+
+    <com.github.whilu.library.CustomRippleButton
+        android:id="@+id/btn_splash_login"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="65dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:text="@string/action_login"
+        android:textColor="@color/deep_gray"
+        android:textSize="14sp"
+        app:ripple_color="@color/material_grey"
+        app:ripple_duration="1000"
+        app:round_radius="5dp"
+        app:shape_type="rectangle"
+        app:unpressed_color="@color/material_teal" />
+
+    <com.github.whilu.library.CustomRippleButton
+        android:id="@+id/btn_splash_reg"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:text="@string/action_reg_house"
+        android:textColor="@color/deep_gray"
+        android:textSize="14sp"
+        app:ripple_color="@color/material_grey"
+        app:ripple_duration="1000"
+        app:round_radius="5dp"
+        app:shape_type="rectangle"
+        app:unpressed_color="@color/material_teal" />
+
+</RelativeLayout>
