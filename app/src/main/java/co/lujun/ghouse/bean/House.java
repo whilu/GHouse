@@ -39,6 +39,14 @@ public class House extends DataSupport {
         this.houseinfo = houseinfo;
     }
 
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
+    }
+
     public long getHousereg() {
         return housereg;
     }
@@ -54,6 +62,8 @@ public class House extends DataSupport {
     private String houseaddress;
 
     private String houseinfo;
+
+    private float money;
 
     private long housereg;
 }

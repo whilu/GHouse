@@ -7,4 +7,6 @@ public class Config {
 
     //app config
     public final static long APP_SPLASH_TIME = 1000;
+    //
+    public final static long SPLASH_LAYER_ANIM_TIME = 1000;
 }

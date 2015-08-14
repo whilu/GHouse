@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
     <TextView
+        android:id="@+id/tv_splash_main_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -26,6 +26,7 @@
         android:text="@string/action_login"
         android:textColor="@color/deep_gray"
         android:textSize="14sp"
+        android:visibility="gone"
         app:ripple_color="@color/material_grey"
         app:ripple_duration="1000"
         app:round_radius="5dp"
@@ -43,6 +44,7 @@
         android:text="@string/action_reg_house"
         android:textColor="@color/deep_gray"
         android:textSize="14sp"
+        android:visibility="gone"
         app:ripple_color="@color/material_grey"
         app:ripple_duration="1000"
         app:round_radius="5dp"
