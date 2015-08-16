@@ -7,8 +7,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
@@ -107,13 +109,17 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                 Animation.RELATIVE_TO_SELF, 0,
                 Animation.RELATIVE_TO_SELF, -1);
         translateAnim.setDuration(Config.SPLASH_LAYER_ANIM_TIME);
-        translateAnim.setFillAfter(true);
+
+        AnimationSet tranAnimSet = new AnimationSet(false);
+        tranAnimSet.addAnimation(translateAnim);
+        tranAnimSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        tranAnimSet.setFillAfter(true);
 
         btnLogin.setVisibility(View.VISIBLE);
         btnReg.setVisibility(View.VISIBLE);
         btnLogin.setAnimation(alphaAnim);
         btnReg.setAnimation(alphaAnim);
 
-        tvMainText.setAnimation(translateAnim);
+        tvMainText.setAnimation(tranAnimSet);
     }
 }
