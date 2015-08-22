@@ -97,7 +97,6 @@ public class MainActivity extends ActionBarActivity {
             curFragment = fragments[1];
         }else if (id == R.id.action_center){
             IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
-//            IntentUtils.startPreviewActivity(this, new Intent(this, HouseViewActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

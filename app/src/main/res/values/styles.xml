@@ -3,4 +3,14 @@
     <style name="Login_Dialog" parent="Material.TextAppearance.SimpleDialog">
         <item name="di_backgroundColor">@android:color/white</item>
     </style>
+
+    <style name="TextView_Tag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/grey_tag</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

@@ -127,13 +127,21 @@ public class Bill extends DataSupport {
         this.moneyFlag = moneyFlag;
     }
 
+    public long getHouseid() {
+        return houseid;
+    }
+
+    public void setHouseid(long houseid) {
+        this.houseid = houseid;
+    }
+
     private long id;
 
     private String content;
 
     private String summary;
 
-    private long time;
+    private long time;//添加时间
 
     private String code;
 
@@ -141,9 +149,9 @@ public class Bill extends DataSupport {
 
     private String extra;
 
-    private String securityCode;
+    private String securityCode;//MD5(houseid + id)
 
-    private long latesttime;
+    private long latesttime;//最后修改时间
 
     private boolean isconfirm;
 
@@ -156,4 +164,6 @@ public class Bill extends DataSupport {
     private int type;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
 
     private int moneyFlag;//0-RMB, 1-Dollar
+
+    private long houseid;
 }

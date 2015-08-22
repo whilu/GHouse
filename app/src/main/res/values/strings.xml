@@ -12,14 +12,15 @@
     <string name="action_reg">注册</string>
     <string name="action_reg_house">注册房子</string>
     <string name="action_house">House view</string>
+    <string name="action_bill_view">Bill view</string>
     <string name="action_back">返回</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
     <string name="til_hint_bill_content">账单内容</string>
     <string name="til_hint_bill_total">合计</string>
-    <string name="til_hint_bill_code">条码</string>
-    <string name="til_hint_bill_extra">其它说明</string>
+    <string name="til_hint_bill_code">发票编码</string>
+    <string name="til_hint_bill_extra">备注</string>
     <string name="dialog_welcome">欢迎干Houser</string>
     <string name="cb_hint_iam_owner">我是拥有者</string>
     <string name="til_hint_rhouse_name">(新)用户名</string>
@@ -40,6 +41,11 @@
     <string name="tv_house_intro">描述</string>
     <string name="tv_house_owner">拥有者</string>
     <string name="tv_house_member">入住成员</string>
+    <string name="tv_bd_spend">花费</string>
+    <string name="tv_bd_creater">创建人</string>
+    <string name="tv_bd_confirmer">确认人</string>
+    <string name="tv_bd_yes_confirm">已确认</string>
+    <string name="tv_bd_no_confirm">未确认</string>
 
     <string name="rb_mt_hint_rmb">RMB</string>
     <string name="rb_mt_hint_dollar">Dollars</string>

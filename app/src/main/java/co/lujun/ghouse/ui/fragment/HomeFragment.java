@@ -1,5 +1,6 @@
 package co.lujun.ghouse.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,10 @@ import java.util.Random;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Bill;
+import co.lujun.ghouse.ui.BillDetailActivity;
+import co.lujun.ghouse.ui.CenterActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
+import co.lujun.ghouse.util.IntentUtils;
 import co.lujun.ghouse.util.MD5;
 
 /**
@@ -93,7 +97,9 @@ public class HomeFragment extends Fragment {
         mAdapter.setItemClickListener(new BillAdapter.BillItemViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getActivity(), mBills.get(position).getTotal() + "", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), mBills.get(position).getTotal() + "", Toast.LENGTH_SHORT).show();
+                IntentUtils.startPreviewActivity(getActivity(),
+                        new Intent(getActivity(), BillDetailActivity.class));
             }
         });
         mAdapter.setMode(Attributes.Mode.Single);

@@ -55,6 +55,14 @@ public class House extends DataSupport {
         this.housereg = housereg;
     }
 
+    public int getPersonnum() {
+        return personnum;
+    }
+
+    public void setPersonnum(int personnum) {
+        this.personnum = personnum;
+    }
+
     private long id;
 
     private long houseid;
@@ -66,4 +74,6 @@ public class House extends DataSupport {
     private float money;
 
     private long housereg;
+
+    private int personnum;
 }

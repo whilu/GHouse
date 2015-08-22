@@ -55,6 +55,14 @@ public class User extends DataSupport {
         this.avatar = avatar;
     }
 
+    public long getHouseid() {
+        return houseid;
+    }
+
+    public void setHouseid(long houseid) {
+        this.houseid = houseid;
+    }
+
     private long id;
 
     private String uname;
@@ -66,4 +74,6 @@ public class User extends DataSupport {
     private String phone;
 
     private String avatar;
+
+    private long houseid;
 }

@@ -2,4 +2,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="#33b5e5"></RelativeLayout>
+    android:background="#33b5e5" />

@@ -13,7 +13,7 @@
         android:minHeight="?attr/actionBarSize"
         android:title="@string/action_center" />
 
-    <ScrollView
+    <co.lujun.library.ElasticScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -84,6 +84,6 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </co.lujun.library.ElasticScrollView>
 
 </LinearLayout>
