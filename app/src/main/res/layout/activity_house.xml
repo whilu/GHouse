@@ -295,7 +295,7 @@
 
             <com.andexert.library.RippleView
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="89dp"
                 android:paddingTop="5dp"
                 app:rv_color="@color/material_grey"
                 app:rv_rippleDuration="800">
@@ -308,23 +308,39 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_height="35dp"
                             android:gravity="center_vertical"
-                            android:text="@string/tv_house_member"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/tv_house_member"
+                                android:textColor="@color/material_grey"
+                                android:textSize="16sp" />
+
+                            <ImageButton
+                                android:id="@+id/btn_house_add_member"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginRight="7dp"
+                                android:background="@drawable/ic_add_grey600_18dp"
+                                android:scaleType="fitCenter"
+                                android:src="@null" />
+
+                        </LinearLayout>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/rv_house_member"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="7dp"
-                            android:layout_weight="2" />
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp" />
 
                     </LinearLayout>
 
