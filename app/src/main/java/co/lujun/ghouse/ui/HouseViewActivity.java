@@ -144,7 +144,8 @@ public class HouseViewActivity extends SlidingActivity {
         int vid = v.getId();
         if (vid == R.id.ll_hv_money_surplus){
             mAddMoneyDialog.title(R.string.tv_house_add_money);
-            tilAddMoney.setHint(getResources().getString(R.string.tv_house_money_surplus)
+            tilAddMoney.getEditText().setText("");
+            tilAddMoney.getEditText().setHint(getResources().getString(R.string.tv_house_money_surplus)
                     + tvMoneySurplus.getText());
             moneySurplus = Float.valueOf(tvMoneySurplus.getText().toString());
             mAddMoneyDialog.show();
