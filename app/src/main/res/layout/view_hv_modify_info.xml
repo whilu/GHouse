@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/til_hv_modify_info"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/deep_gray" />
+</android.support.design.widget.TextInputLayout>

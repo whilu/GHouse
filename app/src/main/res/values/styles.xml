@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Login_Dialog" parent="Material.TextAppearance.SimpleDialog">
+    <style name="App_Dialog" parent="Material.TextAppearance.SimpleDialog">
         <item name="di_backgroundColor">@android:color/white</item>
     </style>
 

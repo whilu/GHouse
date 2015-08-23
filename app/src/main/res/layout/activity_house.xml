@@ -83,8 +83,10 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_hv_money_surplus"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:onClick="addAction"
                         android:orientation="horizontal">
 
                         <TextView
@@ -107,8 +109,7 @@
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
 
-                        <ImageButton
-                            android:id="@+id/btn_house_add_money"
+                        <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
@@ -141,8 +142,10 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_hv_address"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:onClick="updateInfo"
                         android:orientation="horizontal">
 
                         <TextView
@@ -199,8 +202,10 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_hv_intro"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:onClick="updateInfo"
                         android:orientation="horizontal">
 
                         <TextView
@@ -311,9 +316,11 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/ll_hv_add_member"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:gravity="center_vertical"
+                            android:onClick="addAction"
                             android:orientation="horizontal">
 
                             <TextView
@@ -325,8 +332,7 @@
                                 android:textColor="@color/material_grey"
                                 android:textSize="16sp" />
 
-                            <ImageButton
-                                android:id="@+id/btn_house_add_member"
+                            <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_marginRight="7dp"

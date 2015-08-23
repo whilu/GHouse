@@ -7,6 +7,8 @@
     <string name="action_add_todo">添加记录</string>
     <string name="action_center">个人中心</string>
     <string name="action_login">登录</string>
+    <string name="action_update">更新</string>
+    <string name="action_add">增加</string>
     <string name="action_scan">扫码</string>
     <string name="action_logout">退出登录</string>
     <string name="action_reg">注册</string>
@@ -39,6 +41,7 @@
     <string name="tv_house_address">地址</string>
     <string name="tv_house_money_surplus">剩余资金</string>
     <string name="tv_house_intro">描述</string>
+    <string name="tv_house_add_money">增加Money</string>
     <string name="tv_house_owner">拥有者</string>
     <string name="tv_house_member">入住成员</string>
     <string name="tv_bd_spend">花费</string>

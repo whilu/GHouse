@@ -55,7 +55,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
             tilPwd.setHint(getString(R.string.tli_hint_pwd));
 
             mDialog = new SimpleDialog(this);
-            mDialog.applyStyle(R.style.Login_Dialog)
+            mDialog.applyStyle(R.style.App_Dialog)
                     .title(R.string.dialog_welcome)
                     .positiveAction(R.string.action_login)
                     .negativeAction(R.string.action_back)
