@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.whilu.library.CustomRippleButton;
@@ -27,7 +28,6 @@ import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.ImageUtils;
-import co.lujun.ghouse.util.IntentUtils;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -41,10 +41,11 @@ public class AddTodoActivity extends SlidingActivity
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
     private CheckBox cbBillEat, cbBillWear, cbBillLive, cbBillTravel, cbBillPlay, cbBillOther;
     private ImageView[] ivBillImages;
+    private RelativeLayout[] rlBillImages;
     private CustomRippleButton btnBillCameraCode;
 
     private int billImageViewId;
-    private final static int BITMAP_SCALE = 5;
+    private final static int BITMAP_SCALE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,14 @@ public class AddTodoActivity extends SlidingActivity
             (ImageView) findViewById(R.id.iv_bill_image4),
             (ImageView) findViewById(R.id.iv_bill_image5),
             (ImageView) findViewById(R.id.iv_bill_image6)
+        };
+        rlBillImages = new RelativeLayout[]{
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv1),
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv2),
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv3),
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv4),
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv5),
+                (RelativeLayout) findViewById(R.id.rl_add_todo_iv6)
         };
 
         btnBillCameraCode = (CustomRippleButton) findViewById(R.id.btn_bill_camera_code);
@@ -144,50 +153,11 @@ public class AddTodoActivity extends SlidingActivity
                 if (bitmap == null){
                     return;
                 }
-                StringBuilder tmpPhotoName = new StringBuilder();
-                String dotpng = ".png";
-                switch (billImageViewId){
-                    case R.id.iv_bill_image1:
-                        ivBillImages[0].setImageBitmap(bitmap);
-                        ivBillImages[1].setVisibility(View.VISIBLE);
-                        tmpPhotoName.append(R.id.iv_bill_image1);
-                        break;
-                    case R.id.iv_bill_image2:
-                        ivBillImages[1].setImageBitmap(bitmap);
-                        ivBillImages[2].setVisibility(View.VISIBLE);
-                        tmpPhotoName.append(R.id.iv_bill_image2);
-                        break;
-                    case R.id.iv_bill_image3:
-                        ivBillImages[2].setImageBitmap(bitmap);
-                        ivBillImages[3].setVisibility(View.VISIBLE);
-                        tmpPhotoName.append(R.id.iv_bill_image3);
-                        break;
-                    case R.id.iv_bill_image4:
-                        ivBillImages[3].setImageBitmap(bitmap);
-                        ivBillImages[4].setVisibility(View.VISIBLE);
-                        tmpPhotoName.append(R.id.iv_bill_image4);
-                        break;
-                    case R.id.iv_bill_image5:
-                        ivBillImages[4].setImageBitmap(bitmap);
-                        ivBillImages[5].setVisibility(View.VISIBLE);
-                        tmpPhotoName.append(R.id.iv_bill_image5);
-                        break;
-                    case R.id.iv_bill_image6:
-                        ivBillImages[5].setImageBitmap(bitmap);
-                        tmpPhotoName.append(R.id.iv_bill_image6);
-                        break;
-                    default:
-                        break;
-                }
-                tmpPhotoName.append(dotpng);
+                String tmpPhotoName = billImageViewId + ".png";
                 ImageUtils.savePhotoToSDCard(
-                        ImageUtils.zoomBitmap(
-                                bitmap,
-                                bitmap.getWidth() / BITMAP_SCALE,
-                                bitmap.getHeight() / BITMAP_SCALE
-                        ),
+                        bitmap,
                         Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH,
-                        tmpPhotoName.toString());
+                        tmpPhotoName);
                 Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory()
                         + Config.APP_IMAGE_PATH + "/" + tmpPhotoName));
                 // 刷新图库
@@ -195,6 +165,33 @@ public class AddTodoActivity extends SlidingActivity
                 intent.setData(uri);
                 this.sendBroadcast(intent);
                 bitmap.recycle();
+                switch (billImageViewId){
+                    case R.id.iv_bill_image1:
+                        ivBillImages[0].setImageURI(uri);
+                        rlBillImages[1].setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.iv_bill_image2:
+                        ivBillImages[1].setImageURI(uri);
+                        rlBillImages[2].setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.iv_bill_image3:
+                        ivBillImages[2].setImageURI(uri);
+                        rlBillImages[3].setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.iv_bill_image4:
+                        ivBillImages[3].setImageURI(uri);
+                        rlBillImages[4].setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.iv_bill_image5:
+                        ivBillImages[4].setImageURI(uri);
+                        rlBillImages[5].setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.iv_bill_image6:
+                        ivBillImages[5].setImageURI(uri);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

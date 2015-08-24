@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.util.Log;
 
 public final class ImageUtils {
 
@@ -24,7 +23,7 @@ public final class ImageUtils {
 		Matrix matrix = new Matrix();
 		float scaleWidth = ((float) width / w);
 		float scaleHeight = ((float) height / h);
-		matrix.postScale(scaleWidth, scaleHeight);
+		matrix.postScale(1, 1);
 		Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
 		return newbmp;
 	}
@@ -51,7 +50,6 @@ public final class ImageUtils {
 			}
 			
 			File photoFile = new File(path , photoName);
-			Log.d("debugss", path + photoName);
 			FileOutputStream fileOutputStream = null;
 			try {
 				fileOutputStream = new FileOutputStream(photoFile);

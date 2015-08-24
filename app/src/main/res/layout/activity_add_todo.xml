@@ -221,6 +221,7 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv1"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"
@@ -245,6 +246,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv2"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"
@@ -269,6 +271,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv3"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"
@@ -300,6 +303,7 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv4"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"
@@ -325,6 +329,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv5"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"
@@ -349,6 +354,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_add_todo_iv6"
                             android:layout_width="80dp"
                             android:layout_height="60dp"
                             android:layout_marginLeft="4dp"

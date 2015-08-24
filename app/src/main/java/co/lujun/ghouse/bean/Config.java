@@ -17,9 +17,8 @@ public class Config {
 
     //Key of Value
     public final static String KEY_SCAN_CODE_RESULT = "key_scan_code_result";
-    public final static String KEY_FLAG_BILL_IMAGEVIEW = "key_flag_bill_imageview";
 
     //app path
-    private final static String APP_PATH_HOST = "/ghouse";
-    public final static String APP_IMAGE_PATH = APP_PATH_HOST + "/images";
+    private final static String APP_PATH_HOST = "/ghouse/";
+    public final static String APP_IMAGE_PATH = APP_PATH_HOST + "images/";
 }
