@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="co.lujun.ghouse">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".GlApplication"
         android:allowBackup="true"
@@ -33,6 +37,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BillDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CaptureActivity"
             android:screenOrientation="portrait" />
     </application>
 

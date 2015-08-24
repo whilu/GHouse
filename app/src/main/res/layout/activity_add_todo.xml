@@ -111,6 +111,7 @@
                     style="@style/Material.Drawable.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:gravity="center_vertical"
                     android:text="@string/rb_mt_hint_rmb" />
 
@@ -209,50 +210,169 @@
                     android:textColor="@color/deep_gray"
                     android:textSize="16sp" />
 
-                <RelativeLayout
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="@dimen/activity_vertical_margin">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <ImageView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/imaginary_line_trbl" />
-
-                    <ImageView
-                        android:id="@+id/iv_bill_image1"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_add_grey600_24dp" />
+                        android:orientation="horizontal">
 
-                </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
 
-                <RelativeLayout
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="@dimen/activity_vertical_margin">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
 
-                    <ImageView
+                            <ImageView
+                                android:id="@+id/iv_bill_image1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
+
+                            <ImageView
+                                android:id="@+id/iv_bill_image2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
+
+                            <ImageView
+                                android:id="@+id/iv_bill_image3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/imaginary_line_trbl" />
-
-                    <ImageView
-                        android:id="@+id/iv_bill_image2"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_add_grey600_24dp" />
-                </RelativeLayout>
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
+
+                            <ImageView
+                                android:id="@+id/iv_bill_image4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
+
+                            <ImageView
+                                android:id="@+id/iv_bill_image5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/imaginary_line_trbl" />
+
+                            <ImageView
+                                android:id="@+id/iv_bill_image6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:clickable="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_add_grey600_24dp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

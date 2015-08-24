@@ -1,6 +1,12 @@
 package co.lujun.ghouse.ui;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,9 +20,14 @@ import com.github.whilu.library.CustomRippleButton;
 import com.rey.material.widget.CheckBox;
 import com.rey.material.widget.RadioButton;
 
+import java.io.File;
+
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
+import co.lujun.ghouse.util.ImageUtils;
+import co.lujun.ghouse.util.IntentUtils;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -29,8 +40,11 @@ public class AddTodoActivity extends SlidingActivity
     private TextInputLayout tilBillContent, tilBillTotal, tilBillCode, tilBillExtra;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
     private CheckBox cbBillEat, cbBillWear, cbBillLive, cbBillTravel, cbBillPlay, cbBillOther;
-    private ImageView ivBillImg1, ivBillImg2;
+    private ImageView[] ivBillImages;
     private CustomRippleButton btnBillCameraCode;
+
+    private int billImageViewId;
+    private final static int BITMAP_SCALE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +75,14 @@ public class AddTodoActivity extends SlidingActivity
         cbBillPlay = (CheckBox) findViewById(R.id.cb_bill_play);
         cbBillOther = (CheckBox) findViewById(R.id.cb_bill_other);
 
-        ivBillImg1 = (ImageView) findViewById(R.id.iv_bill_image1);
-        ivBillImg2 = (ImageView) findViewById(R.id.iv_bill_image2);
+        ivBillImages = new ImageView[]{
+            (ImageView) findViewById(R.id.iv_bill_image1),
+            (ImageView) findViewById(R.id.iv_bill_image2),
+            (ImageView) findViewById(R.id.iv_bill_image3),
+            (ImageView) findViewById(R.id.iv_bill_image4),
+            (ImageView) findViewById(R.id.iv_bill_image5),
+            (ImageView) findViewById(R.id.iv_bill_image6)
+        };
 
         btnBillCameraCode = (CustomRippleButton) findViewById(R.id.btn_bill_camera_code);
 
@@ -82,15 +102,15 @@ public class AddTodoActivity extends SlidingActivity
         cbBillPlay.setOnCheckedChangeListener(this);
         cbBillOther.setOnCheckedChangeListener(this);
 
-        ivBillImg1.setOnClickListener(this);
-        ivBillImg2.setOnClickListener(this);
-
+        for (ImageView imageView: ivBillImages) {
+            imageView.setOnClickListener(this);
+        }
         btnBillCameraCode.setOnClickListener(this);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (b){
+        if (compoundButton instanceof RadioButton && b){
             rbBillRmb.setChecked(rbBillRmb == compoundButton);
             rbBillDollar.setChecked(rbBillDollar == compoundButton);
             rbBillOther.setChecked(rbBillOther == compoundButton);
@@ -103,9 +123,79 @@ public class AddTodoActivity extends SlidingActivity
     @Override
     public void onClick(View view) {
         if (view instanceof ImageView){
-
+            billImageViewId = view.getId();
+            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), Config.ACTIVITY_REQ_CAMERA);
         }else if (view instanceof CustomRippleButton){
+            startActivityForResult(new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null){
+            return;
+        }
+        if (requestCode == Config.ACTIVITY_REQ_SCAN){
+            tilBillCode.getEditText().setText(data.getStringExtra(Config.KEY_SCAN_CODE_RESULT));
+        }else if (requestCode == Config.ACTIVITY_REQ_CAMERA){
+            if (Activity.RESULT_OK == resultCode){
+                Bitmap bitmap = (Bitmap)(data.getExtras().get("data"));
+                if (bitmap == null){
+                    return;
+                }
+                StringBuilder tmpPhotoName = new StringBuilder();
+                String dotpng = ".png";
+                switch (billImageViewId){
+                    case R.id.iv_bill_image1:
+                        ivBillImages[0].setImageBitmap(bitmap);
+                        ivBillImages[1].setVisibility(View.VISIBLE);
+                        tmpPhotoName.append(R.id.iv_bill_image1);
+                        break;
+                    case R.id.iv_bill_image2:
+                        ivBillImages[1].setImageBitmap(bitmap);
+                        ivBillImages[2].setVisibility(View.VISIBLE);
+                        tmpPhotoName.append(R.id.iv_bill_image2);
+                        break;
+                    case R.id.iv_bill_image3:
+                        ivBillImages[2].setImageBitmap(bitmap);
+                        ivBillImages[3].setVisibility(View.VISIBLE);
+                        tmpPhotoName.append(R.id.iv_bill_image3);
+                        break;
+                    case R.id.iv_bill_image4:
+                        ivBillImages[3].setImageBitmap(bitmap);
+                        ivBillImages[4].setVisibility(View.VISIBLE);
+                        tmpPhotoName.append(R.id.iv_bill_image4);
+                        break;
+                    case R.id.iv_bill_image5:
+                        ivBillImages[4].setImageBitmap(bitmap);
+                        ivBillImages[5].setVisibility(View.VISIBLE);
+                        tmpPhotoName.append(R.id.iv_bill_image5);
+                        break;
+                    case R.id.iv_bill_image6:
+                        ivBillImages[5].setImageBitmap(bitmap);
+                        tmpPhotoName.append(R.id.iv_bill_image6);
+                        break;
+                    default:
+                        break;
+                }
+                tmpPhotoName.append(dotpng);
+                ImageUtils.savePhotoToSDCard(
+                        ImageUtils.zoomBitmap(
+                                bitmap,
+                                bitmap.getWidth() / BITMAP_SCALE,
+                                bitmap.getHeight() / BITMAP_SCALE
+                        ),
+                        Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH,
+                        tmpPhotoName.toString());
+                Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory()
+                        + Config.APP_IMAGE_PATH + "/" + tmpPhotoName));
+                // 刷新图库
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intent.setData(uri);
+                this.sendBroadcast(intent);
+                bitmap.recycle();
+            }
         }
     }
 

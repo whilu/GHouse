@@ -9,4 +9,17 @@ public class Config {
     public final static long APP_SPLASH_TIME = 1000;
     //
     public final static long SPLASH_LAYER_ANIM_TIME = 1000;
+
+    //Activity Result Code
+    public final static int ACTIVITY_REQ_SCAN = 101;
+    public final static int ACTIVITY_REQ_CAMERA = 102;
+    public final static int ACTIVITY_RES_SCAN = 103;
+
+    //Key of Value
+    public final static String KEY_SCAN_CODE_RESULT = "key_scan_code_result";
+    public final static String KEY_FLAG_BILL_IMAGEVIEW = "key_flag_bill_imageview";
+
+    //app path
+    private final static String APP_PATH_HOST = "/ghouse";
+    public final static String APP_IMAGE_PATH = APP_PATH_HOST + "/images";
 }
