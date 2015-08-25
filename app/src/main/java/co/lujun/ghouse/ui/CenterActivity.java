@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 import co.lujun.ghouse.util.IntentUtils;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -47,6 +49,10 @@ public class CenterActivity extends SlidingActivity {
         llHouseId = (RelativeLayout) findViewById(R.id.ll_set_house_id);
 
         btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
+
+        ImageView imageView = (ImageView) findViewById(R.id.iv_test);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.mine_bg));
+        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
 
         llPhone.setOnClickListener(new View.OnClickListener() {
             @Override

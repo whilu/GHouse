@@ -211,6 +211,11 @@
 
                 </com.andexert.library.RippleView>
 
+                <ImageView
+                    android:id="@+id/iv_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
                 <com.github.whilu.library.CustomRippleButton
                     android:id="@+id/btn_set_logout"
                     android:layout_width="match_parent"
