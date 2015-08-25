@@ -23,7 +23,7 @@ public final class ImageUtils {
 		Matrix matrix = new Matrix();
 		float scaleWidth = ((float) width / w);
 		float scaleHeight = ((float) height / h);
-		matrix.postScale(1, 1);
+		matrix.postScale(scaleWidth, scaleHeight);
 		Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
 		return newbmp;
 	}

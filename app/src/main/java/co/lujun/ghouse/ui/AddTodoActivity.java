@@ -3,6 +3,7 @@ package co.lujun.ghouse.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,9 +44,6 @@ public class AddTodoActivity extends SlidingActivity
     private ImageView[] ivBillImages;
     private RelativeLayout[] rlBillImages;
     private CustomRippleButton btnBillCameraCode;
-
-    private int billImageViewId;
-    private final static int BITMAP_SCALE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,11 +127,29 @@ public class AddTodoActivity extends SlidingActivity
         }
     }
 
+    private String imagePath;
+    private String imageName;
+    private int billImageViewId;
+    private Uri photoUri;
+    private final static int BITMAP_SCALE = 5;
+
     @Override
     public void onClick(View view) {
         if (view instanceof ImageView){
+            if (!ImageUtils.checkSDCardAvailable()){
+                return;
+            }
             billImageViewId = view.getId();
-            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), Config.ACTIVITY_REQ_CAMERA);
+            imagePath = Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH;
+            imageName = System.currentTimeMillis() + ".png";
+            File file = new File(imagePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            photoUri = Uri.fromFile(new File(file, imageName));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
         }else if (view instanceof CustomRippleButton){
             startActivityForResult(new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
         }
@@ -142,52 +158,51 @@ public class AddTodoActivity extends SlidingActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data == null){
-            return;
-        }
         if (requestCode == Config.ACTIVITY_REQ_SCAN){
             tilBillCode.getEditText().setText(data.getStringExtra(Config.KEY_SCAN_CODE_RESULT));
         }else if (requestCode == Config.ACTIVITY_REQ_CAMERA){
             if (Activity.RESULT_OK == resultCode){
-                Bitmap bitmap = (Bitmap)(data.getExtras().get("data"));
+                Bitmap bitmap = BitmapFactory.decodeFile(imagePath + imageName);
                 if (bitmap == null){
                     return;
                 }
-                String tmpPhotoName = billImageViewId + ".png";
                 ImageUtils.savePhotoToSDCard(
-                        bitmap,
-                        Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH,
-                        tmpPhotoName);
-                Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory()
-                        + Config.APP_IMAGE_PATH + "/" + tmpPhotoName));
+                        ImageUtils.zoomBitmap(
+                                bitmap,
+                                bitmap.getWidth() / BITMAP_SCALE,
+                                bitmap.getHeight() / BITMAP_SCALE
+                        ),
+                        imagePath,
+                        imageName
+                );
                 // 刷新图库
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intent.setData(uri);
+                intent.setData(photoUri);
                 this.sendBroadcast(intent);
                 bitmap.recycle();
                 switch (billImageViewId){
                     case R.id.iv_bill_image1:
-                        ivBillImages[0].setImageURI(uri);
+                        ivBillImages[0].setImageURI(photoUri);
                         rlBillImages[1].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image2:
-                        ivBillImages[1].setImageURI(uri);
+                        ivBillImages[1].setImageURI(photoUri);
                         rlBillImages[2].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image3:
-                        ivBillImages[2].setImageURI(uri);
+                        ivBillImages[2].setImageURI(photoUri);
                         rlBillImages[3].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image4:
-                        ivBillImages[3].setImageURI(uri);
+                        ivBillImages[3].setImageURI(photoUri);
                         rlBillImages[4].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image5:
-                        ivBillImages[4].setImageURI(uri);
+                        ivBillImages[4].setImageURI(photoUri);
                         rlBillImages[5].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image6:
-                        ivBillImages[5].setImageURI(uri);
+                        ivBillImages[5].setImageURI(photoUri);
                         break;
                     default:
                         break;

@@ -1,23 +1,19 @@
 package co.lujun.ghouse.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
