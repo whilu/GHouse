@@ -5,6 +5,12 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tv_popup_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb_add_billdetail"
         android:layout_width="match_parent"

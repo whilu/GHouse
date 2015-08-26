@@ -5,12 +5,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.adapter.InvoiceImgAdapter;
+import co.lujun.ghouse.ui.widget.GalleryWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 
 /**
@@ -24,6 +26,7 @@ public class BillDetailActivity extends SlidingActivity {
     private LinearLayoutManager mLayoutManager;
 
     private InvoiceImgAdapter mAdapter;
+    private GalleryWindow mGalleryWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +48,28 @@ public class BillDetailActivity extends SlidingActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mGalleryWindow = new GalleryWindow(this);
+
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < 8; i++){
             list.add(i + "");
         }
         mAdapter = new InvoiceImgAdapter(list);
+        mAdapter.setImageClickListener(new InvoiceImgAdapter.ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Toast.makeText(BillDetailActivity.this, position + "" ,Toast.LENGTH_SHORT).show();
+                if (mGalleryWindow != null){
+                    if (!mGalleryWindow.isShowing()){
+                        mGalleryWindow.show(
+                                BillDetailActivity.this.findViewById(R.id.tv_popup_parent),
+                                0,
+                                0
+                        );
+                    }
+                }
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 

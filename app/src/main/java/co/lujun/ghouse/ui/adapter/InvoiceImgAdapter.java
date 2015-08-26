@@ -16,6 +16,7 @@ import co.lujun.ghouse.R;
 public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.MemberViewHolder> {
 
     private List<String> mList;
+    private ImageClickListener mListener;
 
     public InvoiceImgAdapter(List<String> list){
         mList = list;
@@ -35,7 +36,7 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
     public InvoiceImgAdapter.MemberViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
         view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_invoice, viewGroup, false);
-        return new MemberViewHolder(view);
+        return new MemberViewHolder(view, mListener);
     }
 
     @Override
@@ -43,13 +44,31 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
 
     }
 
-    static class MemberViewHolder extends RecyclerView.ViewHolder{
+    static class MemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         final ImageView ivAvatar;
+        private ImageClickListener mImageClicklistener;
 
-        public MemberViewHolder(View view){
+        public MemberViewHolder(View view, ImageClickListener listener){
             super(view);
             ivAvatar = (ImageView) view.findViewById(R.id.iv_bd_voice);
+            mImageClicklistener = listener;
+            view.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (mImageClicklistener != null){
+                mImageClicklistener.onClick(getPosition());
+            }
+        }
+    }
+
+    public void setImageClickListener(ImageClickListener listener){
+        this.mListener = listener;
+    }
+
+    public interface ImageClickListener{
+        void onClick(int position);
     }
 }
