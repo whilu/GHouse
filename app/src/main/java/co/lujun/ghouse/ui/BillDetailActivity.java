@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,11 @@ public class BillDetailActivity extends SlidingActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mGalleryWindow = new GalleryWindow(this);
+        List<String> mlist = new ArrayList<String>();
+        mlist.add("http://s.ledandan.com/image/4/f/5/4f562f3169325678cf2e844d29beb999.png");
+        mlist.add("http://s.ledandan.com/image/0/2/4/0248805c50e3e76e8f5dffd874f37bea.png");
+        mlist.add("http://s.ledandan.com/image/d/6/8/d680d2453443d24d62674e67cf03b4fb.png");
+        mGalleryWindow.setImages(mlist);
 
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < 8; i++){
@@ -58,13 +62,13 @@ public class BillDetailActivity extends SlidingActivity {
         mAdapter.setImageClickListener(new InvoiceImgAdapter.ImageClickListener() {
             @Override
             public void onClick(int position) {
-                Toast.makeText(BillDetailActivity.this, position + "" ,Toast.LENGTH_SHORT).show();
                 if (mGalleryWindow != null){
                     if (!mGalleryWindow.isShowing()){
                         mGalleryWindow.show(
                                 BillDetailActivity.this.findViewById(R.id.tv_popup_parent),
                                 0,
-                                0
+                                0,
+                                position
                         );
                     }
                 }
