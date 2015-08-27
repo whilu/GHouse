@@ -20,7 +20,9 @@ import java.util.List;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Bill;
+import co.lujun.ghouse.ui.BillDetailActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
+import co.lujun.ghouse.util.IntentUtils;
 import co.lujun.ghouse.util.MD5;
 
 /**
@@ -93,6 +95,22 @@ public class TodoListFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getActivity(), mBills.get(position).getTotal() + "", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mAdapter.setBillOperationListener(new BillAdapter.OnBillOperationListener() {
+            @Override
+            public void onConfirmBill(int position) {
+
+            }
+
+            @Override
+            public void onEditBill(int positin) {
+
+            }
+
+            @Override
+            public void onDeleteBill(int position) {
+
             }
         });
         mAdapter.setMode(Attributes.Mode.Single);

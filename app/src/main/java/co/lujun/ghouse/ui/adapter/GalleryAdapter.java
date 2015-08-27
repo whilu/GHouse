@@ -9,7 +9,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by Administrator on 2015/8/27.
@@ -31,18 +30,13 @@ public class GalleryAdapter extends PagerAdapter {
     @Override
     public View instantiateItem(ViewGroup container, int position) {
         PhotoView photoView = new PhotoView(container.getContext());
+        // add tap listener for when tap screen hide the popupWindow
         /*photoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float v, float v1) {
                 if (mListener != null){
                     mListener.onGalleryViewTap();
                 }
-            }
-        });
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v1) {
-
             }
         });*/
         Picasso.with(container.getContext()).load(mImages.get(position)).into(photoView);

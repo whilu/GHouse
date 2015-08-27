@@ -102,6 +102,22 @@ public class HomeFragment extends Fragment {
                         new Intent(getActivity(), BillDetailActivity.class));
             }
         });
+        mAdapter.setBillOperationListener(new BillAdapter.OnBillOperationListener() {
+            @Override
+            public void onConfirmBill(int position) {
+
+            }
+
+            @Override
+            public void onEditBill(int positin) {
+
+            }
+
+            @Override
+            public void onDeleteBill(int position) {
+
+            }
+        });
         mAdapter.setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

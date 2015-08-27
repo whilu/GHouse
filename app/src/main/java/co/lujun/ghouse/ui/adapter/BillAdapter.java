@@ -33,6 +33,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
     private final static int TYPE_1 = TYPE_0 + 1;
 
     private BillItemViewHolder.ItemClickListener mItemClickListener;
+    private OnBillOperationListener mBillOperationListener;
     protected SwipeItemRecyclerMangerImpl mItemManger;
 
     private List<Bill> mList;
@@ -95,21 +96,17 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                    if (mBillOperationListener != null){
+                        mBillOperationListener.onConfirmBill(i);
+                    }
                 }
             });
             viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar snackbar = Snackbar.make(v, "Modify:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
-                            .setAction("知道了", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark));
-                    snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
-                    snackbar.show();
+                    if (mBillOperationListener != null){
+                        mBillOperationListener.onEditBill(i);
+                    }
                 }
             });
             viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +117,21 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                     notifyItemRemoved(i);
                     notifyItemRangeChanged(i, mList.size());
                     mItemManger.closeAllItems();
-                    Toast.makeText(GlApplication.getContext(), "Deleted:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+
+                    Snackbar snackbar = Snackbar.make(v, "Delete:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
+                            .setAction("知道了", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            })
+                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark));
+                    snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
+                    snackbar.show();
+
+                    if (mBillOperationListener != null){
+                        mBillOperationListener.onDeleteBill(i);
+                    }
                 }
             });
             String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
@@ -234,5 +245,15 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
     @Override
     public int getSwipeLayoutResourceId(int i) {
         return R.id.swipe_bill_item;
+    }
+
+    public void setBillOperationListener(OnBillOperationListener listener){
+        this.mBillOperationListener = listener;
+    }
+
+    public interface OnBillOperationListener{
+        void onConfirmBill(int position);
+        void onEditBill(int positin);
+        void onDeleteBill(int position);
     }
 }
