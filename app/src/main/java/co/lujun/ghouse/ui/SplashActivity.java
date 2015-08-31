@@ -61,20 +61,16 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                     .negativeAction(R.string.action_back)
                     .contentView(loginView)
                     .cancelable(false)
-                    .positiveActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    .positiveActionClickListener(view -> {
                             mDialog.dismiss();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();
                         }
-                    })
-                    .negativeActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    )
+                    .negativeActionClickListener(view -> {
                             mDialog.dismiss();
                         }
-                    });
+                    );
         }
 
         btnLogin.setOnClickListener(this);

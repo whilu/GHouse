@@ -54,10 +54,10 @@ dependencies {
 }
 
 retrolambda {
-    jdk System.getenv("JAVA8_HOME")
-    oldJdk System.getenv("JAVA6_HOME")
+//    jdk System.getenv("JAVA8_HOME")
+//    oldJdk System.getenv("JAVA6_HOME")
     javaVersion JavaVersion.VERSION_1_6
-    jvmArgs '-arg1', '-arg2'
-    defaultMethods false
-    incremental true
+//    jvmArgs '-arg1', '-arg2'
+//    defaultMethods false
+//    incremental true
 }
