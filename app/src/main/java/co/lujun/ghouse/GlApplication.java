@@ -2,10 +2,10 @@ package co.lujun.ghouse;
 
 import android.content.Context;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-
 import org.litepal.LitePalApplication;
+
+import co.lujun.ghouse.api.Api;
+import retrofit.RestAdapter;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -13,18 +13,29 @@ import org.litepal.LitePalApplication;
 public class GlApplication extends LitePalApplication {
 
     private static Context sContext;
-    private static RequestQueue mRequestQueue;
+
+    private static RestAdapter mRestAdapter;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
-        mRequestQueue = Volley.newRequestQueue(this);
     }
 
     public static Context getContext(){
         return sContext;
     }
 
-    public static RequestQueue getRequestQueue(){ return mRequestQueue; }
+    public static RestAdapter getRestAdapter(){
+        if (mRestAdapter == null){
+            synchronized (GlApplication.class){
+                if (mRestAdapter == null){
+                    mRestAdapter = new RestAdapter.Builder()
+                            .setEndpoint(Api.API_HOST + Api.API_VERSION)
+                            .build();
+                }
+            }
+        }
+        return mRestAdapter;
+    }
 }
