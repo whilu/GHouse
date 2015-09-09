@@ -54,8 +54,15 @@ public class RegHouseActivity extends SlidingActivity {
             finish();
             return true;
         }else if (item.getItemId() == R.id.action_confirm_reg_house){
-
+            onRegHouse();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 注册房子
+     */
+    private void onRegHouse(){
+
     }
 }

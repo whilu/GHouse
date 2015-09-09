@@ -159,6 +159,10 @@ public class HouseViewActivity extends SlidingActivity {
             return;
         }
         int vid = v.getId();
+        if (vid == R.id.ll_hv_house_moving){// 搬家
+            Toast.makeText(HouseViewActivity.this, "house-moving", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (vid == R.id.ll_hv_address){
             mUpdateDialog.title(R.string.tv_house_address);
             tilInfo.getEditText().setText(tvHouseAddress.getText());

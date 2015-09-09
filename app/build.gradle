@@ -14,7 +14,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
     defaultConfig {
@@ -44,7 +44,8 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'org.litepal.android:core:1.2.1'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'co.lujun.AndroidElasticView:library:1.0.0'
+    compile 'co.lujun:androidelasticview:1.0.0'
+//    compile 'co.lujun:tpsharelogin:1.0.0'
     compile 'com.github.whilu.CustomButton:library:1.0.0'
     compile 'com.github.rey5137:material:1.2.1'
     compile 'com.github.traex.rippleeffect:library:1.3'

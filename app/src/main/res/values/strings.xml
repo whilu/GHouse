@@ -43,6 +43,7 @@
     <string name="tv_house_intro">描述</string>
     <string name="tv_house_add_money">增加Money</string>
     <string name="tv_house_owner">拥有者</string>
+    <string name="tv_house_moving">搬家</string>
     <string name="tv_house_member">入住成员</string>
     <string name="tv_bd_spend">花费</string>
     <string name="tv_bd_creater">创建人</string>
