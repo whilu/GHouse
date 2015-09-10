@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * MD5加密
  * @author fox-life-one
- *
+ * @created at 2014-7-8
  */
 public class MD5 {
 

@@ -18,6 +18,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/add_record")
     Observable<BaseJson<Bill>> onAddRecord(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature
@@ -26,6 +27,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_house_info")
     Observable<BaseJson<House>> onGetHouseInfo(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature
@@ -34,6 +36,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_list")
     Observable<BaseJson<Bill>> onGetRecord(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature
@@ -42,6 +45,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_todo_list")
     Observable<BaseJson<Bill>> onGetTodoRecord(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature
@@ -50,6 +54,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/login")
     Observable<BaseJson<User>> onLogin(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature
@@ -58,6 +63,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/register")
     Observable<BaseJson<House>> onRegisterHouse(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature,
@@ -71,6 +77,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/edit_house")
     Observable<BaseJson<House>> onUpdateHouse(
+            @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature

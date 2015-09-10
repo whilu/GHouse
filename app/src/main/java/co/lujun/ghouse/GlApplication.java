@@ -5,6 +5,7 @@ import android.content.Context;
 import org.litepal.LitePalApplication;
 
 import co.lujun.ghouse.api.Api;
+import co.lujun.ghouse.api.ApiService;
 import retrofit.RestAdapter;
 
 /**
@@ -15,6 +16,7 @@ public class GlApplication extends LitePalApplication {
     private static Context sContext;
 
     private static RestAdapter mRestAdapter;
+    private static ApiService mApiService;
 
     @Override
     public void onCreate() {
@@ -37,5 +39,16 @@ public class GlApplication extends LitePalApplication {
             }
         }
         return mRestAdapter;
+    }
+
+    public static ApiService getApiService(){
+        if (mApiService == null){
+            synchronized (GlApplication.class){
+                if (mApiService == null){
+                    mApiService = getRestAdapter().create(ApiService.class);
+                }
+            }
+        }
+        return mApiService;
     }
 }

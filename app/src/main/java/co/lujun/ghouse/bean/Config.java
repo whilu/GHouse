@@ -9,6 +9,8 @@ public class Config {
     public final static long APP_SPLASH_TIME = 1000;
     //
     public final static long SPLASH_LAYER_ANIM_TIME = 1000;
+    //rendom string length
+    public static final int NONCE_LENGTH = 6;
 
     //Activity Result Code
     public final static int ACTIVITY_REQ_SCAN = 101;
