@@ -2,13 +2,17 @@ package co.lujun.ghouse.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.whilu.library.CustomRippleButton;
+import com.rey.material.app.Dialog;
+import com.rey.material.app.SimpleDialog;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
@@ -25,6 +29,11 @@ public class CenterActivity extends SlidingActivity {
     private TextView tvUName, tvPhone, tvHouseId;
     private RelativeLayout llPhone, llHouseId;
     private CustomRippleButton btnLogout;
+
+    private TextInputLayout tilPhone;
+    private View updatePhoneView;
+
+    private static Dialog mUpdatePhoneDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +57,31 @@ public class CenterActivity extends SlidingActivity {
 
         btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
 
-        llPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        updatePhoneView = LayoutInflater.from(this).inflate(R.layout.view_center_change_phone, null, false);
+        if (updatePhoneView != null){
+            tilPhone = (TextInputLayout) updatePhoneView.findViewById(R.id.til_center_phone);
+            tilPhone.setHint(getString(R.string.tv_phone));
+            mUpdatePhoneDialog = new SimpleDialog(this);
+            mUpdatePhoneDialog.applyStyle(R.style.App_Dialog)
+                    .title(getString(R.string.action_update_phone))
+                    .positiveAction(R.string.action_update)
+                    .negativeAction(R.string.action_back)
+                    .contentView(updatePhoneView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> {})
+                    .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
+        }
 
+        llPhone.setOnClickListener(v -> {
+            if (mUpdatePhoneDialog != null){
+                mUpdatePhoneDialog.show();
             }
         });
-        llHouseId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        llHouseId.setOnClickListener(v ->
                 IntentUtils.startPreviewActivity(CenterActivity.this,
-                        new Intent(CenterActivity.this, HouseViewActivity.class));
-            }
-        });
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+                        new Intent(CenterActivity.this, HouseViewActivity.class))
+        );
+        btnLogout.setOnClickListener(v -> {});
     }
 
     @Override

@@ -23,4 +23,7 @@ public class Config {
     //app path
     private final static String APP_PATH_HOST = "/ghouse/";
     public final static String APP_IMAGE_PATH = APP_PATH_HOST + "images/";
+
+    //server status
+    public final static int STATUS_CODE_OK = 200;
 }

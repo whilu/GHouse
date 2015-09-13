@@ -3,9 +3,11 @@ package co.lujun.ghouse.ui;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Map;
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
+import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
@@ -77,16 +80,33 @@ public class RegHouseActivity extends SlidingActivity {
      * 注册房子
      */
     private void onRegHouse(){
-        Map<String, String> map = new HashMap<String, String>();
+        String username = "";
+        String phone = "";
+        String houseaddress = "";
+        String houseinfo = "";
+        String password = "";
         try{
-            map.put("username", tilUName.getEditText().getText().toString());
-            map.put("phone", tilPhone.getEditText().getText().toString());
-            map.put("houseaddress", tilAddress.getEditText().getText().toString());
-            map.put("houseinfo", tilIntro.getEditText().getText().toString());
-            map.put("password", MD5.getMD5(tilPwd.getEditText().getText().toString()));
+            username = tilUName.getEditText().getText().toString();
+            phone = tilPhone.getEditText().getText().toString();
+            houseaddress = tilAddress.getEditText().getText().toString();
+            houseinfo = tilIntro.getEditText().getText().toString();
+            password = MD5.getMD5(tilPwd.getEditText().getText().toString());
         }catch (NoSuchAlgorithmException e){
             e.printStackTrace();
         }
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(phone)
+                || TextUtils.isEmpty(houseaddress) || TextUtils.isEmpty(houseinfo)
+                || TextUtils.isEmpty(password)){
+            Toast.makeText(this, R.string.msg_all_not_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //TODO show loading dialog
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("username", username);
+        map.put("phone", phone);
+        map.put("houseaddress", houseaddress);
+        map.put("houseinfo", houseinfo);
+        map.put("password", password);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
             .onRegisterHouse(
@@ -94,11 +114,11 @@ public class RegHouseActivity extends SlidingActivity {
                     signCarrier.getNonce(),
                     signCarrier.getTimestamp(),
                     signCarrier.getSignature(),
-                    map.get("username"),
-                    map.get("password"),
-                    map.get("phone"),
-                    map.get("houseaddress"),
-                    map.get("houseinfo")
+                    username,
+                    password,
+                    phone,
+                    houseaddress,
+                    houseinfo
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -110,15 +130,30 @@ public class RegHouseActivity extends SlidingActivity {
 
                 @Override
                 public void onError(Throwable e) {
+                    //TODO Hide app debug Toast
                     Log.d("RegHouseActivity", e.toString());
+                    Toast.makeText(GlApplication.getContext(),
+                            e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onNext(BaseJson<House> houseBaseJson) {
-                    Log.d("RegHouseActivity", "onNext");
-                    Log.d("RegHouseActivity", houseBaseJson.getStatus() + "");
-                    Log.d("RegHouseActivity", houseBaseJson.getData().toString());
-                    Log.d("RegHouseActivity", houseBaseJson.getMessage());
+                    //TODO update output infomation
+                    if (null == houseBaseJson){
+                        Toast.makeText(GlApplication.getContext(),
+                                "reg houseBaseJson == null", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    //Not Correct status
+                    if (houseBaseJson.getStatus() != Config.STATUS_CODE_OK){
+                        Toast.makeText(GlApplication.getContext(),
+                                "reg return code != 200", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Toast.makeText(GlApplication.getContext(),
+                            R.string.msg_register_success, Toast.LENGTH_SHORT).show();
+                    //TODO hide loading dialog
+                    finish();
                 }
             });
     }

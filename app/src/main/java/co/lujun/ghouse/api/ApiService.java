@@ -57,7 +57,10 @@ public interface ApiService {
             @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
-            @Query("signature") String signature
+            @Query("signature") String signature,
+            @Field("username") String username,
+            @Field("password") String password,
+            @Field("usertype") String usertype
     );
 
     @FormUrlEncoded

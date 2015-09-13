@@ -16,6 +16,9 @@
     <string name="action_house">House view</string>
     <string name="action_bill_view">Bill view</string>
     <string name="action_back">返回</string>
+    <string name="action_uhouse">搬家</string>
+    <string name="action_add_member">添加成员</string>
+    <string name="action_update_phone">修改手机号</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -61,4 +64,9 @@
     <string name="hint_ct_travel">行</string>
     <string name="hint_ct_play">玩</string>
     <string name="hint_ct_other">其他</string>
+
+    <!-- Message-->
+    <string name="msg_all_not_empty">所有信息不能为空，请补充完整!</string>
+    <string name="msg_register_success">注册成功!</string>
+    <string name="msg_login_info_not_null">用户名或密码不能为空！</string>
 </resources>

@@ -13,7 +13,8 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
-    <co.lujun.androidelasticview.ElasticScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_house"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -314,7 +315,7 @@
                         android:id="@+id/ll_hv_house_moving"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:onClick="updateInfo"
+                        android:onClick="addAction"
                         android:orientation="horizontal">
 
                         <TextView
@@ -419,6 +420,6 @@
             </com.andexert.library.RippleView>
         </LinearLayout>
 
-    </co.lujun.androidelasticview.ElasticScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

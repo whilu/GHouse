@@ -31,10 +31,10 @@ public class HouseViewActivity extends SlidingActivity {
     private TextView tvHouseId, tvMoneySurplus, tvHouseAddress, tvHouseIntro, tvHouseOwner;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private TextInputLayout tilInfo, tilAddMoney;
-    private View hvUpdateView, hvAddMoneyView;
+    private TextInputLayout tilInfo, tilAddMoney, tilHouseAdd, tilHouseIntro, tilUName, tilUPwd;
+    private View hvUpdateView, hvAddMoneyView, hvUHouseView, hvAddMemberView;
 
-    private static Dialog mUpdateDialog, mAddMoneyDialog;
+    private static Dialog mUpdateDialog, mAddMoneyDialog, mUHouseDialog, mAddMemberDialog;
 
     private MemberAdapter mAdapter;
 
@@ -68,20 +68,31 @@ public class HouseViewActivity extends SlidingActivity {
 
         hvUpdateView = LayoutInflater.from(this).inflate(R.layout.view_hv_modify_info, null, false);
         hvAddMoneyView = LayoutInflater.from(this).inflate(R.layout.view_hv_add_money, null, false);
+        hvUHouseView = LayoutInflater.from(this).inflate(R.layout.view_hv_change_house, null, false);
+        hvAddMemberView = LayoutInflater.from(this).inflate(R.layout.view_hv_add_member, null, false);
         //
-        if (hvUpdateView != null && hvAddMoneyView != null){
+        if (hvUpdateView != null && hvAddMoneyView != null
+                && hvUHouseView != null && hvAddMemberView != null){
             tilInfo = (TextInputLayout) hvUpdateView.findViewById(R.id.til_hv_modify_info);
             tilAddMoney = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money);
+            tilHouseAdd = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_address);
+            tilHouseIntro = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_info);
+            tilUName = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_uname);
+            tilUPwd = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_pwd);
+            tilHouseAdd.setHint(getString(R.string.til_hint_rhouse_address));
+            tilHouseIntro.setHint(getString(R.string.til_hint_rhouse_intro));
+            tilUName.setHint(getString(R.string.til_hint_rhouse_name));
+            tilUPwd.setHint(getString(R.string.til_hint_rhouse_pwd));
             mUpdateDialog = new SimpleDialog(this);
             mAddMoneyDialog = new SimpleDialog(this);
+            mUHouseDialog = new SimpleDialog(this);
+            mAddMemberDialog = new SimpleDialog(this);
             mUpdateDialog.applyStyle(R.style.App_Dialog)
                     .positiveAction(R.string.action_update)
                     .negativeAction(R.string.action_back)
                     .contentView(hvUpdateView)
                     .cancelable(false)
-                    .positiveActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    .positiveActionClickListener(v -> {
                             if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
                                 Toast.makeText(HouseViewActivity.this,
                                         "tv_house_address" + tilInfo.getEditText().getText(), Toast.LENGTH_SHORT).show();
@@ -89,36 +100,41 @@ public class HouseViewActivity extends SlidingActivity {
                                 Toast.makeText(HouseViewActivity.this,
                                         "tv_house_intro" + tilInfo.getEditText().getText(), Toast.LENGTH_SHORT).show();
                             }
-                        }
                     })
-                    .negativeActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mUpdateDialog.dismiss();
-                        }
-                    });
+                    .negativeActionClickListener(v -> mUpdateDialog.dismiss());
             //
             mAddMoneyDialog.applyStyle(R.style.App_Dialog)
                     .positiveAction(R.string.action_add)
                     .negativeAction(R.string.action_back)
                     .contentView(hvAddMoneyView)
                     .cancelable(false)
-                    .positiveActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    .positiveActionClickListener(v -> {
                             Toast.makeText(HouseViewActivity.this,
                                     "tv_house_money_surplus" + (moneySurplus +
                                             Float.valueOf(tilAddMoney.getEditText().getText().toString())), Toast.LENGTH_SHORT).show();
                             tvMoneySurplus.setText((moneySurplus
                                     + Float.valueOf(tilAddMoney.getEditText().getText().toString())) + "");
                         }
-                    })
-                    .negativeActionClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mAddMoneyDialog.dismiss();
-                        }
-                    });
+                    )
+                    .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
+            //
+            mUHouseDialog.applyStyle(R.style.App_Dialog)
+                    .title(getString(R.string.action_uhouse))
+                    .positiveAction(R.string.action_uhouse)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvUHouseView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> {})
+                    .negativeActionClickListener(v -> mUHouseDialog.dismiss());
+            //
+            mAddMemberDialog.applyStyle(R.style.App_Dialog)
+                    .title(getString(R.string.action_add_member))
+                    .positiveAction(R.string.action_add)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvAddMemberView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> {})
+                    .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
         }
         //
         List<String> list = new ArrayList<String>();
@@ -146,7 +162,13 @@ public class HouseViewActivity extends SlidingActivity {
             moneySurplus = Float.valueOf(tvMoneySurplus.getText().toString());
             mAddMoneyDialog.show();
         }else if (vid == R.id.ll_hv_add_member){
-            Toast.makeText(HouseViewActivity.this, "add member", Toast.LENGTH_SHORT).show();
+            if (hvAddMemberView != null && mAddMemberDialog != null){
+                mAddMemberDialog.show();
+            }
+        }else if (vid == R.id.ll_hv_house_moving){
+            if (hvUHouseView != null && mUHouseDialog != null){
+                mUHouseDialog.show();
+            }
         }
     }
 
@@ -159,10 +181,6 @@ public class HouseViewActivity extends SlidingActivity {
             return;
         }
         int vid = v.getId();
-        if (vid == R.id.ll_hv_house_moving){// 搬家
-            Toast.makeText(HouseViewActivity.this, "house-moving", Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (vid == R.id.ll_hv_address){
             mUpdateDialog.title(R.string.tv_house_address);
             tilInfo.getEditText().setText(tvHouseAddress.getText());
