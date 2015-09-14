@@ -1,27 +1,11 @@
 package co.lujun.ghouse.bean;
 
-import org.litepal.crud.DataSupport;
+import java.util.List;
 
 /**
  * Created by lujun on 2015/8/3.
  */
-public class House extends DataSupport {
-
-    public long getHouseid() {
-        return houseid;
-    }
-
-    public void setHouseid(long houseid) {
-        this.houseid = houseid;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+public class House {
 
     public String getHouseaddress() {
         return houseaddress;
@@ -47,25 +31,41 @@ public class House extends DataSupport {
         this.money = money;
     }
 
-    public long getHousereg() {
-        return housereg;
+    public long getHid() {
+        return hid;
     }
 
-    public void setHousereg(long housereg) {
-        this.housereg = housereg;
+    public void setHid(long hid) {
+        this.hid = hid;
     }
 
-    public int getPersonnum() {
-        return personnum;
+    public String getReg_user() {
+        return reg_user;
     }
 
-    public void setPersonnum(int personnum) {
-        this.personnum = personnum;
+    public void setReg_user(String reg_user) {
+        this.reg_user = reg_user;
     }
 
-    private long id;
+    public long getReguid() {
+        return reguid;
+    }
 
-    private long houseid;
+    public void setReguid(long reguid) {
+        this.reguid = reguid;
+    }
+
+    public List<User> getMember() {
+        return member;
+    }
+
+    public void setMember(List<User> member) {
+        this.member = member;
+    }
+
+    private long hid;
+
+    private String reg_user;
 
     private String houseaddress;
 
@@ -73,7 +73,7 @@ public class House extends DataSupport {
 
     private float money;
 
-    private long housereg;
+    private long reguid;
 
-    private int personnum;
+    private List<User> member;
 }

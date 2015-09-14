@@ -1,19 +1,9 @@
 package co.lujun.ghouse.bean;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by lujun on 2015/8/3.
  */
-public class User extends DataSupport {
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+public class User {
 
     public String getUname() {
         return uname;
@@ -29,14 +19,6 @@ public class User extends DataSupport {
 
     public void setUpwd(String upwd) {
         this.upwd = upwd;
-    }
-
-    public long getLatestlogin() {
-        return latestlogin;
-    }
-
-    public void setLatestlogin(long latestlogin) {
-        this.latestlogin = latestlogin;
     }
 
     public String getPhone() {
@@ -63,17 +45,43 @@ public class User extends DataSupport {
         this.houseid = houseid;
     }
 
-    private long id;
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
+    public long getValidate_time() {
+        return validate_time;
+    }
+
+    public void setValidate_time(long validate_time) {
+        this.validate_time = validate_time;
+    }
+
+    public int getUsertype() {
+        return usertype;
+    }
+
+    public void setUsertype(int usertype) {
+        this.usertype = usertype;
+    }
+
+    private long uid;
 
     private String uname;
 
     private String upwd;
 
-    private long latestlogin;
+    private long validate_time;
 
     private String phone;
 
     private String avatar;
 
     private long houseid;
+
+    private int usertype;
 }

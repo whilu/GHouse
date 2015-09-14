@@ -73,34 +73,31 @@ public class HomeFragment extends Fragment {
         //test
         for (int i = 0; i < 10; i++){
             Bill bill = new Bill();
-            bill.setType((int) (Math.random() * 10 / 2));
-            bill.setSummary("晚上合伙请客吃饭+唱歌+打桌球家吃烧烤");
+            bill.setType_id((int) (Math.random() * 10 / 2));
+            bill.setTitle("晚上合伙请客吃饭+唱歌+打桌球家吃烧烤");
             bill.setTotal((float) ((Math.random() * 10000)));
-            bill.setTime(System.currentTimeMillis());
+            bill.setCreate_time(System.currentTimeMillis());
             try {
                 bill.setSecurityCode(MD5.getMD5(String.valueOf(Math.random() * 10)));
             }catch (NoSuchAlgorithmException e){
                 e.printStackTrace();
             }
             if (i % 3 == 0){
-                bill.setInvoice(new String[]{});
+                bill.setPhotos(new String[]{});
             }else if (i % 3 == 1){
-                bill.setInvoice(new String[]{""});
+                bill.setPhotos(new String[]{""});
             }else {
-                bill.setInvoice(new String[]{"", ""});
+                bill.setPhotos(new String[]{"", ""});
             }
 
             mBills.add(bill);
         }
         //
         mAdapter = new BillAdapter(mBills);
-        mAdapter.setItemClickListener(new BillAdapter.BillItemViewHolder.ItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
+        mAdapter.setItemClickListener((View view, int position) -> {
 //                Toast.makeText(getActivity(), mBills.get(position).getTotal() + "", Toast.LENGTH_SHORT).show();
                 IntentUtils.startPreviewActivity(getActivity(),
                         new Intent(getActivity(), BillDetailActivity.class));
-            }
         });
         mAdapter.setBillOperationListener(new BillAdapter.OnBillOperationListener() {
             @Override
@@ -120,11 +117,8 @@ public class HomeFragment extends Fragment {
         });
         mAdapter.setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        mRefreshLayout.setOnRefreshListener(() -> {
 
-            }
         });
     }
 }

@@ -1,8 +1,7 @@
 package co.lujun.ghouse;
 
+import android.app.Application;
 import android.content.Context;
-
-import org.litepal.LitePalApplication;
 
 import co.lujun.ghouse.api.Api;
 import co.lujun.ghouse.api.ApiService;
@@ -11,7 +10,7 @@ import retrofit.RestAdapter;
 /**
  * Created by lujun on 2015/3/1.
  */
-public class GlApplication extends LitePalApplication {
+public class GlApplication extends Application {
 
     private static Context sContext;
 

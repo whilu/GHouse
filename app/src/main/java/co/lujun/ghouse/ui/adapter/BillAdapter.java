@@ -137,9 +137,9 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
             String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
             String type, bgDrawableType;
-            if (mList.get(i).getType() >= 0 && mList.get(i).getMoneyFlag() < types.length){
-                type = types[mList.get(i).getType()];
-                bgDrawableType = bgDrawableTypes[mList.get(i).getType()];
+            if (mList.get(i).getType_id() >= 0 && mList.get(i).getType_id() < types.length){
+                type = types[mList.get(i).getType_id()];
+                bgDrawableType = bgDrawableTypes[mList.get(i).getType_id()];
             }else {
                 type = types[0];
                 bgDrawableType = bgDrawableTypes[0];
@@ -153,11 +153,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             }
 
             viewHolder.tvType.setText(type);
-            viewHolder.tvSummary.setText(mList.get(i).getSummary());
+            viewHolder.tvSummary.setText(mList.get(i).getTitle());
             String[] moneyFlags = GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
             String moneyFlag;
-            if (mList.get(i).getMoneyFlag() >= 0 && mList.get(i).getMoneyFlag() < moneyFlags.length){
-                moneyFlag = moneyFlags[mList.get(i).getMoneyFlag()];
+            if (mList.get(i).getMoney_flag() >= 0 && mList.get(i).getMoney_flag() < moneyFlags.length){
+                moneyFlag = moneyFlags[mList.get(i).getMoney_flag()];
             }else {
                 moneyFlag = moneyFlags[0];
             }
@@ -165,9 +165,9 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                     GlApplication.getContext().getResources().getString(R.string.tv_total)
                             + moneyFlag + mList.get(i).getTotal());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            viewHolder.tvTime.setText(format.format(mList.get(i).getTime()));
+            viewHolder.tvTime.setText(format.format(mList.get(i).getCreate_time()));
             viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurityCode().substring(0, 7));
-            int voliceLength = mList.get(i).getInvoice().length;
+            int voliceLength = mList.get(i).getPhotos().length;
             if (voliceLength > 0){
                 viewHolder.llInvoice.setVisibility(View.VISIBLE);
                 switch (voliceLength){

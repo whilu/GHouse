@@ -1,11 +1,17 @@
 package co.lujun.ghouse.bean;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by lujun on 2015/8/3.
  */
-public class Bill extends DataSupport {
+public class Bill {
+
+    public long getBid() {
+        return bid;
+    }
+
+    public void setBid(long bid) {
+        this.bid = bid;
+    }
 
     public String getContent() {
         return content;
@@ -15,36 +21,28 @@ public class Bill extends DataSupport {
         this.content = content;
     }
 
-    public long getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public long getCreate_time() {
+        return create_time;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setCreate_time(long create_time) {
+        this.create_time = create_time;
     }
 
-    public long getTime() {
-        return time;
+    public String getQcode() {
+        return qcode;
     }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setQcode(String qcode) {
+        this.qcode = qcode;
     }
 
     public float getTotal() {
@@ -55,12 +53,12 @@ public class Bill extends DataSupport {
         this.total = total;
     }
 
-    public String getExtra() {
-        return extra;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setExtra(String extra) {
-        this.extra = extra;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getSecurityCode() {
@@ -71,60 +69,52 @@ public class Bill extends DataSupport {
         this.securityCode = securityCode;
     }
 
-    public long getLatesttime() {
-        return latesttime;
+    public long getLast_time() {
+        return last_time;
     }
 
-    public void setLatesttime(long latesttime) {
-        this.latesttime = latesttime;
+    public void setLast_time(long last_time) {
+        this.last_time = last_time;
     }
 
-    public boolean isconfirm() {
-        return isconfirm;
+    public long getConfirm_time() {
+        return confirm_time;
     }
 
-    public void setIsconfirm(boolean isconfirm) {
-        this.isconfirm = isconfirm;
+    public void setConfirm_time(long confirm_time) {
+        this.confirm_time = confirm_time;
     }
 
-    public long getAddperson() {
-        return addperson;
+    public int getConfirm_status() {
+        return confirm_status;
     }
 
-    public void setAddperson(long addperson) {
-        this.addperson = addperson;
+    public void setConfirm_status(int confirm_status) {
+        this.confirm_status = confirm_status;
     }
 
-    public long getConfirmperson() {
-        return confirmperson;
+    public String[] getPhotos() {
+        return photos;
     }
 
-    public void setConfirmperson(long confirmperson) {
-        this.confirmperson = confirmperson;
+    public void setPhotos(String[] photos) {
+        this.photos = photos;
     }
 
-    public String[] getInvoice() {
-        return invoice;
+    public int getType_id() {
+        return type_id;
     }
 
-    public void setInvoice(String[] invoice) {
-        this.invoice = invoice;
+    public void setType_id(int type_id) {
+        this.type_id = type_id;
     }
 
-    public int getType() {
-        return type;
+    public int getMoney_flag() {
+        return money_flag;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getMoneyFlag() {
-        return moneyFlag;
-    }
-
-    public void setMoneyFlag(int moneyFlag) {
-        this.moneyFlag = moneyFlag;
+    public void setMoney_flag(int money_flag) {
+        this.money_flag = money_flag;
     }
 
     public long getHouseid() {
@@ -135,35 +125,54 @@ public class Bill extends DataSupport {
         this.houseid = houseid;
     }
 
-    private long id;
+    public String getAdd_user() {
+        return add_user;
+    }
+
+    public void setAdd_user(String add_user) {
+        this.add_user = add_user;
+    }
+
+    public String getConf_user() {
+        return conf_user;
+    }
+
+    public void setConf_user(String conf_user) {
+        this.conf_user = conf_user;
+    }
+
+    private long bid;
 
     private String content;
 
-    private String summary;
+    private String title;
 
-    private long time;//添加时间
+    private long create_time;//添加时间
 
-    private String code;
+    private String qcode;
 
     private float total;
 
-    private String extra;
+    private String remark;
 
     private String securityCode;//MD5(houseid + id)
 
-    private long latesttime;//最后修改时间
+    private long last_time;//最后修改时间
 
-    private boolean isconfirm;
+    private long confirm_time;
 
-    private long addperson;
+    private int confirm_status;// 0 un confirm, 1 confirm
 
-    private long confirmperson;
+    private String[] photos;//max size is 2, if the size exceed 2, will get the first two
 
-    private String[] invoice;//max size is 2, if the size exceed 2, will get the first two
+    private int type_id;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
 
-    private int type;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
-
-    private int moneyFlag;//0-RMB, 1-Dollar
+    private int money_flag;//0-RMB, 1-Dollar, 2-Other
 
     private long houseid;
+
+    private String add_user;
+
+    private String conf_user;
+
 }
