@@ -1,16 +1,20 @@
 package co.lujun.ghouse.bean;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by lujun on 2015/8/3.
  */
+@DatabaseTable(tableName = "user")
 public class User {
 
-    public String getUname() {
-        return uname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUname(String uname) {
-        this.uname = uname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getUpwd() {
@@ -69,19 +73,21 @@ public class User {
         this.usertype = usertype;
     }
 
+
+    @DatabaseField(columnName = "uid", id = true)
     private long uid;
-
-    private String uname;
-
+    @DatabaseField(columnName = "username")
+    private String username;
+    @DatabaseField(columnName = "upwd")
     private String upwd;
-
+    @DatabaseField(columnName = "validate_time")
     private long validate_time;
-
+    @DatabaseField(columnName = "phone")
     private String phone;
-
+    @DatabaseField(columnName = "avatar")
     private String avatar;
-
+    @DatabaseField(columnName = "houseid")
     private long houseid;
-
+    @DatabaseField(columnName = "usertype")
     private int usertype;
 }

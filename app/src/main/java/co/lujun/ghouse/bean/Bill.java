@@ -1,8 +1,12 @@
 package co.lujun.ghouse.bean;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by lujun on 2015/8/3.
  */
+@DatabaseTable(tableName = "bill")
 public class Bill {
 
     public long getBid() {
@@ -141,38 +145,39 @@ public class Bill {
         this.conf_user = conf_user;
     }
 
+    @DatabaseField(columnName = "bid", id = true)
     private long bid;
-
+    @DatabaseField(columnName = "content")
     private String content;
-
+    @DatabaseField(columnName = "title")
     private String title;
-
+    @DatabaseField(columnName = "create_time")
     private long create_time;//添加时间
-
+    @DatabaseField(columnName = "qcode")
     private String qcode;
-
+    @DatabaseField(columnName = "total")
     private float total;
-
+    @DatabaseField(columnName = "remark")
     private String remark;
-
+    @DatabaseField(columnName = "securityCode")
     private String securityCode;//MD5(houseid + id)
-
+    @DatabaseField(columnName = "last_time")
     private long last_time;//最后修改时间
-
+    @DatabaseField(columnName = "confirm_time")
     private long confirm_time;
-
+    @DatabaseField(columnName = "confirm_status")
     private int confirm_status;// 0 un confirm, 1 confirm
-
+    @DatabaseField(columnName = "photos")
     private String[] photos;//max size is 2, if the size exceed 2, will get the first two
-
+    @DatabaseField(columnName = "type_id")
     private int type_id;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
-
+    @DatabaseField(columnName = "money_flag")
     private int money_flag;//0-RMB, 1-Dollar, 2-Other
-
+    @DatabaseField(columnName = "houseid")
     private long houseid;
-
+    @DatabaseField(columnName = "add_user")
     private String add_user;
-
+    @DatabaseField(columnName = "conf_user")
     private String conf_user;
 
 }

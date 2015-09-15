@@ -68,5 +68,7 @@
     <!-- Message-->
     <string name="msg_all_not_empty">所有信息不能为空，请补充完整!</string>
     <string name="msg_register_success">注册成功!</string>
-    <string name="msg_login_info_not_null">用户名或密码不能为空！</string>
+    <string name="msg_login_info_not_null">用户名或密码不能为空!</string>
+    <string name="msg_nullpointer_error">服务器错误</string>
+    <string name="msg_register_error">注册失败，请重试</string>
 </resources>

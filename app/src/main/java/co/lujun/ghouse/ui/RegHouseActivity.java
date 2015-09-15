@@ -5,6 +5,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,9 +20,11 @@ import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
+import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.SignatureUtil;
+import co.lujun.ghouse.util.SystemUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,6 +36,9 @@ public class RegHouseActivity extends SlidingActivity {
 
     private Toolbar mToolbar;
     private TextInputLayout tilUName, tilPwd, tilPhone, tilAddress, tilIntro;
+    private LoadingWindow winLoading;
+
+    private final static String TAG = "RegHouseActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,8 @@ public class RegHouseActivity extends SlidingActivity {
         tilAddress.setHint(getString(R.string.til_hint_rhouse_address));
         tilIntro = (TextInputLayout) findViewById(R.id.til_rhouse_intro);
         tilIntro.setHint(getString(R.string.til_hint_rhouse_intro));
+
+        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
     }
 
     @Override
@@ -100,7 +108,13 @@ public class RegHouseActivity extends SlidingActivity {
             Toast.makeText(this, R.string.msg_all_not_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        //TODO show loading dialog
+        // 显示Loding进度条
+        if (!winLoading.isShowing()) {
+            winLoading.showAsDropDown(mToolbar, 0, 0);
+        }
+        // 隐藏软键盘
+        SystemUtil.showOrHideInputMethodManager(this);
+        // 请求数据
         Map<String, String> map = new HashMap<String, String>();
         map.put("username", username);
         map.put("phone", phone);
@@ -125,34 +139,29 @@ public class RegHouseActivity extends SlidingActivity {
             .subscribe(new Subscriber<BaseJson<House>>() {
                 @Override
                 public void onCompleted() {
-                    Log.d("RegHouseActivity", "onCompleted");
+                    Log.d(TAG, "onCompleted()");
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    //TODO Hide app debug Toast
-                    Log.d("RegHouseActivity", e.toString());
-                    Toast.makeText(GlApplication.getContext(),
-                            e.toString(), Toast.LENGTH_SHORT).show();
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    Log.d(TAG, e.toString());
                 }
 
                 @Override
                 public void onNext(BaseJson<House> houseBaseJson) {
-                    //TODO update output infomation
-                    if (null == houseBaseJson){
-                        Toast.makeText(GlApplication.getContext(),
-                                "reg houseBaseJson == null", Toast.LENGTH_SHORT).show();
-                        return;
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
                     }
-                    //Not Correct status
-                    if (houseBaseJson.getStatus() != Config.STATUS_CODE_OK){
+                    if (null == houseBaseJson || houseBaseJson.getStatus() != Config.STATUS_CODE_OK){
                         Toast.makeText(GlApplication.getContext(),
-                                "reg return code != 200", Toast.LENGTH_SHORT).show();
+                                getString(R.string.msg_register_error), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Toast.makeText(GlApplication.getContext(),
                             R.string.msg_register_success, Toast.LENGTH_SHORT).show();
-                    //TODO hide loading dialog
                     finish();
                 }
             });

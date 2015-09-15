@@ -1,10 +1,15 @@
 package co.lujun.ghouse.bean;
 
-import java.util.List;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Collection;
 
 /**
  * Created by lujun on 2015/8/3.
  */
+@DatabaseTable(tableName = "house")
 public class House {
 
     public String getHouseaddress() {
@@ -55,25 +60,26 @@ public class House {
         this.reguid = reguid;
     }
 
-    public List<User> getMember() {
+    public Collection<User> getMember() {
         return member;
     }
 
-    public void setMember(List<User> member) {
+    public void setMember(Collection<User> member) {
         this.member = member;
     }
 
+    @DatabaseField(columnName = "hid", id = true)
     private long hid;
-
+    @DatabaseField(columnName = "reg_user")
     private String reg_user;
-
+    @DatabaseField(columnName = "houseaddress")
     private String houseaddress;
-
+    @DatabaseField(columnName = "houseinfo")
     private String houseinfo;
-
+    @DatabaseField(columnName = "money")
     private float money;
-
+    @DatabaseField(columnName = "reguid")
     private long reguid;
-
-    private List<User> member;
+    @ForeignCollectionField
+    private Collection<User> member;
 }
