@@ -94,12 +94,6 @@ public class HomeFragment extends Fragment {
                 onRefreshData();
             }
         });
-
-        try {
-            mBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         mAdapter = new BillAdapter(mBills);
         mAdapter.setItemClickListener((View view, int position) -> {
             IntentUtils.startPreviewActivity(getActivity(),
@@ -120,6 +114,14 @@ public class HomeFragment extends Fragment {
         });
         mAdapter.setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
+        // load cache
+        try {
+            mBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
+            onShowData(mBills, true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // refresh data
         onRefreshData();
     }
 
@@ -170,9 +172,40 @@ public class HomeFragment extends Fragment {
                             return;
                         }
                         PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-                        mBills.addAll(billListBaseJson.getData().getLists());
-                        mAdapter.notifyDataSetChanged();
+                        onShowData(billListBaseJson.getData().getLists(), true);
                     }
                 });
+    }
+
+    /**
+     * show data
+     * @param bills
+     * @param isRefresh
+     */
+    private void onShowData(List<Bill> bills, boolean isRefresh){
+        if (bills == null || bills.size() <= 0){
+            return;
+        }
+        if (isRefresh){
+            mBills.clear();
+        }
+        mBills.addAll(bills);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * save data
+     * @param bills
+     * @param isRefresh
+     */
+    private void onCache(List<Bill> bills, boolean isRefresh){
+        if (bills == null || bills.size() <= 0){
+            return;
+        }
+        if (isRefresh){// 刷新，先删除所有缓存，在写缓存
+
+        }else {// 加载更多，接着写缓存
+
+        }
     }
 }

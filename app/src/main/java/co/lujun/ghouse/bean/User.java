@@ -90,4 +90,6 @@ public class User {
     private long houseid;
     @DatabaseField(columnName = "usertype")
     private int usertype;
+    @DatabaseField(canBeNull = true, foreign = true, columnName = "house", foreignAutoRefresh = true)
+    private House house;
 }

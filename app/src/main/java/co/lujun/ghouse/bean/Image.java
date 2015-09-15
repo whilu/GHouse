@@ -33,10 +33,20 @@ public class Image {
         this.bill = bill;
     }
 
-    @DatabaseField(canBeNull = false, foreign = true, columnName = "bill", foreignAutoRefresh = true)
+    public long getBid() {
+        return bid;
+    }
+
+    public void setBid(long bid) {
+        this.bid = bid;
+    }
+
+    @DatabaseField(canBeNull = true, foreign = true, columnName = "bill", foreignAutoRefresh = true)
     private Bill bill;
     @DatabaseField(columnName = "small")
     private String small;
     @DatabaseField(columnName = "large")
     private String large;
+    @DatabaseField(columnName = "bid")
+    private long bid;
 }
