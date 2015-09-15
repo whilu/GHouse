@@ -68,7 +68,7 @@ public class TodoListFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //test
-        for (int i = 0; i < 10; i++){
+        /*for (int i = 0; i < 10; i++){
             Bill bill = new Bill();
             bill.setType_id((int) (Math.random() * 10 / 2));
             bill.setTitle("xxxxxxxxxx晚上合伙请客吃饭+唱歌+打桌球家吃烧烤");
@@ -88,7 +88,7 @@ public class TodoListFragment extends Fragment {
             }
 
             mBills.add(bill);
-        }
+        }*/
         //
         mAdapter = new BillAdapter(mBills);
         mAdapter.setItemClickListener((View view, int position) -> {

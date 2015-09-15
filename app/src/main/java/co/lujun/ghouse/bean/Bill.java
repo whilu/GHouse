@@ -1,7 +1,10 @@
 package co.lujun.ghouse.bean;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Collection;
 
 /**
  * Created by lujun on 2015/8/3.
@@ -65,14 +68,6 @@ public class Bill {
         this.remark = remark;
     }
 
-    public String getSecurityCode() {
-        return securityCode;
-    }
-
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
-    }
-
     public long getLast_time() {
         return last_time;
     }
@@ -95,14 +90,6 @@ public class Bill {
 
     public void setConfirm_status(int confirm_status) {
         this.confirm_status = confirm_status;
-    }
-
-    public String[] getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(String[] photos) {
-        this.photos = photos;
     }
 
     public int getType_id() {
@@ -145,6 +132,22 @@ public class Bill {
         this.conf_user = conf_user;
     }
 
+    public String getSecurity_code() {
+        return security_code;
+    }
+
+    public void setSecurity_code(String security_code) {
+        this.security_code = security_code;
+    }
+
+    public Collection<Image> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(Collection<Image> photos) {
+        this.photos = photos;
+    }
+
     @DatabaseField(columnName = "bid", id = true)
     private long bid;
     @DatabaseField(columnName = "content")
@@ -160,15 +163,15 @@ public class Bill {
     @DatabaseField(columnName = "remark")
     private String remark;
     @DatabaseField(columnName = "securityCode")
-    private String securityCode;//MD5(houseid + id)
+    private String security_code;//MD5(houseid + aid + uid)
     @DatabaseField(columnName = "last_time")
     private long last_time;//最后修改时间
     @DatabaseField(columnName = "confirm_time")
     private long confirm_time;
     @DatabaseField(columnName = "confirm_status")
     private int confirm_status;// 0 un confirm, 1 confirm
-    @DatabaseField(columnName = "photos")
-    private String[] photos;//max size is 2, if the size exceed 2, will get the first two
+    @ForeignCollectionField
+    private Collection<Image> photos;//max size is 2, if the size exceed 2, will get the first two
     @DatabaseField(columnName = "type_id")
     private int type_id;//012345，吃穿住行玩其他，EWLTPO，eat-wear-live-travel-play-other，红黄蓝绿棕灰
     @DatabaseField(columnName = "money_flag")

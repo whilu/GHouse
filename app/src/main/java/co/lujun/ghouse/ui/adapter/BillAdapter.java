@@ -2,6 +2,7 @@ package co.lujun.ghouse.ui.adapter;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,10 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d("HomeF", mList.size() + "");
+        if (mList.size() == 0){
+            return 0;
+        }
         return mList.size() + 1;
     }
 
@@ -166,8 +171,8 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                             + moneyFlag + mList.get(i).getTotal());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             viewHolder.tvTime.setText(format.format(mList.get(i).getCreate_time()));
-            viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurityCode().substring(0, 7));
-            int voliceLength = mList.get(i).getPhotos().length;
+            viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurity_code().substring(0, 7));
+            int voliceLength = mList.get(i).getPhotos().size();
             if (voliceLength > 0){
                 viewHolder.llInvoice.setVisibility(View.VISIBLE);
                 switch (voliceLength){
