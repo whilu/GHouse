@@ -9,11 +9,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import co.lujun.ghouse.R;
-import co.lujun.ghouse.ui.fragment.HomeFragment;
-import co.lujun.ghouse.ui.fragment.TodoListFragment;
+import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.ui.fragment.BillListFragment;
 import co.lujun.ghouse.util.IntentUtils;
 
 
@@ -36,17 +35,26 @@ public class MainActivity extends ActionBarActivity {
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         setSupportActionBar(mToolbar);
         fabAddBill = (FloatingActionButton) findViewById(R.id.fab_add_bill);
-        fabAddBill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        fabAddBill.setOnClickListener(view ->
                 IntentUtils.startPreviewActivity(MainActivity.this,
-                        new Intent(MainActivity.this, AddTodoActivity.class));
-            }
-        });
+                        new Intent(MainActivity.this, AddTodoActivity.class))
+        );
         fragmentManager = getSupportFragmentManager();
+
+        // init fragments
+        Bundle billBundle = new Bundle();
+        billBundle.putInt(Config.KEY_OF_FRAGMENT, Config.BILL_FRAGMENT);
+        Fragment billListFragment = new BillListFragment();
+        billListFragment.setArguments(billBundle);
+
+        Bundle todoBundle = new Bundle();
+        todoBundle.putInt(Config.KEY_OF_FRAGMENT, Config.TODO_FRAGMENT);
+        Fragment todoListFragment = new BillListFragment();
+        todoListFragment.setArguments(todoBundle);
+
         fragments = new Fragment[]{
-            new HomeFragment(),
-            new TodoListFragment()
+            billListFragment,
+            todoListFragment
         };
         if (savedInstanceState == null){
             fragmentManager.beginTransaction().add(R.id.content_frame, fragments[0]).commit();

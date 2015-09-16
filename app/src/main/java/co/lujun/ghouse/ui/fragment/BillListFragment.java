@@ -34,6 +34,7 @@ import co.lujun.ghouse.ui.BillDetailActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
+import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
@@ -44,7 +45,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/7/30.
  */
-public class HomeFragment extends Fragment {
+public class BillListFragment extends Fragment {
 
     private View mView;
     private SwipeRefreshLayout mRefreshLayout;
@@ -54,7 +55,9 @@ public class HomeFragment extends Fragment {
     private List<Bill> mBills;
 
     private int current_page = 1;
-    private final static String TAG = "HomeFragment";
+    private final static String TAG = "BillListFragment";
+
+    private int flag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,12 +73,23 @@ public class HomeFragment extends Fragment {
         return mView;
     }
 
+    /**
+     * init members
+     */
     private void init(){
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mBills = new ArrayList<Bill>();
+        if (getArguments() == null
+                || (flag = getArguments().getInt(Config.KEY_OF_FRAGMENT, Config.BILL_UNKNOW))
+                == Config.BILL_UNKNOW){
+            return;
+        }
     }
 
+    /**
+     * init views
+     */
     private void initView(){
         if (mView == null){
             return;
@@ -114,9 +128,9 @@ public class HomeFragment extends Fragment {
         // load cache
         try {
             List<Bill> tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
-            if (tmpBills != null && tmpBills.size() > 0)
-                Log.d(TAG, tmpBills.get(0).getPhotos().size() + "");
-            onShowData(tmpBills, true);
+            if (tmpBills != null && tmpBills.size() > 0) {
+                onShowData(tmpBills, true);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -156,9 +170,13 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 更新数据
+     * request data
      */
     private void onRequestData(boolean isRefresh){
+        if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
         if (isRefresh){
             current_page = 1;
         }
@@ -179,37 +197,37 @@ public class HomeFragment extends Fragment {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
+                .subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted()");
+                    }
 
-                @Override
-                public void onError(Throwable e) {
-                    if (mRefreshLayout.isRefreshing()) {
-                        mRefreshLayout.setRefreshing(false);
+                    @Override
+                    public void onError(Throwable e) {
+                        if (mRefreshLayout.isRefreshing()) {
+                            mRefreshLayout.setRefreshing(false);
+                        }
+                        Log.d(TAG, e.toString());
                     }
-                    Log.d(TAG, e.toString());
-                }
 
-                @Override
-                public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
-                    if (mRefreshLayout.isRefreshing()) {
-                        mRefreshLayout.setRefreshing(false);
+                    @Override
+                    public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
+                        if (mRefreshLayout.isRefreshing()) {
+                            mRefreshLayout.setRefreshing(false);
+                        }
+                        if (null == billListBaseJson
+                                || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
+                                || billListBaseJson.getData().getLists() == null) {
+                            SystemUtil.showToast(R.string.msg_request_error);
+                            return;
+                        }
+                        current_page = billListBaseJson.getData().getCurrent_page() + 1;
+                        PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
+//                    onShowData(billListBaseJson.getData().getLists(), isRefresh);
+                        onCacheData(billListBaseJson.getData().getLists(), isRefresh);
                     }
-                    if (null == billListBaseJson
-                            || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
-                            || billListBaseJson.getData().getLists() == null) {
-                        SystemUtil.showToast(R.string.msg_request_error);
-                        return;
-                    }
-                    current_page = billListBaseJson.getData().getCurrent_page() + 1;
-                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-                    onShowData(billListBaseJson.getData().getLists(), isRefresh);
-                    onCacheData(billListBaseJson.getData().getLists(), isRefresh);
-                }
-            });
+                });
     }
 
     /**
@@ -224,7 +242,15 @@ public class HomeFragment extends Fragment {
         if (isRefresh){
             mBills.clear();
         }
-        mBills.addAll(bills);
+        if (flag == Config.BILL_FRAGMENT){
+            mBills.addAll(bills);
+        }else if(flag == Config.TODO_FRAGMENT) {
+            for (Bill bill : bills) {
+                if (bill.getConfirm_status() == 0){
+                    mBills.add(bill);
+                }
+            }
+        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -257,6 +283,7 @@ public class HomeFragment extends Fragment {
                     imageDao.create(image);
                 }
             }
+            onShowData(bills, isRefresh);
         }catch (SQLException e){
             e.printStackTrace();
         }

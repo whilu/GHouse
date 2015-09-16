@@ -72,4 +72,5 @@
     <string name="msg_nullpointer_error">服务器错误</string>
     <string name="msg_register_error">注册失败，请重试</string>
     <string name="msg_request_error">请求失败，请刷新重试</string>
+    <string name="msg_network_disconnect">网络未连接，请检查网络</string>
 </resources>
