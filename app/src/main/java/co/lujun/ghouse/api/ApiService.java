@@ -50,6 +50,7 @@ public interface ApiService {
             @Query("timestamp") String timestamp,
             @Query("signature") String signature,
             @Field("page") String page,
-            @Field("validate") String validate
+            @Field("validate") String validate,
+            @Field("type") String type
     );
 }

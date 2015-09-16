@@ -10,21 +10,24 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.github.whilu.library.CustomRippleButton;
 import com.rey.material.widget.CheckBox;
 import com.rey.material.widget.RadioButton;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
@@ -44,6 +47,10 @@ public class AddTodoActivity extends SlidingActivity
     private ImageView[] ivBillImages;
     private RelativeLayout[] rlBillImages;
     private CustomRippleButton btnBillCameraCode;
+
+    private Map<Integer, String> pMap;
+
+    private final static String TAG = "AddTodoActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +97,8 @@ public class AddTodoActivity extends SlidingActivity
                 (RelativeLayout) findViewById(R.id.rl_add_todo_iv5),
                 (RelativeLayout) findViewById(R.id.rl_add_todo_iv6)
         };
+
+        pMap = new HashMap<Integer, String>();
 
         btnBillCameraCode = (CustomRippleButton) findViewById(R.id.btn_bill_camera_code);
 
@@ -182,32 +191,52 @@ public class AddTodoActivity extends SlidingActivity
                 bitmap.recycle();
                 switch (billImageViewId){
                     case R.id.iv_bill_image1:
+                        pMap.put(1, imagePath + imageName);
                         ivBillImages[0].setImageURI(photoUri);
                         rlBillImages[1].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image2:
+                        pMap.put(2, imagePath + imageName);
                         ivBillImages[1].setImageURI(photoUri);
                         rlBillImages[2].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image3:
+                        pMap.put(3, imagePath + imageName);
                         ivBillImages[2].setImageURI(photoUri);
                         rlBillImages[3].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image4:
+                        pMap.put(4, imagePath + imageName);
                         ivBillImages[3].setImageURI(photoUri);
                         rlBillImages[4].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image5:
+                        pMap.put(5, imagePath + imageName);
                         ivBillImages[4].setImageURI(photoUri);
                         rlBillImages[5].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image6:
+                        pMap.put(6, imagePath + imageName);
                         ivBillImages[5].setImageURI(photoUri);
                         break;
                     default:
                         break;
                 }
             }
+        }
+    }
+
+    /**
+     * add record
+     */
+    private void onAddRecord(){
+        String content = tilBillContent.getEditText().getText().toString();
+        String total = tilBillTotal.getEditText().getText().toString();
+        String code = tilBillCode.getEditText().getText().toString();
+        String extra = tilBillExtra.getEditText().getText().toString();
+
+        for (Map.Entry<Integer, String> entry : pMap.entrySet()) {
+            Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
         }
     }
 
@@ -223,7 +252,7 @@ public class AddTodoActivity extends SlidingActivity
             finish();
             return true;
         }else if (item.getItemId() == R.id.action_confirm_add_todo){
-            Toast.makeText(GlApplication.getContext(), "action_confirm_add_todo", Toast.LENGTH_SHORT).show();
+            onAddRecord();
         }
         return super.onOptionsItemSelected(item);
     }

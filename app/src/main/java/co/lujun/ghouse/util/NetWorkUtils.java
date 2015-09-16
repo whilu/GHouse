@@ -36,7 +36,7 @@ public class NetWorkUtils {
         String type = NETWORK_TYPE_DISCONNECT;
         if (manager == null || (networkInfo = manager.getActiveNetworkInfo()) == null) {
             return type;
-        };
+        }
 
         if (networkInfo.isConnected()) {
             String typeName = networkInfo.getTypeName();

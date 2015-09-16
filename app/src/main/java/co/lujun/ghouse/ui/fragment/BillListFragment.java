@@ -127,7 +127,14 @@ public class BillListFragment extends Fragment {
         initRecyclerView();
         // load cache
         try {
-            List<Bill> tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
+            List<Bill> tmpBills = null;
+            if (flag == Config.BILL_FRAGMENT){
+                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
+                        .queryForEq("confirm_status", 1);
+            }else if (flag == Config.TODO_FRAGMENT){
+                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
+                        .queryForEq("confirm_status", 0);
+            }
             if (tmpBills != null && tmpBills.size() > 0) {
                 onShowData(tmpBills, true);
             }
@@ -177,6 +184,12 @@ public class BillListFragment extends Fragment {
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;
         }
+        String type = "";// 1-BillList, 2-TodoList
+        if (flag == Config.BILL_FRAGMENT){
+            type = "1";
+        }else if (flag == Config.TODO_FRAGMENT){
+            type = "0";
+        }
         if (isRefresh){
             current_page = 1;
         }
@@ -185,6 +198,7 @@ public class BillListFragment extends Fragment {
         Map<String, String> map = new HashMap<String, String>();
         map.put("page", page);
         map.put("validate", validate);
+        map.put("type", type);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
             .onGetBillList(
@@ -193,7 +207,8 @@ public class BillListFragment extends Fragment {
                     signCarrier.getTimestamp(),
                     signCarrier.getSignature(),
                     page,
-                    validate
+                    validate,
+                    type
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -224,7 +239,6 @@ public class BillListFragment extends Fragment {
                         }
                         current_page = billListBaseJson.getData().getCurrent_page() + 1;
                         PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-//                    onShowData(billListBaseJson.getData().getLists(), isRefresh);
                         onCacheData(billListBaseJson.getData().getLists(), isRefresh);
                     }
                 });
@@ -242,15 +256,7 @@ public class BillListFragment extends Fragment {
         if (isRefresh){
             mBills.clear();
         }
-        if (flag == Config.BILL_FRAGMENT){
-            mBills.addAll(bills);
-        }else if(flag == Config.TODO_FRAGMENT) {
-            for (Bill bill : bills) {
-                if (bill.getConfirm_status() == 0){
-                    mBills.add(bill);
-                }
-            }
-        }
+        mBills.addAll(bills);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -267,7 +273,12 @@ public class BillListFragment extends Fragment {
             Dao billDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class);
             Dao imageDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Image.class);
             if (isRefresh){// 刷新，先删除所有缓存，在写缓存
-                List<Bill> tmpBills = billDao.queryForEq("confirm_status", 1);
+                List<Bill> tmpBills = null;
+                if (flag == Config.BILL_FRAGMENT) {
+                    tmpBills = billDao.queryForEq("confirm_status", 1);
+                }else if (flag == Config.TODO_FRAGMENT) {
+                    tmpBills = billDao.queryForEq("confirm_status", 0);
+                }
                 for (Bill bill : tmpBills) {
                     imageDao.deleteBuilder().where().eq("bid", bill.getBid());
                     imageDao.deleteBuilder().delete();
