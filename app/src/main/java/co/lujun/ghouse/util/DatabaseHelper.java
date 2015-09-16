@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.House;
+import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.User;
 
 /**
@@ -34,6 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, House.class);
             TableUtils.createTableIfNotExists(connectionSource, Bill.class);
+            TableUtils.createTableIfNotExists(connectionSource, Image.class);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -47,6 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.dropTable(connectionSource, House.class, true);
             TableUtils.dropTable(connectionSource, Bill.class, true);
+            TableUtils.dropTable(connectionSource, Image.class, true);
             // then create tables again
             onCreate(sqLiteDatabase, connectionSource);
         }catch (SQLException e){

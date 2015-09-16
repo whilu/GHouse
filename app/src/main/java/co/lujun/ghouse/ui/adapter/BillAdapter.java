@@ -2,13 +2,13 @@ package co.lujun.ghouse.ui.adapter;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +39,8 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     private List<Bill> mList;
 
+    private RvFooterViewHolder rvFooterViewHolder;
+
     public BillAdapter(List<Bill> list){
         mList = list;
         mItemManger = new SwipeItemRecyclerMangerImpl(this);
@@ -50,7 +52,6 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d("HomeF", mList.size() + "");
         if (mList.size() == 0){
             return 0;
         }
@@ -80,7 +81,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             return new BillItemViewHolder(view, mItemClickListener);
         }else {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_rv_footer, viewGroup, false);
-            return new RvFooterViewHolder(view);
+            return (rvFooterViewHolder = new RvFooterViewHolder(view));
         }
     }
 
@@ -173,6 +174,9 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             viewHolder.tvTime.setText(format.format(mList.get(i).getCreate_time()));
             viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurity_code().substring(0, 7));
             int voliceLength = mList.get(i).getPhotos().size();
+            if (voliceLength >= 2){
+                voliceLength = 2;
+            }
             if (voliceLength > 0){
                 viewHolder.llInvoice.setVisibility(View.VISIBLE);
                 switch (voliceLength){
@@ -242,8 +246,25 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     static class RvFooterViewHolder extends RecyclerView.ViewHolder{
 
+        ProgressBar pbFooter;
+
         public RvFooterViewHolder(View view){
             super(view);
+            pbFooter = (ProgressBar) view.findViewById(R.id.pb_footer);
+        }
+
+        /**
+         * hide progressbar
+         */
+        public void hideProgressBar(){
+            this.pbFooter.setVisibility(View.GONE);
+        }
+
+        /**
+         * show progressbar
+         */
+        public void showProgressBar(){
+            this.pbFooter.setVisibility(View.VISIBLE);
         }
     }
 
@@ -254,6 +275,20 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     public void setBillOperationListener(OnBillOperationListener listener){
         this.mBillOperationListener = listener;
+    }
+
+    /**
+     * hide the footer's progressBar
+     */
+    public void hideFooter(){
+        rvFooterViewHolder.hideProgressBar();
+    }
+
+    /**
+     * show the footer's progressBar
+     */
+    public void showFooter(){
+        rvFooterViewHolder.showProgressBar();
     }
 
     public interface OnBillOperationListener{

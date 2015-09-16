@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -105,7 +104,7 @@ public class RegHouseActivity extends SlidingActivity {
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(phone)
                 || TextUtils.isEmpty(houseaddress) || TextUtils.isEmpty(houseinfo)
                 || TextUtils.isEmpty(password)){
-            Toast.makeText(this, R.string.msg_all_not_empty, Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_all_not_empty);
             return;
         }
         // 显示Loding进度条
@@ -156,12 +155,10 @@ public class RegHouseActivity extends SlidingActivity {
                         winLoading.dismiss();
                     }
                     if (null == houseBaseJson || houseBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                        Toast.makeText(GlApplication.getContext(),
-                                getString(R.string.msg_register_error), Toast.LENGTH_SHORT).show();
+                        SystemUtil.showToast(R.string.msg_register_error);
                         return;
                     }
-                    Toast.makeText(GlApplication.getContext(),
-                            R.string.msg_register_success, Toast.LENGTH_SHORT).show();
+                    SystemUtil.showToast(R.string.msg_register_success);
                     finish();
                 }
             });

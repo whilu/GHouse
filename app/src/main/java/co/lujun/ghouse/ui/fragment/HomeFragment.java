@@ -12,17 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.daimajia.swipe.util.Attributes;
+import com.j256.ormlite.dao.Dao;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
@@ -30,16 +28,15 @@ import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.BaseList;
 import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
-import co.lujun.ghouse.bean.House;
+import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.ui.BillDetailActivity;
-import co.lujun.ghouse.ui.CenterActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
-import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
+import co.lujun.ghouse.util.SystemUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -90,8 +87,8 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRefreshLayout.setOnRefreshListener(() -> {
-            if(mRefreshLayout.isRefreshing()){
-                onRefreshData();
+            if (mRefreshLayout.isRefreshing()) {
+                onRequestData(true);
             }
         });
         mAdapter = new BillAdapter(mBills);
@@ -113,22 +110,56 @@ public class HomeFragment extends Fragment {
             }
         });
         mAdapter.setMode(Attributes.Mode.Single);
-        mRecyclerView.setAdapter(mAdapter);
+        initRecyclerView();
         // load cache
         try {
-            mBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
-            onShowData(mBills, true);
+            List<Bill> tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
+            onShowData(tmpBills, true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         // refresh data
-        onRefreshData();
+        onRequestData(true);
+    }
+
+    /**
+     * intit recyclerview
+     */
+    private void initRecyclerView(){
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
+                    int totalItemCount = mLayoutManager.getItemCount();
+                    if (lastVisibleItem == totalItemCount - 1) {
+                        onRequestData(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
+                int totalItemCount = mLayoutManager.getItemCount();
+                if (lastVisibleItem - firstVisibleItem == totalItemCount - 1) {
+                    ((BillAdapter) recyclerView.getAdapter()).hideFooter();
+                }
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
      * 更新数据
      */
-    private void onRefreshData(){
+    private void onRequestData(boolean isRefresh){
+        if (isRefresh){
+            current_page = 1;
+        }
         String validate = PreferencesUtils.getString(getActivity(), Config.KEY_OF_VALIDATE);
         String page = current_page + "";
         Map<String, String> map = new HashMap<String, String>();
@@ -136,45 +167,47 @@ public class HomeFragment extends Fragment {
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
-                .onGetBillList(signCarrier.getAppId(),
-                        signCarrier.getNonce(),
-                        signCarrier.getTimestamp(),
-                        signCarrier.getSignature(),
-                        page,
-                        validate
-                )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
-                    }
+            .onGetBillList(
+                    signCarrier.getAppId(),
+                    signCarrier.getNonce(),
+                    signCarrier.getTimestamp(),
+                    signCarrier.getSignature(),
+                    page,
+                    validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
-                        Log.d(TAG, e.toString());
+                @Override
+                public void onError(Throwable e) {
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
                     }
+                    Log.d(TAG, e.toString());
+                }
 
-                    @Override
-                    public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
-                        if (null == billListBaseJson
-                                || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
-                                || billListBaseJson.getData().getLists() == null) {
-                            Toast.makeText(GlApplication.getContext(),
-                                    getString(R.string.msg_request_error), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-                        onShowData(billListBaseJson.getData().getLists(), true);
+                @Override
+                public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
                     }
-                });
+                    if (null == billListBaseJson
+                            || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
+                            || billListBaseJson.getData().getLists() == null) {
+                        SystemUtil.showToast(R.string.msg_request_error);
+                        return;
+                    }
+                    current_page = billListBaseJson.getData().getCurrent_page() + 1;
+                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
+                    onShowData(billListBaseJson.getData().getLists(), isRefresh);
+                    onCacheData(billListBaseJson.getData().getLists(), isRefresh);
+                }
+            });
     }
 
     /**
@@ -182,8 +215,8 @@ public class HomeFragment extends Fragment {
      * @param bills
      * @param isRefresh
      */
-    private void onShowData(List<Bill> bills, boolean isRefresh){
-        if (bills == null || bills.size() <= 0){
+    private synchronized void onShowData(List<Bill> bills, boolean isRefresh){
+        if (bills == null || bills.size() == 0){
             return;
         }
         if (isRefresh){
@@ -198,14 +231,31 @@ public class HomeFragment extends Fragment {
      * @param bills
      * @param isRefresh
      */
-    private void onCache(List<Bill> bills, boolean isRefresh){
+    private void onCacheData(List<Bill> bills, boolean isRefresh){
         if (bills == null || bills.size() <= 0){
             return;
         }
-        if (isRefresh){// 刷新，先删除所有缓存，在写缓存
-
-        }else {// 加载更多，接着写缓存
-
+        try {
+            Dao billDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class);
+            Dao imageDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Image.class);
+            if (isRefresh){// 刷新，先删除所有缓存，在写缓存
+                List<Bill> tmpBills = billDao.queryForEq("confirm_status", 1);
+                for (Bill bill : tmpBills) {
+                    imageDao.deleteBuilder().where().eq("bid", bill.getBid());
+                    imageDao.deleteBuilder().delete();
+                }
+                billDao.delete(tmpBills);
+            }
+            for (Bill bill : bills) {
+                long bid = bill.getBid();
+                billDao.create(bill);
+                for (Image image : bill.getPhotos()) {
+                    image.setBid(bid);
+                    imageDao.create(image);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
     }
 }

@@ -34,11 +34,11 @@
     <string name="til_hint_rhouse_address">详细地址</string>
     <string name="til_hint_rhouse_intro">房子介绍</string>
 
-    <string name="tv_total">统计:</string>
-    <string name="tv_money_type">币种:</string>
-    <string name="tv_cost_type">类型:</string>
-    <string name="tv_add_images">照片:</string>
-    <string name="tv_set_uname">用户名:</string>
+    <string name="tv_total">统计: </string>
+    <string name="tv_money_type">币种: </string>
+    <string name="tv_cost_type">类型: </string>
+    <string name="tv_add_images">照片: </string>
+    <string name="tv_set_uname">用户名: </string>
     <string name="tv_phone">手机号</string>
     <string name="tv_house_id">房子编号</string>
     <string name="tv_house_address">地址</string>

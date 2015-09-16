@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.whilu.library.CustomRippleButton;
 import com.rey.material.app.Dialog;
@@ -129,7 +128,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
-            Toast.makeText(this, R.string.msg_login_info_not_null, Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_login_info_not_null);
             return;
         }
         // 隐藏输入框
@@ -184,8 +183,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                         }
                         User user;
                         if (null == userBaseJson || (user = userBaseJson.getData()) == null){
-                            Toast.makeText(GlApplication.getContext(),
-                                    getString(R.string.msg_nullpointer_error), Toast.LENGTH_SHORT).show();
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
                             if (!mDialog.isShowing()){
                                 mDialog.show();
                             }
@@ -193,8 +191,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                         }
                         // not Correct status
                         if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                            Toast.makeText(GlApplication.getContext(),
-                                    userBaseJson.getMessage(), Toast.LENGTH_SHORT).show();
+                            SystemUtil.showToast(userBaseJson.getMessage());
                             if (!mDialog.isShowing()){
                                 mDialog.show();
                             }
