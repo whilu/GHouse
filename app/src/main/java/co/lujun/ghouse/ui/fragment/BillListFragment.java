@@ -154,10 +154,15 @@ public class BillListFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
                     int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
                     int totalItemCount = mLayoutManager.getItemCount();
                     if (lastVisibleItem == totalItemCount - 1) {
-                        onRequestData(false);
+                        // TODO cal item num
+                        if (lastVisibleItem - firstVisibleItem < totalItemCount){
+                            ((BillAdapter) recyclerView.getAdapter()).showFooter();
+                            onRequestData(false);
+                        }
                     }
                 }
             }

@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.ImageUtils;
+import co.lujun.ghouse.util.SystemUtil;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -43,12 +45,15 @@ public class AddTodoActivity extends SlidingActivity
 
     private TextInputLayout tilBillContent, tilBillTotal, tilBillCode, tilBillExtra;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
-    private CheckBox cbBillEat, cbBillWear, cbBillLive, cbBillTravel, cbBillPlay, cbBillOther;
+    private CheckBox[] cbCostType;
     private ImageView[] ivBillImages;
     private RelativeLayout[] rlBillImages;
     private CustomRippleButton btnBillCameraCode;
 
     private Map<Integer, String> pMap;
+    private int costType;
+    private int moneyType = 0;
+    private String content, total, code, extra;
 
     private final static String TAG = "AddTodoActivity";
 
@@ -74,12 +79,14 @@ public class AddTodoActivity extends SlidingActivity
         rbBillDollar = (RadioButton) findViewById(R.id.rb_bill_dollar);
         rbBillOther = (RadioButton) findViewById(R.id.rb_bill_other);
 
-        cbBillEat = (CheckBox) findViewById(R.id.cb_bill_eat);
-        cbBillWear = (CheckBox) findViewById(R.id.cb_bill_wear);
-        cbBillLive = (CheckBox) findViewById(R.id.cb_bill_live);
-        cbBillTravel = (CheckBox) findViewById(R.id.cb_bill_travel);
-        cbBillPlay = (CheckBox) findViewById(R.id.cb_bill_play);
-        cbBillOther = (CheckBox) findViewById(R.id.cb_bill_other);
+        cbCostType = new CheckBox[]{
+            (CheckBox) findViewById(R.id.cb_bill_eat),
+            (CheckBox) findViewById(R.id.cb_bill_wear),
+            (CheckBox) findViewById(R.id.cb_bill_live),
+            (CheckBox) findViewById(R.id.cb_bill_travel),
+            (CheckBox) findViewById(R.id.cb_bill_play),
+            (CheckBox) findViewById(R.id.cb_bill_other)
+        };
 
         ivBillImages = new ImageView[]{
             (ImageView) findViewById(R.id.iv_bill_image1),
@@ -111,12 +118,9 @@ public class AddTodoActivity extends SlidingActivity
         rbBillDollar.setOnCheckedChangeListener(this);
         rbBillOther.setOnCheckedChangeListener(this);
 
-        cbBillEat.setOnCheckedChangeListener(this);
-        cbBillWear.setOnCheckedChangeListener(this);
-        cbBillLive.setOnCheckedChangeListener(this);
-        cbBillTravel.setOnCheckedChangeListener(this);
-        cbBillPlay.setOnCheckedChangeListener(this);
-        cbBillOther.setOnCheckedChangeListener(this);
+        for (CheckBox checkBox : cbCostType) {
+            checkBox.setOnCheckedChangeListener(this);
+        }
 
         for (ImageView imageView: ivBillImages) {
             imageView.setOnClickListener(this);
@@ -130,9 +134,21 @@ public class AddTodoActivity extends SlidingActivity
             rbBillRmb.setChecked(rbBillRmb == compoundButton);
             rbBillDollar.setChecked(rbBillDollar == compoundButton);
             rbBillOther.setChecked(rbBillOther == compoundButton);
+            if (rbBillRmb == compoundButton){
+                moneyType = 0;
+            }else if (rbBillDollar == compoundButton){
+                moneyType = 1;
+            }else if(rbBillOther == compoundButton){
+                moneyType = 2;
+            }
         }
         if (compoundButton instanceof CheckBox){
-
+            costType = 0;
+            for (int i = 0; i < cbCostType.length; i++){
+                if (cbCostType[i].isChecked()){
+                    costType += Math.pow(2, i);
+                }
+            }
         }
     }
 
@@ -230,14 +246,41 @@ public class AddTodoActivity extends SlidingActivity
      * add record
      */
     private void onAddRecord(){
-        String content = tilBillContent.getEditText().getText().toString();
-        String total = tilBillTotal.getEditText().getText().toString();
-        String code = tilBillCode.getEditText().getText().toString();
-        String extra = tilBillExtra.getEditText().getText().toString();
+        content = tilBillContent.getEditText().getText().toString();
+        total = tilBillTotal.getEditText().getText().toString();
+        code = tilBillCode.getEditText().getText().toString();
+        extra = tilBillExtra.getEditText().getText().toString();
 
+        if (TextUtils.isEmpty(content) || TextUtils.isEmpty(total)){
+            SystemUtil.showToast(R.string.msg_content_bill_not_null);
+            return;
+        }
+        if (costType <= 0){
+            SystemUtil.showToast(R.string.msg_cost_type_not_null);
+            return;
+        }
+        if (!pMap.isEmpty()){// 有图片，先上传图片，再发表记录
+            onUploadImages();
+        }else {// 否则，直接发表记录
+            onPublishRecord();
+        }
+    }
+
+    /**
+     * upload images to QiNiu
+     */
+    private void onUploadImages(){
         for (Map.Entry<Integer, String> entry : pMap.entrySet()) {
             Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
         }
+
+    }
+
+    /**
+     * publish record
+     */
+    private void onPublishRecord(){
+
     }
 
     @Override
