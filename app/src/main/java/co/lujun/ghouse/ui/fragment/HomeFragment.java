@@ -114,6 +114,8 @@ public class HomeFragment extends Fragment {
         // load cache
         try {
             List<Bill> tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class).queryForAll();
+            if (tmpBills != null && tmpBills.size() > 0)
+                Log.d(TAG, tmpBills.get(0).getPhotos().size() + "");
             onShowData(tmpBills, true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -251,6 +253,7 @@ public class HomeFragment extends Fragment {
                 billDao.create(bill);
                 for (Image image : bill.getPhotos()) {
                     image.setBid(bid);
+                    image.setBill(bill);
                     imageDao.create(image);
                 }
             }
