@@ -5,11 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.List;
 
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 
 /**
  * Created by lujun on 2015/8/4.
@@ -47,11 +47,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
     static class MemberViewHolder extends RecyclerView.ViewHolder{
 
-        final ImageView ivAvatar;
+        final RoundedImageView ivAvatar;
 
         public MemberViewHolder(View view){
             super(view);
-            ivAvatar = (ImageView) view.findViewById(R.id.iv_house_member_avatar);
+            ivAvatar = (RoundedImageView) view.findViewById(R.id.iv_house_member_avatar);
         }
     }
 }

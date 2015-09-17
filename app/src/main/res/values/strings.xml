@@ -19,6 +19,7 @@
     <string name="action_uhouse">搬家</string>
     <string name="action_add_member">添加成员</string>
     <string name="action_update_phone">修改手机号</string>
+    <string name="action_update_pwd">修改密码</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -33,6 +34,8 @@
     <string name="til_hint_rhouse_phone">手机号码</string>
     <string name="til_hint_rhouse_address">详细地址</string>
     <string name="til_hint_rhouse_intro">房子介绍</string>
+    <string name="til_hint_center_opwd">旧密码</string>
+    <string name="til_hint_center_npwd">新密码</string>
 
     <string name="tv_total">统计: </string>
     <string name="tv_money_type">币种: </string>
@@ -76,4 +79,5 @@
     <string name="msg_content_bill_not_null">账单内容和消费合计不能为空</string>
     <string name="msg_cost_type_not_null">请至少选择一个消费类型</string>
     <string name="msg_user_null">用户数据获取失败</string>
+    <string name="msg_update_error">数据更新失败，请稍后重试</string>
 </resources>

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/iv_house_member_avatar"
     android:layout_width="40dp"
     android:layout_height="40dp"
-    android:scaleType="fitCenter"
     android:layout_marginRight="8dp"
-    android:src="@mipmap/ic_launcher" />
+    android:scaleType="fitCenter"
+    android:src="@mipmap/ic_launcher"
+    app:riv_border_width="0dp"
+    app:riv_corner_radius="0dp"
+    app:riv_mutate_background="true"
+    app:riv_oval="true" />

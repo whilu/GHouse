@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.adapter.MemberAdapter;
+import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.NetWorkUtils;
@@ -62,9 +64,9 @@ public class HouseViewActivity extends SlidingActivity {
 
     private List<String> mAvatarList;
 
-    private float moneySurplus;
-
     private final static String TAG = "HouseViewActivity";
+
+    private LoadingWindow winLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,8 @@ public class HouseViewActivity extends SlidingActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         initDialog();
+
+        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
 
         srlHouse.setOnRefreshListener(() -> onRequestData());
         // read cache
@@ -146,11 +150,9 @@ public class HouseViewActivity extends SlidingActivity {
                     .cancelable(false)
                     .positiveActionClickListener(v -> {
                         if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
-                            Toast.makeText(HouseViewActivity.this,
-                                    "tv_house_address" + tilInfo.getEditText().getText(), Toast.LENGTH_SHORT).show();
+                            onEditHouse(1);
                         }else if ((Integer) tilInfo.getTag() == R.id.tv_house_intro){
-                            Toast.makeText(HouseViewActivity.this,
-                                    "tv_house_intro" + tilInfo.getEditText().getText(), Toast.LENGTH_SHORT).show();
+                            onEditHouse(2);
                         }
                     })
                     .negativeActionClickListener(v -> mUpdateDialog.dismiss());
@@ -160,14 +162,7 @@ public class HouseViewActivity extends SlidingActivity {
                     .negativeAction(R.string.action_back)
                     .contentView(hvAddMoneyView)
                     .cancelable(false)
-                    .positiveActionClickListener(v -> {
-                            Toast.makeText(HouseViewActivity.this,
-                                    "tv_house_money_surplus" + (moneySurplus +
-                                            Float.valueOf(tilAddMoney.getEditText().getText().toString())), Toast.LENGTH_SHORT).show();
-                            tvMoneySurplus.setText((moneySurplus
-                                    + Float.valueOf(tilAddMoney.getEditText().getText().toString())) + "");
-                        }
-                    )
+                    .positiveActionClickListener(v -> onEditHouse(0))
                     .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
             //
             mUHouseDialog.applyStyle(R.style.App_Dialog)
@@ -185,7 +180,7 @@ public class HouseViewActivity extends SlidingActivity {
                     .negativeAction(R.string.action_back)
                     .contentView(hvAddMemberView)
                     .cancelable(false)
-                    .positiveActionClickListener(v -> {})
+                    .positiveActionClickListener(v -> onAddMember())
                     .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
         }
     }
@@ -194,7 +189,7 @@ public class HouseViewActivity extends SlidingActivity {
      * add action method
      * @param v
      */
-    public void addAction(View v){
+    public void addAction(View v) {
         if (hvAddMoneyView == null || mAddMoneyDialog == null){
             return;
         }
@@ -204,14 +199,17 @@ public class HouseViewActivity extends SlidingActivity {
             tilAddMoney.getEditText().setText("");
             tilAddMoney.getEditText().setHint(getResources().getString(R.string.tv_house_money_surplus)
                     + tvMoneySurplus.getText());
-            moneySurplus = Float.valueOf(tvMoneySurplus.getText().toString());
             mAddMoneyDialog.show();
         }else if (vid == R.id.ll_hv_add_member){
             if (hvAddMemberView != null && mAddMemberDialog != null){
+                tilUName.getEditText().setText("");
+                tilUPwd.getEditText().setText("");
                 mAddMemberDialog.show();
             }
         }else if (vid == R.id.ll_hv_house_moving){
             if (hvUHouseView != null && mUHouseDialog != null){
+                tilHouseAdd.getEditText().setText("");
+                tilHouseIntro.getEditText().setText("");
                 mUHouseDialog.show();
             }
         }
@@ -277,6 +275,12 @@ public class HouseViewActivity extends SlidingActivity {
 
                 @Override
                 public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    if (srlHouse.isRefreshing()){
+                        srlHouse.setRefreshing(false);
+                    }
                     Log.d(TAG, e.toString());
                 }
 
@@ -294,6 +298,12 @@ public class HouseViewActivity extends SlidingActivity {
                     }
                     PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, houseBaseJson.getValidate());
                     onCacheData(house);
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    if (srlHouse.isRefreshing()){
+                        srlHouse.setRefreshing(false);
+                    }
                 }
             });
     }
@@ -349,5 +359,159 @@ public class HouseViewActivity extends SlidingActivity {
             mAvatarList.add(user.getAvatar());
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * add member
+     */
+    private void onAddMember(){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
+        String uname = tilUName.getEditText().getText().toString();
+        String upwd = tilUPwd.getEditText().getText().toString();
+        if (TextUtils.isEmpty(uname) || TextUtils.isEmpty(upwd)){
+            SystemUtil.showToast(R.string.msg_login_info_not_null);
+            return;
+        }
+        SystemUtil.showOrHideInputMethodManager(this);
+        if (mAddMemberDialog.isShowing()){
+            mAddMemberDialog.dismiss();
+        }
+        if (!winLoading.isShowing()) {
+            winLoading.showAsDropDown(mToolbar, 0, 0);
+        }
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("username", uname);
+        map.put("password", upwd);
+        map.put("validate", validate);
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService()
+            .onAddMember(
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                uname,
+                upwd,
+                validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BaseJson<User>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted()");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        if (!mAddMemberDialog.isShowing()) {
+                            mAddMemberDialog.show();
+                        }
+                        Log.d(TAG, e.toString());
+                    }
+
+                    @Override
+                    public void onNext(BaseJson<User> userBaseJson) {
+                        if (null == userBaseJson) {
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            return;
+                        }
+                        // not Correct status
+                        if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                            SystemUtil.showToast(userBaseJson.getMessage());
+                            return;
+                        }
+                        PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                        onRequestData();
+                    }
+                });
+    }
+
+    /**
+     * update house information
+     */
+    private void onEditHouse(int type){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
+        String value = "";
+        if (type == 0){
+            value = tilAddMoney.getEditText().getText().toString();
+        }else {
+            value = tilInfo.getEditText().getText().toString();
+        }
+        if (TextUtils.isEmpty(value)){
+            SystemUtil.showToast(R.string.msg_all_not_empty);
+            return;
+        }
+        SystemUtil.showOrHideInputMethodManager(this);
+        Dialog dialog = null;
+        if (type == 0){
+            dialog = mAddMoneyDialog;
+        }else {
+            dialog = mUpdateDialog;
+        }
+        if (dialog.isShowing()){
+            dialog.dismiss();
+        }
+        if (!winLoading.isShowing()) {
+            winLoading.showAsDropDown(mToolbar, 0, 0);
+        }
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("type", Integer.toString(type));
+        map.put("value", value);
+        map.put("validate", validate);
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService()
+            .onEditHouse(
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                Integer.toString(type),
+                value,
+                validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<House>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    Log.d(TAG, e.toString());
+                    SystemUtil.showToast(R.string.msg_update_error);
+                }
+
+                @Override
+                public void onNext(BaseJson<House> houseBaseJson) {
+                    if (null == houseBaseJson) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    // not Correct status
+                    if (houseBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                        SystemUtil.showToast(houseBaseJson.getMessage());
+                        return;
+                    }
+                    PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, houseBaseJson.getValidate());
+                    onRequestData();
+                }
+            });
     }
 }

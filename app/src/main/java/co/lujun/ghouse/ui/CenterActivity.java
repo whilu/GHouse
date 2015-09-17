@@ -47,13 +47,13 @@ public class CenterActivity extends SlidingActivity {
     private Toolbar mToolbar;
     private RoundedImageView ivAvatar;
     private TextView tvUName, tvPhone, tvHouseId;
-    private RelativeLayout llPhone, llHouseId;
+    private RelativeLayout llPhone, llHouseId, llUpdatePwd;
     private CustomRippleButton btnLogout;
 
-    private TextInputLayout tilPhone;
-    private View updatePhoneView;
+    private TextInputLayout tilPhone, tilOldPwd, tilNewPwd;
+    private View updatePhoneView, updatePwdView;
 
-    private static Dialog mUpdatePhoneDialog;
+    private static Dialog mUpdatePhoneDialog, mUpdatePwdDialog;
 
     private final static String TAG = "CenterActivity";
 
@@ -76,22 +76,40 @@ public class CenterActivity extends SlidingActivity {
         tvHouseId = (TextView) findViewById(R.id.tv_set_house_id);
         llPhone = (RelativeLayout) findViewById(R.id.ll_set_phone);
         llHouseId = (RelativeLayout) findViewById(R.id.ll_set_house_id);
+        llUpdatePwd = (RelativeLayout) findViewById(R.id.ll_set_update_pwd);
 
         btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
 
         updatePhoneView = LayoutInflater.from(this).inflate(R.layout.view_center_change_phone, null, false);
+        updatePwdView = LayoutInflater.from(this).inflate(R.layout.view_center_update_pwd, null, false);
         if (updatePhoneView != null){
             tilPhone = (TextInputLayout) updatePhoneView.findViewById(R.id.til_center_phone);
             tilPhone.setHint(getString(R.string.tv_phone));
             mUpdatePhoneDialog = new SimpleDialog(this);
             mUpdatePhoneDialog.applyStyle(R.style.App_Dialog)
-                    .title(getString(R.string.action_update_phone))
-                    .positiveAction(R.string.action_update)
-                    .negativeAction(R.string.action_back)
-                    .contentView(updatePhoneView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> {})
-                    .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
+                .title(getString(R.string.action_update_phone))
+                .positiveAction(R.string.action_update)
+                .negativeAction(R.string.action_back)
+                .contentView(updatePhoneView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> {
+                })
+                .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
+        }
+        if (updatePwdView != null){
+            tilOldPwd = (TextInputLayout) updatePwdView.findViewById(R.id.til_center_opwd);
+            tilNewPwd = (TextInputLayout) updatePwdView.findViewById(R.id.til_center_npwd);
+            tilOldPwd.setHint(getString(R.string.til_hint_center_opwd));
+            tilNewPwd.setHint(getString(R.string.til_hint_center_npwd));
+            mUpdatePwdDialog = new SimpleDialog(this);
+            mUpdatePwdDialog.applyStyle(R.style.App_Dialog)
+                .title(getString(R.string.action_update_pwd))
+                .positiveAction(R.string.action_update)
+                .negativeAction(R.string.action_back)
+                .contentView(updatePwdView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> {})
+                .negativeActionClickListener(v -> mUpdatePwdDialog.dismiss());
         }
 
         llPhone.setOnClickListener(v -> {
@@ -100,9 +118,14 @@ public class CenterActivity extends SlidingActivity {
             }
         });
         llHouseId.setOnClickListener(v ->
-                        IntentUtils.startPreviewActivity(CenterActivity.this,
-                                new Intent(CenterActivity.this, HouseViewActivity.class))
+            IntentUtils.startPreviewActivity(CenterActivity.this,
+                    new Intent(CenterActivity.this, HouseViewActivity.class))
         );
+        llUpdatePwd.setOnClickListener(v -> {
+            if (mUpdatePwdDialog != null) {
+                mUpdatePwdDialog.show();
+            }
+        });
         btnLogout.setOnClickListener(v -> onLogOut());
         // read cache
         try{
