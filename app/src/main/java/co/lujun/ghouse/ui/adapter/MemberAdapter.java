@@ -1,6 +1,7 @@
 package co.lujun.ghouse.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
     @Override
     public int getItemCount() {
+        Log.d("HouseView", mList.size() + "");
         return mList.size();
     }
 

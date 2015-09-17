@@ -22,6 +22,7 @@ import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.MD5;
+import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
 import rx.Subscriber;
@@ -87,6 +88,10 @@ public class RegHouseActivity extends SlidingActivity {
      * 注册房子
      */
     private void onRegHouse(){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
         String username = "";
         String phone = "";
         String houseaddress = "";
@@ -123,15 +128,15 @@ public class RegHouseActivity extends SlidingActivity {
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
             .onRegisterHouse(
-                    signCarrier.getAppId(),
-                    signCarrier.getNonce(),
-                    signCarrier.getTimestamp(),
-                    signCarrier.getSignature(),
-                    username,
-                    password,
-                    phone,
-                    houseaddress,
-                    houseinfo
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                username,
+                password,
+                phone,
+                houseaddress,
+                houseinfo
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

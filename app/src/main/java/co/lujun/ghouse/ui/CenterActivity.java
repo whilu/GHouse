@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,13 +12,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.whilu.library.CustomRippleButton;
+import com.j256.ormlite.dao.Dao;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.bean.BaseJson;
+import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.bean.SignCarrier;
+import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
+import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
+import co.lujun.ghouse.util.NetWorkUtils;
+import co.lujun.ghouse.util.PreferencesUtils;
+import co.lujun.ghouse.util.SignatureUtil;
+import co.lujun.ghouse.util.SystemUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -34,6 +54,8 @@ public class CenterActivity extends SlidingActivity {
     private View updatePhoneView;
 
     private static Dialog mUpdatePhoneDialog;
+
+    private final static String TAG = "CenterActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +95,26 @@ public class CenterActivity extends SlidingActivity {
         }
 
         llPhone.setOnClickListener(v -> {
-            if (mUpdatePhoneDialog != null){
+            if (mUpdatePhoneDialog != null) {
                 mUpdatePhoneDialog.show();
             }
         });
         llHouseId.setOnClickListener(v ->
-                IntentUtils.startPreviewActivity(CenterActivity.this,
-                        new Intent(CenterActivity.this, HouseViewActivity.class))
+                        IntentUtils.startPreviewActivity(CenterActivity.this,
+                                new Intent(CenterActivity.this, HouseViewActivity.class))
         );
-        btnLogout.setOnClickListener(v -> {});
+        btnLogout.setOnClickListener(v -> onLogOut());
+        // read cache
+        try{
+            List<User> users = DatabaseHelper.getDatabaseHelper(this).getDao(User.class).queryForAll();
+            if (users != null && users.size() > 0){
+                onShowData(users.get(0));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        // request data
+        onRequestData();
     }
 
     @Override
@@ -91,5 +124,95 @@ public class CenterActivity extends SlidingActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 请求用户信息
+     */
+    private void onRequestData(){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("validate", validate);
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService()
+            .onGetUserData(
+                    signCarrier.getAppId(),
+                    signCarrier.getNonce(),
+                    signCarrier.getTimestamp(),
+                    signCarrier.getSignature(),
+                    validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<User>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    User user;
+                    if (null == userBaseJson || (user = userBaseJson.getData()) == null) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        return;
+                    }
+                    PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    onCacheData(user);
+                }
+            });
+    }
+
+    /**
+     * 缓存用户信息
+     * @param user
+     */
+    private void onCacheData(User user){
+        if (user == null){
+            return;
+        }
+        try{
+            Dao userDao = DatabaseHelper.getDatabaseHelper(this).getDao(User.class);
+            userDao.update(user);
+            onShowData(user);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 展示数据
+     * @param user
+     */
+    private void onShowData(User user){
+        if (user == null){
+            SystemUtil.showToast(R.string.msg_user_null);
+            return;
+        }
+        tvUName.setText(user.getUsername());
+        tvPhone.setText(user.getPhone() == null ? "" : user.getPhone());
+        tvHouseId.setText(Long.toString(user.getHouseid()));
+//        ivAvatar.setImageURI(user.getAvatar() == null ? "" : user.getAvatar());
+    }
+
+    /**
+     * logout
+     */
+    private void onLogOut(){
+
     }
 }

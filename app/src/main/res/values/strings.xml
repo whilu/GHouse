@@ -75,4 +75,5 @@
     <string name="msg_network_disconnect">网络未连接，请检查网络</string>
     <string name="msg_content_bill_not_null">账单内容和消费合计不能为空</string>
     <string name="msg_cost_type_not_null">请至少选择一个消费类型</string>
+    <string name="msg_user_null">用户数据获取失败</string>
 </resources>

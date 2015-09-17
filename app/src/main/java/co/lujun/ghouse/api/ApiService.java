@@ -53,4 +53,24 @@ public interface ApiService {
             @Field("validate") String validate,
             @Field("type") String type
     );
+
+    @FormUrlEncoded
+    @POST("/get_house_info")
+    Observable<BaseJson<House>> onGetHouseData(
+            @Query("appid") String appid,
+            @Query("nonce") String nonce,
+            @Query("timestamp") String timestamp,
+            @Query("signature") String signature,
+            @Field("validate") String validate
+    );
+
+    @FormUrlEncoded
+    @POST("/get_user_info")
+    Observable<BaseJson<User>> onGetUserData(
+            @Query("appid") String appid,
+            @Query("nonce") String nonce,
+            @Query("timestamp") String timestamp,
+            @Query("signature") String signature,
+            @Field("validate") String validate
+    );
 }

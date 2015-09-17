@@ -129,7 +129,7 @@
                                 android:layout_marginRight="4dp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|right"
-                                android:text="13762098087"
+                                android:text=""
                                 android:textColor="@color/material_grey"
                                 android:textSize="16sp" />
 
@@ -187,7 +187,7 @@
                                 android:layout_marginRight="4dp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|right"
-                                android:text="20098"
+                                android:text=""
                                 android:textColor="@color/material_grey"
                                 android:textSize="16sp" />
 

@@ -73,6 +73,14 @@ public class User {
         this.usertype = usertype;
     }
 
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
 
     @DatabaseField(columnName = "uid", id = true)
     private long uid;
@@ -90,6 +98,7 @@ public class User {
     private long houseid;
     @DatabaseField(columnName = "usertype")
     private int usertype;
+
     @DatabaseField(canBeNull = true, foreign = true, columnName = "house", foreignAutoRefresh = true)
     private House house;
 }

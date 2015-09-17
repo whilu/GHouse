@@ -57,7 +57,7 @@
                             android:layout_marginRight="7dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
-                            android:text="20098"
+                            android:text=""
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -106,7 +106,7 @@
                             android:layout_marginRight="4dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
-                            android:text="1010.55"
+                            android:text=""
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
 
@@ -166,7 +166,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
                             android:singleLine="true"
-                            android:text="广东省深圳市宝安区西乡街道永丰社区4区16-1"
+                            android:text=""
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
 
@@ -226,7 +226,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
                             android:singleLine="true"
-                            android:text="三室一厅"
+                            android:text=""
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
 
@@ -284,7 +284,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
                             android:singleLine="true"
-                            android:text="lujun"
+                            android:text=""
                             android:textColor="@color/material_grey"
                             android:textSize="16sp" />
 

@@ -207,13 +207,13 @@ public class BillListFragment extends Fragment {
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
             .onGetBillList(
-                    signCarrier.getAppId(),
-                    signCarrier.getNonce(),
-                    signCarrier.getTimestamp(),
-                    signCarrier.getSignature(),
-                    page,
-                    validate,
-                    type
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                page,
+                validate,
+                type
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

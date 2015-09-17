@@ -38,6 +38,7 @@ import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
 import co.lujun.ghouse.util.MD5;
+import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
@@ -117,6 +118,10 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
      * 登录逻辑
      */
     private void onLogin(){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
         String username = "";
         String password = "";
         String usertype = "";
@@ -148,67 +153,67 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
         map.put("usertype", usertype);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
-                .onLogin(
-                        signCarrier.getAppId(),
-                        signCarrier.getNonce(),
-                        signCarrier.getTimestamp(),
-                        signCarrier.getSignature(),
-                        username,
-                        password,
-                        usertype
-                )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseJson<User>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
-                    }
+            .onLogin(
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                username,
+                password,
+                usertype
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<User>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (winLoading.isShowing()){
-                            winLoading.dismiss();
-                        }
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()){
+                        winLoading.dismiss();
+                    }
+                    if (!mDialog.isShowing()){
+                        mDialog.show();
+                    }
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    if (winLoading.isShowing()){
+                        winLoading.dismiss();
+                    }
+                    User user;
+                    if (null == userBaseJson || (user = userBaseJson.getData()) == null){
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
                         if (!mDialog.isShowing()){
                             mDialog.show();
                         }
-                        Log.d(TAG, e.toString());
+                        return;
                     }
-
-                    @Override
-                    public void onNext(BaseJson<User> userBaseJson) {
-                        if (winLoading.isShowing()){
-                            winLoading.dismiss();
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        if (!mDialog.isShowing()){
+                            mDialog.show();
                         }
-                        User user;
-                        if (null == userBaseJson || (user = userBaseJson.getData()) == null){
-                            SystemUtil.showToast(R.string.msg_nullpointer_error);
-                            if (!mDialog.isShowing()){
-                                mDialog.show();
-                            }
-                            return;
-                        }
-                        // not Correct status
-                        if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                            SystemUtil.showToast(userBaseJson.getMessage());
-                            if (!mDialog.isShowing()){
-                                mDialog.show();
-                            }
-                            return;
-                        }
-                        try{
-                            DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
-                            PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
-                            PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                        }catch (SQLException e){
-                            e.printStackTrace();
-                        }
-                        mDialog.dismiss();
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                        finish();
+                        return;
                     }
-                });
+                    try{
+                        DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
+                        PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
+                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    mDialog.dismiss();
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
     }
 
     /**
