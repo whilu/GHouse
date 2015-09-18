@@ -53,7 +53,7 @@ public class HouseViewActivity extends SlidingActivity {
     private TextView tvHouseId, tvMoneySurplus, tvHouseAddress, tvHouseIntro, tvHouseOwner;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private TextInputLayout tilInfo, tilAddMoney, tilHouseAdd, tilHouseIntro, tilUName, tilUPwd;
+    private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilHouseAdd, tilHouseIntro, tilUName, tilUPwd;
     private View hvUpdateView, hvAddMoneyView, hvUHouseView, hvAddMemberView;
 
     private static Dialog mUpdateDialog, mAddMoneyDialog, mUHouseDialog, mAddMemberDialog;
@@ -131,6 +131,7 @@ public class HouseViewActivity extends SlidingActivity {
                 && hvUHouseView != null && hvAddMemberView != null){
             tilInfo = (TextInputLayout) hvUpdateView.findViewById(R.id.til_hv_modify_info);
             tilAddMoney = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money);
+            tilAddMoneyExtra = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money_extra);
             tilHouseAdd = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_address);
             tilHouseIntro = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_info);
             tilUName = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_uname);
@@ -199,6 +200,7 @@ public class HouseViewActivity extends SlidingActivity {
             tilAddMoney.getEditText().setText("");
             tilAddMoney.getEditText().setHint(getResources().getString(R.string.tv_house_money_surplus)
                     + tvMoneySurplus.getText());
+            tilAddMoneyExtra.setHint(getString(R.string.tv_house_intro));
             mAddMoneyDialog.show();
         }else if (vid == R.id.ll_hv_add_member){
             if (hvAddMemberView != null && mAddMemberDialog != null){
@@ -443,8 +445,10 @@ public class HouseViewActivity extends SlidingActivity {
             return;
         }
         String value = "";
+        String remark = "";
         if (type == 0){
             value = tilAddMoney.getEditText().getText().toString();
+            remark = tilAddMoneyExtra.getEditText().getText().toString();
         }else {
             value = tilInfo.getEditText().getText().toString();
         }
@@ -469,6 +473,7 @@ public class HouseViewActivity extends SlidingActivity {
         Map<String, String> map = new HashMap<String, String>();
         map.put("type", Integer.toString(type));
         map.put("value", value);
+        map.put("remark", remark);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
@@ -479,6 +484,7 @@ public class HouseViewActivity extends SlidingActivity {
                 signCarrier.getSignature(),
                 Integer.toString(type),
                 value,
+                remark,
                 validate
             )
             .subscribeOn(Schedulers.io())

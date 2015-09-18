@@ -95,6 +95,7 @@ public interface ApiService {
             @Query("signature") String signature,
             @Field("type") String username,// 0-money, 1- address, 2-intro
             @Field("value") String password,
+            @Field("remark") String remark,
             @Field("validate") String validate
     );
 }
