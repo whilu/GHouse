@@ -97,7 +97,7 @@ public class User {
     @DatabaseField(columnName = "houseid")
     private long houseid;
     @DatabaseField(columnName = "usertype")
-    private int usertype;
+    private int usertype;// 1-owner, 0-roommate
 
     @DatabaseField(canBeNull = true, foreign = true, columnName = "house", foreignAutoRefresh = true)
     private House house;

@@ -29,6 +29,7 @@ public class Config {
     public final static String KEY_OF_VALIDATE = "validate";
     public final static String KEY_SCAN_CODE_RESULT = "key_scan_code_result";
     public final static String KEY_OF_FRAGMENT = "key_fragment";
+    public final static String KEY_OF_USER_TYPE = "key_user_type";
 
     // fragment key
     public final static int BILL_UNKNOW = 0x1000;

@@ -75,6 +75,19 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
+    @POST("/edit_user_info")
+    Observable<BaseJson<User>> onEditUserData(
+            @Query("appid") String appid,
+            @Query("nonce") String nonce,
+            @Query("timestamp") String timestamp,
+            @Query("signature") String signature,
+            @Field("type") String type,// 0-phone, 1-password
+            @Field("value1") String value1,
+            @Field("value2") String value2,// when update pwd need as old pwd
+            @Field("validate") String validate
+    );
+
+    @FormUrlEncoded
     @POST("/add_member")
     Observable<BaseJson<User>> onAddMember(
             @Query("appid") String appid,
@@ -96,6 +109,18 @@ public interface ApiService {
             @Field("type") String username,// 0-money, 1- address, 2-intro
             @Field("value") String password,
             @Field("remark") String remark,
+            @Field("validate") String validate
+    );
+
+    @FormUrlEncoded
+    @POST("/operate_record")
+    Observable<BaseJson<Bill>> onOperateBill(
+            @Query("appid") String appid,
+            @Query("nonce") String nonce,
+            @Query("timestamp") String timestamp,
+            @Query("signature") String signature,
+            @Field("bid") String bid,
+            @Field("type") String type,// 0-删除， 1-确认
             @Field("validate") String validate
     );
 }

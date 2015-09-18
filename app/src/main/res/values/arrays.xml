@@ -11,6 +11,7 @@
     <string-array name="money_flag">
         <item>￥</item>
         <item>$</item>
+        <item>Other</item>
     </string-array>
     <string-array name="bill_type">
         <item>E</item>

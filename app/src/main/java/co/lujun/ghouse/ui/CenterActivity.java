@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,8 +26,10 @@ import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
+import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 import co.lujun.ghouse.util.DatabaseHelper;
@@ -57,6 +60,8 @@ public class CenterActivity extends SlidingActivity {
 
     private final static String TAG = "CenterActivity";
 
+    private LoadingWindow winLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +85,8 @@ public class CenterActivity extends SlidingActivity {
 
         btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
 
+        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+
         updatePhoneView = LayoutInflater.from(this).inflate(R.layout.view_center_change_phone, null, false);
         updatePwdView = LayoutInflater.from(this).inflate(R.layout.view_center_update_pwd, null, false);
         if (updatePhoneView != null){
@@ -92,8 +99,7 @@ public class CenterActivity extends SlidingActivity {
                 .negativeAction(R.string.action_back)
                 .contentView(updatePhoneView)
                 .cancelable(false)
-                .positiveActionClickListener(v -> {
-                })
+                .positiveActionClickListener(v -> onEditUserData(0, mUpdatePhoneDialog))
                 .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
         }
         if (updatePwdView != null){
@@ -108,7 +114,7 @@ public class CenterActivity extends SlidingActivity {
                 .negativeAction(R.string.action_back)
                 .contentView(updatePwdView)
                 .cancelable(false)
-                .positiveActionClickListener(v -> {})
+                .positiveActionClickListener(v -> onEditUserData(1, mUpdatePwdDialog))
                 .negativeActionClickListener(v -> mUpdatePwdDialog.dismiss());
         }
 
@@ -237,5 +243,113 @@ public class CenterActivity extends SlidingActivity {
      */
     private void onLogOut(){
 
+    }
+
+    /**
+     * edit user data
+     * @param type
+     */
+    private void onEditUserData(int type, Dialog dialog){
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
+        String value1 = "";
+        String value2 = "";
+
+        if (type == 0){
+            value1 = tilPhone.getEditText().getText().toString();
+            if (TextUtils.isEmpty(value1)){
+                SystemUtil.showToast(R.string.msg_all_not_empty);
+                return;
+            }
+        }else if (type == 1){
+            value1 = tilOldPwd.getEditText().getText().toString();
+            value2 = tilNewPwd.getEditText().getText().toString();
+            if (TextUtils.isEmpty(value1) || TextUtils.isEmpty(value2)){
+                SystemUtil.showToast(R.string.msg_all_not_empty);
+                return;
+            }
+        }
+        onShowAndHide(winLoading, true, dialog, false);
+
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("type", Integer.toString(type));
+        map.put("value1", value1);
+        map.put("value2", value2);
+        map.put("validate", validate);
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService()
+            .onEditUserData(
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                Integer.toString(type),
+                value1,
+                value2,
+                validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<User>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    onShowAndHide(winLoading, false, dialog, true);
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    if (null == userBaseJson) {
+                        onShowAndHide(winLoading, false, dialog, true);
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                        onShowAndHide(winLoading, false, dialog, true);
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        return;
+                    }
+                    PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    onRequestData();
+                    onShowAndHide(winLoading, false, dialog, false);
+                }
+            });
+    }
+
+    /**
+     * show or hide LoadingWindow & Dialog
+     * @param winLoading
+     * @param isShow1
+     * @param dialog
+     * @param isShow2
+     */
+    private void onShowAndHide(LoadingWindow winLoading, boolean isShow1, Dialog dialog, boolean isShow2){
+        if (isShow1){
+            if (!winLoading.isShowing()) {
+                winLoading.showAsDropDown(mToolbar, 0, 0);
+            }
+        }else {
+            if (winLoading.isShowing()){
+                winLoading.dismiss();
+            }
+        }
+        if (isShow2){
+            if (!dialog.isShowing()){
+                dialog.show();
+            }
+        }else {
+            if (dialog.isShowing()){
+                dialog.hide();
+            }
+        }
     }
 }

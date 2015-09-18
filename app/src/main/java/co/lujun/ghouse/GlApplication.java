@@ -3,6 +3,8 @@ package co.lujun.ghouse;
 import android.app.Application;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+
 import co.lujun.ghouse.api.Api;
 import co.lujun.ghouse.api.ApiService;
 import retrofit.RestAdapter;
@@ -17,10 +19,13 @@ public class GlApplication extends Application {
     private static RestAdapter mRestAdapter;
     private static ApiService mApiService;
 
+    private static SimpleDateFormat mSimpleDateFormat;
+
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
+        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public static Context getContext(){
@@ -49,5 +54,13 @@ public class GlApplication extends Application {
             }
         }
         return mApiService;
+    }
+
+    /**
+     * get SimpleDateFormat
+     * @return
+     */
+    public static SimpleDateFormat getSimpleDateFormat(){
+        return mSimpleDateFormat;
     }
 }

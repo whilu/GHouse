@@ -205,6 +205,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                     try{
                         DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
                         PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
+                        PreferencesUtils.putInt(SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
                         PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
                     }catch (SQLException e){
                         e.printStackTrace();

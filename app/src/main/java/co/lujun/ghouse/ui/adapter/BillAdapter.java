@@ -98,57 +98,45 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 //                Toast.makeText(GlApplication.getContext(), mList.get(i) + "--Open", Toast.LENGTH_SHORT).show();
                 }
             });
-            viewHolder.btnConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
-                    if (mBillOperationListener != null){
-                        mBillOperationListener.onConfirmBill(i);
-                    }
+            viewHolder.btnConfirm.setOnClickListener(v -> {
+                Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
+                if (mBillOperationListener != null){
+                    mBillOperationListener.onConfirmBill(i);
                 }
             });
-            viewHolder.btnModify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mBillOperationListener != null){
-                        mBillOperationListener.onEditBill(i);
-                    }
+            viewHolder.btnModify.setOnClickListener(v -> {
+                if (mBillOperationListener != null){
+                    mBillOperationListener.onEditBill(i);
                 }
             });
-            viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            viewHolder.btnDelete.setOnClickListener(v -> {
+                /*Snackbar snackbar = Snackbar.make(v, "Delete:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
+                    .setAction("知道了", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    })
+                    .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark));
+                snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
+                snackbar.show();*/
+                if (mBillOperationListener != null){
+                    mBillOperationListener.onDeleteBill(i);
                     mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
                     mList.remove(i);
                     notifyItemRemoved(i);
                     notifyItemRangeChanged(i, mList.size());
                     mItemManger.closeAllItems();
-
-                    Snackbar snackbar = Snackbar.make(v, "Delete:" + viewHolder.tvType.getText(), Snackbar.LENGTH_LONG)
-                            .setAction("知道了", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .setActionTextColor(GlApplication.getContext().getResources().getColor(R.color.accent_material_dark));
-                    snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
-                    snackbar.show();
-
-                    if (mBillOperationListener != null){
-                        mBillOperationListener.onDeleteBill(i);
-                    }
                 }
             });
             String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
             String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
             String type, bgDrawableType;
-            if (mList.get(i).getType_id() >= 0 && mList.get(i).getType_id() < types.length){
-                type = types[mList.get(i).getType_id()];
-                bgDrawableType = bgDrawableTypes[mList.get(i).getType_id()];
+            if (mList.get(i).getType_id() >= 1 && mList.get(i).getType_id() < types.length + 1){
+                type = types[mList.get(i).getType_id() - 1];
+                bgDrawableType = bgDrawableTypes[mList.get(i).getType_id() - 1];
             }else {
-                type = types[0];
-                bgDrawableType = bgDrawableTypes[0];
+                type = types[5];
+                bgDrawableType = bgDrawableTypes[5];
             }
             try {
                 Field field = R.drawable.class.getField(bgDrawableType);
@@ -170,9 +158,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             viewHolder.tvTotal.setText(
                     GlApplication.getContext().getResources().getString(R.string.tv_total)
                             + moneyFlag + mList.get(i).getTotal());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            viewHolder.tvTime.setText(format.format(mList.get(i).getCreate_time()));
-            viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurity_code().substring(0, 7));
+            viewHolder.tvTime.setText(GlApplication.getSimpleDateFormat().format(mList.get(i).getCreate_time()));
+            if (mList.get(i).getSecurity_code() != null
+                    && mList.get(i).getSecurity_code().length() > 7){
+                viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurity_code().substring(0, 7));
+            }
             int voliceLength = mList.get(i).getPhotos().size();
             if (voliceLength >= 2){
                 voliceLength = 2;

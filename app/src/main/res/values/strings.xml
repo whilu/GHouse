@@ -80,4 +80,6 @@
     <string name="msg_cost_type_not_null">请至少选择一个消费类型</string>
     <string name="msg_user_null">用户数据获取失败</string>
     <string name="msg_update_error">数据更新失败，请稍后重试</string>
+    <string name="msg_data_null">数据为空，无法操作</string>
+    <string name="msg_have_no_permission">您没有该项操作权限</string>
 </resources>
