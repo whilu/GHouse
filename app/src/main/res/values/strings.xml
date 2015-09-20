@@ -20,6 +20,7 @@
     <string name="action_add_member">添加成员</string>
     <string name="action_update_phone">修改手机号</string>
     <string name="action_update_pwd">修改密码</string>
+    <string name="action_find_am_record">交钱记录</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -36,6 +37,7 @@
     <string name="til_hint_rhouse_intro">房子介绍</string>
     <string name="til_hint_center_opwd">旧密码</string>
     <string name="til_hint_center_npwd">新密码</string>
+    <string name="til_hint_no_text">无</string>
 
     <string name="tv_total">统计: </string>
     <string name="tv_money_type">币种: </string>
@@ -51,6 +53,7 @@
     <string name="tv_house_owner">拥有者</string>
     <string name="tv_house_moving">搬家</string>
     <string name="tv_house_member">入住成员</string>
+    <string name="tv_house_image">图片</string>
     <string name="tv_bd_spend">花费</string>
     <string name="tv_bd_creater">创建人</string>
     <string name="tv_bd_confirmer">确认人</string>
@@ -82,4 +85,5 @@
     <string name="msg_update_error">数据更新失败，请稍后重试</string>
     <string name="msg_data_null">数据为空，无法操作</string>
     <string name="msg_have_no_permission">您没有该项操作权限</string>
+    <string name="msg_have_confirmed">账单已经确认，无法进行此操作</string>
 </resources>

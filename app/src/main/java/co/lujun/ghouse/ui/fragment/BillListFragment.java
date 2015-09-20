@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import com.daimajia.swipe.util.Attributes;
 import com.j256.ormlite.dao.Dao;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,16 +29,13 @@ import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.BaseList;
 import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
-import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
-import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.BillDetailActivity;
-import co.lujun.ghouse.ui.MainActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
+import co.lujun.ghouse.util.AppHelper;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
-import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
@@ -114,8 +109,9 @@ public class BillListFragment extends Fragment {
         });
         mAdapter = new BillAdapter(mBills);
         mAdapter.setItemClickListener((View view, int position) -> {
-            IntentUtils.startPreviewActivity(getActivity(),
-                    new Intent(getActivity(), BillDetailActivity.class));
+            Intent intent = new Intent(getActivity(), BillDetailActivity.class);
+            intent.putExtra(Config.KEY_OF_BID, mBills.get(position).getBid());
+            IntentUtils.startPreviewActivity(getActivity(), intent);
         });
         mAdapter.setBillOperationListener(new BillAdapter.OnBillOperationListener() {
             @Override
@@ -125,7 +121,7 @@ public class BillListFragment extends Fragment {
 
             @Override
             public void onEditBill(int positin) {
-                onEditBill(positin);
+                onUpdateBill(positin);
             }
 
             @Override
@@ -320,10 +316,23 @@ public class BillListFragment extends Fragment {
      * @param i
      */
     private void onOperateBill(int i, int type){
-        if (!onCheckPermission()){
-            SystemUtil.showToast(R.string.msg_have_no_permission);
-            return;
+        if (type == 0){// 删除账单
+            if (!mBills.get(i).getAdd_user().equals(AppHelper.onGetLocalUserName(getActivity()))
+                    && !AppHelper.onCheckPermission(getActivity())){
+                SystemUtil.showToast(R.string.msg_have_no_permission);
+                return;
+            }
+        }else {// 确认账单
+            if (!AppHelper.onCheckPermission(getActivity())){
+                SystemUtil.showToast(R.string.msg_have_no_permission);
+                return;
+            }
+            if (mBills.get(i).getConfirm_status() == 1){
+                SystemUtil.showToast(R.string.msg_have_confirmed);
+                return;
+            }
         }
+
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;
@@ -389,6 +398,11 @@ public class BillListFragment extends Fragment {
      * @param i
      */
     private void onUpdateBill(int i){
+        if (!mBills.get(i).getAdd_user().equals(AppHelper.onGetLocalUserName(getActivity()))
+                && !AppHelper.onCheckPermission(getActivity())){
+            SystemUtil.showToast(R.string.msg_have_no_permission);
+            return;
+        }
 
     }
 
@@ -402,19 +416,6 @@ public class BillListFragment extends Fragment {
             billDao.deleteById(bid);
         }catch (SQLException e){
             e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * check user permission
-     * @return true, user can operate confirm & delete, else have no permission
-     */
-    private boolean onCheckPermission(){
-        if (PreferencesUtils.getInt(getActivity(), Config.KEY_OF_USER_TYPE, 0) == 1){
-            return true;
-        }else {
-            return false;
         }
     }
 }

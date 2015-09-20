@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import co.lujun.ghouse.R;
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -39,7 +40,10 @@ public class GalleryAdapter extends PagerAdapter {
                 }
             }
         });*/
-        Picasso.with(container.getContext()).load(mImages.get(position)).into(photoView);
+        Picasso.with(container.getContext())
+            .load(mImages.get(position))
+            .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
+            .into(photoView);
 
         // Now just add PhotoView to ViewPager and return it
         container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

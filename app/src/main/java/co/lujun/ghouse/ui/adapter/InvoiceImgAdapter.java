@@ -6,9 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
+import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.ui.listener.ViewClickListener;
 
 /**
  * Created by lujun on 2015/8/4.
@@ -16,8 +20,7 @@ import co.lujun.ghouse.R;
 public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.MemberViewHolder> {
 
     private List<String> mList;
-    private ImageClickListener mListener;
-
+    private ViewClickListener mListener;
     public InvoiceImgAdapter(List<String> list){
         mList = list;
     }
@@ -41,17 +44,19 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
 
     @Override
     public void onBindViewHolder(InvoiceImgAdapter.MemberViewHolder recyclerViewHolder, int i) {
-
+        Picasso.with(GlApplication.getContext())
+            .load(mList.get(i) == null ? "" : mList.get(i))
+            .into(recyclerViewHolder.ivImage);
     }
 
     static class MemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        final ImageView ivAvatar;
-        private ImageClickListener mImageClicklistener;
+        final ImageView ivImage;
+        private ViewClickListener mImageClicklistener;
 
-        public MemberViewHolder(View view, ImageClickListener listener){
+        public MemberViewHolder(View view, ViewClickListener listener){
             super(view);
-            ivAvatar = (ImageView) view.findViewById(R.id.iv_bd_voice);
+            ivImage = (ImageView) view.findViewById(R.id.iv_bd_voice);
             mImageClicklistener = listener;
             view.setOnClickListener(this);
         }
@@ -64,11 +69,7 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
         }
     }
 
-    public void setImageClickListener(ImageClickListener listener){
+    public void setImageClickListener(ViewClickListener listener){
         this.mListener = listener;
-    }
-
-    public interface ImageClickListener{
-        void onClick(int position);
     }
 }

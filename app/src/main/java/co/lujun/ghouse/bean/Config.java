@@ -30,6 +30,8 @@ public class Config {
     public final static String KEY_SCAN_CODE_RESULT = "key_scan_code_result";
     public final static String KEY_OF_FRAGMENT = "key_fragment";
     public final static String KEY_OF_USER_TYPE = "key_user_type";
+    public final static String KEY_OF_USER_NAME = "key_user_name";
+    public final static String KEY_OF_BID = "key_bill_id";
 
     // fragment key
     public final static int BILL_UNKNOW = 0x1000;

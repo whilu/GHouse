@@ -16,6 +16,7 @@ import com.github.whilu.library.CustomRippleButton;
 import com.j256.ormlite.dao.Dao;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
+import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -169,11 +170,11 @@ public class CenterActivity extends SlidingActivity {
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
             .onGetUserData(
-                    signCarrier.getAppId(),
-                    signCarrier.getNonce(),
-                    signCarrier.getTimestamp(),
-                    signCarrier.getSignature(),
-                    validate
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                validate
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -232,10 +233,13 @@ public class CenterActivity extends SlidingActivity {
             SystemUtil.showToast(R.string.msg_user_null);
             return;
         }
-        tvUName.setText(user.getUsername());
+        tvUName.setText(getString(R.string.tv_set_uname) + user.getUsername());
         tvPhone.setText(user.getPhone() == null ? "" : user.getPhone());
         tvHouseId.setText(Long.toString(user.getHouseid()));
-//        ivAvatar.setImageURI(user.getAvatar() == null ? "" : user.getAvatar());
+        Picasso.with(this)
+            .load(user.getAvatar() == null ? "" : user.getAvatar())
+            .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
+                .into(ivAvatar);
     }
 
     /**

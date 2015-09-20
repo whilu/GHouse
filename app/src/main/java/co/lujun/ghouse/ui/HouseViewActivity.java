@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
 import com.rey.material.app.Dialog;
@@ -32,6 +31,7 @@ import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.adapter.MemberAdapter;
+import co.lujun.ghouse.ui.listener.ViewClickListener;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.DatabaseHelper;
@@ -103,6 +103,12 @@ public class HouseViewActivity extends SlidingActivity {
 
         mAvatarList = new ArrayList<String>();
         mAdapter = new MemberAdapter(mAvatarList);
+        mAdapter.setViewOnClickListener(new ViewClickListener() {
+            @Override
+            public void onClick(int position) {
+                SystemUtil.showToast(position + "-------");
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
         initDialog();
@@ -145,44 +151,44 @@ public class HouseViewActivity extends SlidingActivity {
             mUHouseDialog = new SimpleDialog(this);
             mAddMemberDialog = new SimpleDialog(this);
             mUpdateDialog.applyStyle(R.style.App_Dialog)
-                    .positiveAction(R.string.action_update)
-                    .negativeAction(R.string.action_back)
-                    .contentView(hvUpdateView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> {
-                        if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
-                            onEditHouse(1);
-                        }else if ((Integer) tilInfo.getTag() == R.id.tv_house_intro){
-                            onEditHouse(2);
-                        }
-                    })
-                    .negativeActionClickListener(v -> mUpdateDialog.dismiss());
+                .positiveAction(R.string.action_update)
+                .negativeAction(R.string.action_back)
+                .contentView(hvUpdateView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> {
+                    if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
+                        onEditHouse(1);
+                    }else if ((Integer) tilInfo.getTag() == R.id.tv_house_intro){
+                        onEditHouse(2);
+                    }
+                })
+                .negativeActionClickListener(v -> mUpdateDialog.dismiss());
             //
             mAddMoneyDialog.applyStyle(R.style.App_Dialog)
-                    .positiveAction(R.string.action_add)
-                    .negativeAction(R.string.action_back)
-                    .contentView(hvAddMoneyView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> onEditHouse(0))
-                    .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
+                .positiveAction(R.string.action_add)
+                .negativeAction(R.string.action_back)
+                .contentView(hvAddMoneyView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> onEditHouse(0))
+                .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
             //
             mUHouseDialog.applyStyle(R.style.App_Dialog)
-                    .title(getString(R.string.action_uhouse))
-                    .positiveAction(R.string.action_uhouse)
-                    .negativeAction(R.string.action_back)
-                    .contentView(hvUHouseView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> {})
-                    .negativeActionClickListener(v -> mUHouseDialog.dismiss());
+                .title(getString(R.string.action_uhouse))
+                .positiveAction(R.string.action_uhouse)
+                .negativeAction(R.string.action_back)
+                .contentView(hvUHouseView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> {})
+                .negativeActionClickListener(v -> mUHouseDialog.dismiss());
             //
             mAddMemberDialog.applyStyle(R.style.App_Dialog)
-                    .title(getString(R.string.action_add_member))
-                    .positiveAction(R.string.action_add)
-                    .negativeAction(R.string.action_back)
-                    .contentView(hvAddMemberView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> onAddMember())
-                    .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
+                .title(getString(R.string.action_add_member))
+                .positiveAction(R.string.action_add)
+                .negativeAction(R.string.action_back)
+                .contentView(hvAddMemberView)
+                .cancelable(false)
+                .positiveActionClickListener(v -> onAddMember())
+                .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
         }
     }
 
@@ -214,6 +220,8 @@ public class HouseViewActivity extends SlidingActivity {
                 tilHouseIntro.getEditText().setText("");
                 mUHouseDialog.show();
             }
+        }else if (vid == R.id.ll_action_find_am_record){
+            SystemUtil.showToast("交钱记录");
         }
     }
 

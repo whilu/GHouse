@@ -67,7 +67,6 @@
                             android:layout_height="66.67dp"
                             android:layout_centerInParent="true"
                             android:background="@null"
-                            android:src="@drawable/ic_timer_auto_grey600_48dp"
                             app:riv_border_width="0dp"
                             app:riv_corner_radius="0dp"
                             app:riv_mutate_background="true"
@@ -83,7 +82,7 @@
                         android:gravity="center"
                         android:text="@string/tv_set_uname"
                         android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/iv_bd_voice"
-    android:layout_width="80dp"
-    android:layout_height="60dp"
-    android:scaleType="fitXY"
-    android:layout_marginRight="8dp"
-    android:src="@drawable/grey_tag" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="8dp">
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/tv_house_image"
+        android:textColor="@color/gray_text"
+        android:background="@drawable/real_line_trbl"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/iv_bd_voice"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:scaleType="fitXY" />
+</RelativeLayout>
