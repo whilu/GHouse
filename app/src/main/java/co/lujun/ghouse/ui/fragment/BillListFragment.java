@@ -148,7 +148,10 @@ public class BillListFragment extends Fragment {
             e.printStackTrace();
         }
         // refresh data
-        onRequestData(true);
+        mRefreshLayout.post(() -> {
+            mRefreshLayout.setRefreshing(true);
+            onRequestData(true);
+        });
     }
 
     /**
@@ -192,6 +195,9 @@ public class BillListFragment extends Fragment {
      */
     private void onRequestData(boolean isRefresh){
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            if (mRefreshLayout.isRefreshing()) {
+                mRefreshLayout.setRefreshing(false);
+            }
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;
         }
@@ -201,7 +207,7 @@ public class BillListFragment extends Fragment {
         }else if (flag == Config.TODO_FRAGMENT){
             type = "0";
         }
-        if (isRefresh){
+        if (isRefresh) {
             current_page = 1;
         }
         String validate = PreferencesUtils.getString(getActivity(), Config.KEY_OF_VALIDATE);
@@ -277,7 +283,14 @@ public class BillListFragment extends Fragment {
      * @param isRefresh
      */
     private void onCacheData(List<Bill> bills, boolean isRefresh){
-        if (bills == null || bills.size() <= 0){
+        if (bills == null){
+            return;
+        }
+        if (bills.size() <= 0){
+            if (isRefresh){
+                // TODO show dialog with no data
+                SystemUtil.showToast(R.string.msg_have_no_data);
+            }
             return;
         }
         try {
@@ -353,36 +366,36 @@ public class BillListFragment extends Fragment {
         GlApplication.getApiService()
             .onOperateBill(
                 signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                bid,
-                Integer.toString(type),
-                validate
+                    signCarrier.getNonce(),
+                    signCarrier.getTimestamp(),
+                    signCarrier.getSignature(),
+                    bid,
+                    Integer.toString(type),
+                    validate
             )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<Bill>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    onRequestData(true);
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<Bill> billBaseJson) {
-                    if (null == billBaseJson) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        onRequestData(true);
-                        return;
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BaseJson<Bill>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted()");
                     }
-                    // not Correct status
-                    if (billBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onRequestData(true);
+                        Log.d(TAG, e.toString());
+                    }
+
+                    @Override
+                    public void onNext(BaseJson<Bill> billBaseJson) {
+                        if (null == billBaseJson) {
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            onRequestData(true);
+                            return;
+                        }
+                        // not Correct status
+                        if (billBaseJson.getStatus() != Config.STATUS_CODE_OK) {
                         SystemUtil.showToast(billBaseJson.getMessage());
                         onRequestData(true);
                         return;
