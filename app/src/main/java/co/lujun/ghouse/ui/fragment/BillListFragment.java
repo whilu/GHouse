@@ -373,35 +373,40 @@ public class BillListFragment extends Fragment {
                     Integer.toString(type),
                     validate
             )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseJson<Bill>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<BaseJson<Bill>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
+                @Override
+                public void onError(Throwable e) {
+                    onRequestData(true);
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<Bill> billBaseJson) {
+                    if (null == billBaseJson) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
                         onRequestData(true);
-                        Log.d(TAG, e.toString());
+                        return;
                     }
-
-                    @Override
-                    public void onNext(BaseJson<Bill> billBaseJson) {
-                        if (null == billBaseJson) {
-                            SystemUtil.showToast(R.string.msg_nullpointer_error);
-                            onRequestData(true);
-                            return;
-                        }
-                        // not Correct status
-                        if (billBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                    // not Correct status
+                    if (billBaseJson.getStatus() != Config.STATUS_CODE_OK) {
                         SystemUtil.showToast(billBaseJson.getMessage());
                         onRequestData(true);
                         return;
                     }
+                    SystemUtil.showToast(billBaseJson.getMessage());
+                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billBaseJson.getValidate());
                     // delete success, delete cache
-                    onDeleteCacheById(billId);
+                    if (type == 0) {
+                        onDeleteCacheById(billId);
+                    }
+                    onRequestData(true);
                 }
             });
     }

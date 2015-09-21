@@ -18,6 +18,7 @@ import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
 import com.squareup.picasso.Picasso;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
+import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
@@ -268,8 +270,12 @@ public class CenterActivity extends SlidingActivity {
                 return;
             }
         }else if (type == 1){
-            value1 = tilOldPwd.getEditText().getText().toString();
-            value = tilNewPwd.getEditText().getText().toString();
+            try {
+                value1 = MD5.getMD5(tilOldPwd.getEditText().getText().toString());
+                value = MD5.getMD5(tilNewPwd.getEditText().getText().toString());
+            }catch (NoSuchAlgorithmException e){
+                e.printStackTrace();
+            }
             if (TextUtils.isEmpty(value1) || TextUtils.isEmpty(value)){
                 SystemUtil.showToast(R.string.msg_all_not_empty);
                 return;
@@ -322,6 +328,7 @@ public class CenterActivity extends SlidingActivity {
                         SystemUtil.showToast(userBaseJson.getMessage());
                         return;
                     }
+                    SystemUtil.showToast(userBaseJson.getMessage());
                     PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
                     onRequestData();
                     onShowAndHide(winLoading, false, dialog, false);

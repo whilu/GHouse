@@ -99,13 +99,14 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                 }
             });
             viewHolder.btnConfirm.setOnClickListener(v -> {
-                Toast.makeText(GlApplication.getContext(), "Confirm:" + viewHolder.tvType.getText(), Toast.LENGTH_SHORT).show();
                 if (mBillOperationListener != null){
+                    mItemManger.closeAllItems();
                     mBillOperationListener.onConfirmBill(i);
                 }
             });
             viewHolder.btnModify.setOnClickListener(v -> {
                 if (mBillOperationListener != null){
+                    mItemManger.closeAllItems();
                     mBillOperationListener.onEditBill(i);
                 }
             });
