@@ -258,19 +258,19 @@ public class CenterActivity extends SlidingActivity {
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;
         }
+        String value = "";
         String value1 = "";
-        String value2 = "";
 
         if (type == 0){
-            value1 = tilPhone.getEditText().getText().toString();
-            if (TextUtils.isEmpty(value1)){
+            value = tilPhone.getEditText().getText().toString();
+            if (TextUtils.isEmpty(value)){
                 SystemUtil.showToast(R.string.msg_all_not_empty);
                 return;
             }
         }else if (type == 1){
             value1 = tilOldPwd.getEditText().getText().toString();
-            value2 = tilNewPwd.getEditText().getText().toString();
-            if (TextUtils.isEmpty(value1) || TextUtils.isEmpty(value2)){
+            value = tilNewPwd.getEditText().getText().toString();
+            if (TextUtils.isEmpty(value1) || TextUtils.isEmpty(value)){
                 SystemUtil.showToast(R.string.msg_all_not_empty);
                 return;
             }
@@ -280,8 +280,8 @@ public class CenterActivity extends SlidingActivity {
         String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
         Map<String, String> map = new HashMap<String, String>();
         map.put("type", Integer.toString(type));
+        map.put("value", value);
         map.put("value1", value1);
-        map.put("value2", value2);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService()
@@ -291,8 +291,8 @@ public class CenterActivity extends SlidingActivity {
                 signCarrier.getTimestamp(),
                 signCarrier.getSignature(),
                 Integer.toString(type),
+                value,
                 value1,
-                value2,
                 validate
             )
             .subscribeOn(Schedulers.io())
@@ -349,10 +349,12 @@ public class CenterActivity extends SlidingActivity {
         if (isShow2){
             if (!dialog.isShowing()){
                 dialog.show();
+                SystemUtil.showOrHideInputMethodManager(this);
             }
         }else {
             if (dialog.isShowing()){
                 dialog.hide();
+                SystemUtil.showOrHideInputMethodManager(this);
             }
         }
     }

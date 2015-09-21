@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
+import com.rey.material.widget.RadioButton;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,7 +48,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/8/10.
  */
-public class HouseViewActivity extends SlidingActivity {
+public class HouseViewActivity extends SlidingActivity
+        implements CompoundButton.OnCheckedChangeListener {
 
     private Toolbar mToolbar;
 
@@ -55,6 +58,7 @@ public class HouseViewActivity extends SlidingActivity {
     private LinearLayoutManager mLayoutManager;
     private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilHouseAdd, tilHouseIntro, tilUName, tilUPwd;
     private View hvUpdateView, hvAddMoneyView, hvUHouseView, hvAddMemberView;
+    private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
 
     private static Dialog mUpdateDialog, mAddMoneyDialog, mUHouseDialog, mAddMemberDialog;
 
@@ -67,6 +71,8 @@ public class HouseViewActivity extends SlidingActivity {
     private final static String TAG = "HouseViewActivity";
 
     private LoadingWindow winLoading;
+
+    private int moneyType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,10 +144,16 @@ public class HouseViewActivity extends SlidingActivity {
             tilInfo = (TextInputLayout) hvUpdateView.findViewById(R.id.til_hv_modify_info);
             tilAddMoney = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money);
             tilAddMoneyExtra = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money_extra);
+            rbBillRmb = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_rmb);
+            rbBillDollar = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_dollar);
+            rbBillOther = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_other);
             tilHouseAdd = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_address);
             tilHouseIntro = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_info);
             tilUName = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_uname);
             tilUPwd = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_pwd);
+            rbBillRmb.setOnCheckedChangeListener(this);
+            rbBillDollar.setOnCheckedChangeListener(this);
+            rbBillOther.setOnCheckedChangeListener(this);
             tilHouseAdd.setHint(getString(R.string.til_hint_rhouse_address));
             tilHouseIntro.setHint(getString(R.string.til_hint_rhouse_intro));
             tilUName.setHint(getString(R.string.til_hint_rhouse_name));
@@ -189,6 +201,21 @@ public class HouseViewActivity extends SlidingActivity {
                 .cancelable(false)
                 .positiveActionClickListener(v -> onAddMember())
                 .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
+        }
+    }
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (compoundButton instanceof RadioButton && b) {
+            rbBillRmb.setChecked(rbBillRmb == compoundButton);
+            rbBillDollar.setChecked(rbBillDollar == compoundButton);
+            rbBillOther.setChecked(rbBillOther == compoundButton);
+            if (rbBillRmb == compoundButton) {
+                moneyType = 0;
+            } else if (rbBillDollar == compoundButton) {
+                moneyType = 1;
+            } else if (rbBillOther == compoundButton) {
+                moneyType = 2;
+            }
         }
     }
 
@@ -453,9 +480,11 @@ public class HouseViewActivity extends SlidingActivity {
             return;
         }
         String value = "";
+        String value1 = "";
         String remark = "";
         if (type == 0){
             value = tilAddMoney.getEditText().getText().toString();
+            value1 = Integer.toString(moneyType);
             remark = tilAddMoneyExtra.getEditText().getText().toString();
         }else {
             value = tilInfo.getEditText().getText().toString();
@@ -481,6 +510,7 @@ public class HouseViewActivity extends SlidingActivity {
         Map<String, String> map = new HashMap<String, String>();
         map.put("type", Integer.toString(type));
         map.put("value", value);
+        map.put("value1", value1);
         map.put("remark", remark);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
@@ -492,6 +522,7 @@ public class HouseViewActivity extends SlidingActivity {
                 signCarrier.getSignature(),
                 Integer.toString(type),
                 value,
+                value1,
                 remark,
                 validate
             )

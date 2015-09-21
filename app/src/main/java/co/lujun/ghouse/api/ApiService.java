@@ -82,8 +82,8 @@ public interface ApiService {
             @Query("timestamp") String timestamp,
             @Query("signature") String signature,
             @Field("type") String type,// 0-phone, 1-password
-            @Field("value1") String value1,
-            @Field("value2") String value2,// when update pwd need as old pwd
+            @Field("value") String value,
+            @Field("value1") String value1,// when update pwd need as old pwd
             @Field("validate") String validate
     );
 
@@ -100,14 +100,15 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
-    @POST("/edit_house")
+    @POST("/edit_house_info")
     Observable<BaseJson<House>> onEditHouse(
             @Query("appid") String appid,
             @Query("nonce") String nonce,
             @Query("timestamp") String timestamp,
             @Query("signature") String signature,
-            @Field("type") String username,// 0-money, 1- address, 2-intro
-            @Field("value") String password,
+            @Field("type") String type,// 0-money, 1- address, 2-intro
+            @Field("value") String value,
+            @Field("value1") String value1,
             @Field("remark") String remark,
             @Field("validate") String validate
     );

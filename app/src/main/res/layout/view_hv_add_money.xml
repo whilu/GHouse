@@ -5,6 +5,47 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_money_type"
+            android:textColor="@color/deep_gray"
+            android:textSize="16sp" />
+
+        <com.rey.material.widget.RadioButton
+            android:id="@+id/rb_am_rmb"
+            style="@style/Material.Drawable.RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:text="@string/rb_mt_hint_rmb" />
+
+        <com.rey.material.widget.RadioButton
+            android:id="@+id/rb_am_dollar"
+            style="@style/Material.Drawable.RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/rb_mt_hint_dollar" />
+
+        <com.rey.material.widget.RadioButton
+            android:id="@+id/rb_am_other"
+            style="@style/Material.Drawable.RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/rb_mt_hint_other" />
+
+    </LinearLayout>
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_hv_add_money"
         android:layout_width="300dp"
