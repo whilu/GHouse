@@ -61,6 +61,7 @@ public class BillListFragment extends Fragment {
     private final static String TAG = "BillListFragment";
 
     private int flag;
+    private boolean hasMoreData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,7 +170,7 @@ public class BillListFragment extends Fragment {
                     int totalItemCount = mLayoutManager.getItemCount();
                     if (lastVisibleItem == totalItemCount - 1) {
                         // TODO cal item num
-                        if (lastVisibleItem - firstVisibleItem < totalItemCount) {
+                        if (lastVisibleItem - firstVisibleItem < totalItemCount && hasMoreData) {
                             ((BillAdapter) recyclerView.getAdapter()).showFooter();
                             onRequestData(false);
                         }
@@ -184,6 +185,7 @@ public class BillListFragment extends Fragment {
                 int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
                 int totalItemCount = mLayoutManager.getItemCount();
                 if (lastVisibleItem - firstVisibleItem == totalItemCount - 1) {
+//                    mAdapter.hideFooter();
                     ((BillAdapter) recyclerView.getAdapter()).hideFooter();
                 }
             }
@@ -201,6 +203,9 @@ public class BillListFragment extends Fragment {
             }
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;
+        }
+        if (isRefresh){
+            hasMoreData = true;
         }
         String type = "";// 1-BillList, 2-TodoList
         if (flag == Config.BILL_FRAGMENT){
@@ -248,6 +253,21 @@ public class BillListFragment extends Fragment {
                     super.onNext(baseListBaseJson);
                     if (baseListBaseJson.getData().getLists() == null) {
                         SystemUtil.showToast(R.string.msg_request_error);
+                        return;
+                    }
+                    if(baseListBaseJson.getData().getCount() == 0){// 没有任何数据
+                        //TODO show add content dialog
+                        if(isRefresh){
+                            SystemUtil.showToast(R.string.msg_have_no_data);
+                        }
+                        return;
+                    }
+                    if (baseListBaseJson.getData().getLists().size() == 0) {// 加载更多没有更多数据
+                        if (!isRefresh){
+                            hasMoreData = false;
+                            SystemUtil.showToast(R.string.msg_no_more_data);
+                            mAdapter.hideFooter();
+                        }
                         return;
                     }
                     current_page = baseListBaseJson.getData().getCurrent_page() + 1;

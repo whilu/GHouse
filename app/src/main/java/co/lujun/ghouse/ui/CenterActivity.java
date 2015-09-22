@@ -27,7 +27,10 @@ import java.util.Map;
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
+import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.bean.House;
+import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
@@ -257,14 +260,43 @@ public class CenterActivity extends BaseActivity {
         Picasso.with(this)
             .load(user.getAvatar() == null ? "" : user.getAvatar())
             .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
-                .into(ivAvatar);
+            .into(ivAvatar);
     }
 
     /**
      * logout
      */
     private void onLogOut(){
+        try{
+            // delete bill table, image table, house table, user table
+            Dao billDao = DatabaseHelper.getDatabaseHelper(this).getDao(Bill.class);
+            Dao imageDao = DatabaseHelper.getDatabaseHelper(this).getDao(Image.class);
+            Dao houseDao = DatabaseHelper.getDatabaseHelper(this).getDao(House.class);
+            Dao userDao = DatabaseHelper.getDatabaseHelper(this).getDao(User.class);
 
+            List<Bill> bills = billDao.queryForAll();
+            for (Bill bill : bills) {
+                imageDao.deleteBuilder().where().eq("bid", bill.getBid());
+                imageDao.deleteBuilder().delete();
+            }
+            billDao.delete(bills);
+            List<House> houses = houseDao.queryForAll();
+            for (House house : houses) {
+                userDao.deleteBuilder().where().eq("houseid", house.getHid());
+                userDao.deleteBuilder().delete();
+            }
+            houseDao.delete(houses);
+
+            PreferencesUtils.putBoolean(this, Config.KEY_OF_LOGIN_FLAG, false);
+            PreferencesUtils.putInt(this, Config.KEY_OF_USER_TYPE, -1);
+            PreferencesUtils.putString(this, Config.KEY_OF_USER_NAME, "");
+            PreferencesUtils.putString(this, Config.KEY_OF_VALIDATE, "");
+
+            startActivity(new Intent(this, SplashActivity.class));
+            finish();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     /**
