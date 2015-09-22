@@ -19,8 +19,8 @@ import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
-import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.SignatureUtil;
@@ -32,7 +32,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/8/12.
  */
-public class RegHouseActivity extends SlidingActivity {
+public class RegHouseActivity extends BaseActivity {
 
     private Toolbar mToolbar;
     private TextInputLayout tilUName, tilPwd, tilPhone, tilAddress, tilIntro;
@@ -140,7 +140,26 @@ public class RegHouseActivity extends SlidingActivity {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<House>>() {
+            .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<House> houseBaseJson) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    super.onNext(houseBaseJson);
+                    SystemUtil.showToast(R.string.msg_register_success);
+                    finish();
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<House>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -166,6 +185,6 @@ public class RegHouseActivity extends SlidingActivity {
                     SystemUtil.showToast(R.string.msg_register_success);
                     finish();
                 }
-            });
+            });*/
     }
 }

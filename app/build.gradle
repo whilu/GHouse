@@ -50,8 +50,8 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'co.lujun:androidelasticview:1.0.0'
-//    compile 'co.lujun:tpsharelogin:1.0.0'
+    compile 'co.lujun:androidelasticview:1.0.1'
+//    compile 'co.lujun:tpsharelogin:1.0.2'
     compile 'com.qiniu:qiniu-android-sdk:7.0.1'
 }
 

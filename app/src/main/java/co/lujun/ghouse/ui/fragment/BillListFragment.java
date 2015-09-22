@@ -33,6 +33,7 @@ import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.ui.BillDetailActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.util.AppHelper;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
@@ -229,36 +230,60 @@ public class BillListFragment extends Fragment {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
-                    }
+            .subscribe(new BaseSubscriber<BaseJson<BaseList<Bill>>>() {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
-                        Log.d(TAG, e.toString());
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
                     }
+                }
 
-                    @Override
-                    public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
-                        if (null == billListBaseJson
-                                || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
-                                || billListBaseJson.getData().getLists() == null) {
-                            SystemUtil.showToast(R.string.msg_request_error);
-                            return;
-                        }
-                        current_page = billListBaseJson.getData().getCurrent_page() + 1;
-                        PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-                        onCacheData(billListBaseJson.getData().getLists(), isRefresh);
+                @Override
+                public void onNext(BaseJson<BaseList<Bill>> baseListBaseJson) {
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
                     }
-                });
+                    super.onNext(baseListBaseJson);
+                    if (baseListBaseJson.getData().getLists() == null) {
+                        SystemUtil.showToast(R.string.msg_request_error);
+                        return;
+                    }
+                    current_page = baseListBaseJson.getData().getCurrent_page() + 1;
+                    onCacheData(baseListBaseJson.getData().getLists(), isRefresh);
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                    if (null == billListBaseJson
+                            || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
+                            || billListBaseJson.getData().getLists() == null) {
+                        SystemUtil.showToast(R.string.msg_request_error);
+                        return;
+                    }
+                    current_page = billListBaseJson.getData().getCurrent_page() + 1;
+                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
+                    onCacheData(billListBaseJson.getData().getLists(), isRefresh);
+                }
+            });*/
     }
 
     /**
@@ -375,7 +400,22 @@ public class BillListFragment extends Fragment {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<Bill>>() {
+            .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
+
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    onRequestData(true);
+                }
+
+                @Override
+                public void onNext(BaseJson<Bill> billBaseJson) {
+                    onRequestData(true);
+                    super.onNext(billBaseJson);
+                    SystemUtil.showToast(billBaseJson.getMessage());
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<Bill>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -408,7 +448,7 @@ public class BillListFragment extends Fragment {
                     }
                     onRequestData(true);
                 }
-            });
+            });*/
     }
 
     /**

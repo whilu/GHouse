@@ -33,9 +33,9 @@ import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.adapter.MemberAdapter;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.ui.listener.ViewClickListener;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
-import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
@@ -48,7 +48,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/8/10.
  */
-public class HouseViewActivity extends SlidingActivity
+public class HouseViewActivity extends BaseActivity
         implements CompoundButton.OnCheckedChangeListener {
 
     private Toolbar mToolbar;
@@ -304,7 +304,36 @@ public class HouseViewActivity extends SlidingActivity
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<House>>() {
+            .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    if (srlHouse.isRefreshing()) {
+                        srlHouse.setRefreshing(false);
+                    }
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<House> houseBaseJson) {
+                    super.onNext(houseBaseJson);
+                    House house;
+                    if ((house = houseBaseJson.getData()) == null) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    onCacheData(house);
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    if (srlHouse.isRefreshing()){
+                        srlHouse.setRefreshing(false);
+                    }
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<House>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -342,7 +371,7 @@ public class HouseViewActivity extends SlidingActivity
                         srlHouse.setRefreshing(false);
                     }
                 }
-            });
+            });*/
     }
 
     /**
@@ -437,38 +466,56 @@ public class HouseViewActivity extends SlidingActivity
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseJson<User>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
+            .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
                     }
+                    if (!mAddMemberDialog.isShowing()) {
+                        mAddMemberDialog.show();
+                    }
+                    super.onError(e);
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (winLoading.isShowing()) {
-                            winLoading.dismiss();
-                        }
-                        if (!mAddMemberDialog.isShowing()) {
-                            mAddMemberDialog.show();
-                        }
-                        Log.d(TAG, e.toString());
-                    }
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    super.onNext(userBaseJson);
+                    onRequestData();
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<User>>() {
+                @Override
+                public void onCompleted() {
+                    Log.d(TAG, "onCompleted()");
+                }
 
-                    @Override
-                    public void onNext(BaseJson<User> userBaseJson) {
-                        if (null == userBaseJson) {
-                            SystemUtil.showToast(R.string.msg_nullpointer_error);
-                            return;
-                        }
-                        // not Correct status
-                        if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                            SystemUtil.showToast(userBaseJson.getMessage());
-                            return;
-                        }
-                        PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                        onRequestData();
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
                     }
-                });
+                    if (!mAddMemberDialog.isShowing()) {
+                        mAddMemberDialog.show();
+                    }
+                    Log.d(TAG, e.toString());
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    if (null == userBaseJson) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        return;
+                    }
+                    PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    onRequestData();
+                }
+            });*/
     }
 
     /**
@@ -528,7 +575,23 @@ public class HouseViewActivity extends SlidingActivity
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<House>>() {
+            .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                @Override
+                public void onError(Throwable e) {
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    SystemUtil.showToast(R.string.msg_update_error);
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<House> houseBaseJson) {
+                    super.onNext(houseBaseJson);
+                    onRequestData();
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<House>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -557,6 +620,6 @@ public class HouseViewActivity extends SlidingActivity
                     PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, houseBaseJson.getValidate());
                     onRequestData();
                 }
-            });
+            });*/
     }
 }

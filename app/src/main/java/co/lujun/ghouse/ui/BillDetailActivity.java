@@ -22,15 +22,13 @@ import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.ui.adapter.InvoiceImgAdapter;
-import co.lujun.ghouse.ui.listener.ViewClickListener;
 import co.lujun.ghouse.ui.widget.GalleryWindow;
-import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.DatabaseHelper;
 
 /**
  * Created by lujun on 2015/8/17.
  */
-public class BillDetailActivity extends SlidingActivity {
+public class BillDetailActivity extends BaseActivity {
 
     private Toolbar mToolbar;
 

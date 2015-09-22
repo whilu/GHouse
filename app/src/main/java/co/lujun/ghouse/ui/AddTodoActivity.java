@@ -24,21 +24,18 @@ import com.rey.material.widget.CheckBox;
 import com.rey.material.widget.RadioButton;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Config;
-import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.util.ImageUtils;
 import co.lujun.ghouse.util.SystemUtil;
 
 /**
  * Created by lujun on 2015/7/30.
  */
-public class AddTodoActivity extends SlidingActivity
+public class AddTodoActivity extends BaseActivity
         implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private Toolbar mToolbar;
@@ -184,7 +181,9 @@ public class AddTodoActivity extends SlidingActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Config.ACTIVITY_REQ_SCAN){
-            tilBillCode.getEditText().setText(data.getStringExtra(Config.KEY_SCAN_CODE_RESULT));
+            if (data != null){
+                tilBillCode.getEditText().setText(data.getStringExtra(Config.KEY_SCAN_CODE_RESULT));
+            }
         }else if (requestCode == Config.ACTIVITY_REQ_CAMERA){
             if (Activity.RESULT_OK == resultCode){
                 Bitmap bitmap = BitmapFactory.decodeFile(imagePath + imageName);

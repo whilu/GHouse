@@ -28,11 +28,10 @@ import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
-import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
-import co.lujun.ghouse.ui.widget.SlidingActivity;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
@@ -48,7 +47,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/7/30.
  */
-public class CenterActivity extends SlidingActivity {
+public class CenterActivity extends BaseActivity {
 
     private Toolbar mToolbar;
     private RoundedImageView ivAvatar;
@@ -180,7 +179,24 @@ public class CenterActivity extends SlidingActivity {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<User>>() {
+            .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    super.onNext(userBaseJson);
+                    User user;
+                    if ((user = userBaseJson.getData()) == null) {
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    onCacheData(user);
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<User>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -206,7 +222,7 @@ public class CenterActivity extends SlidingActivity {
                     PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
                     onCacheData(user);
                 }
-            });
+            });*/
     }
 
     /**
@@ -303,7 +319,37 @@ public class CenterActivity extends SlidingActivity {
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<User>>() {
+            .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                @Override
+                public void onError(Throwable e) {
+                    onShowAndHide(winLoading, false, dialog, true);
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+//                    super.onNext(userBaseJson);
+                    if (null == userBaseJson) {
+                        onShowAndHide(winLoading, false, dialog, true);
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    if (userBaseJson.getValidate() != null && !TextUtils.isEmpty(userBaseJson.getValidate())) {
+                        PreferencesUtils.putString(CenterActivity.this,
+                                Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    }
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
+                        onShowAndHide(winLoading, false, dialog, true);
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        return;
+                    }
+                    SystemUtil.showToast(userBaseJson.getMessage());
+                    onRequestData();
+                    onShowAndHide(winLoading, false, dialog, false);
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<User>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -333,7 +379,7 @@ public class CenterActivity extends SlidingActivity {
                     onRequestData();
                     onShowAndHide(winLoading, false, dialog, false);
                 }
-            });
+            });*/
     }
 
     /**

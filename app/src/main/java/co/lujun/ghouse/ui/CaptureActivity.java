@@ -12,7 +12,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -32,7 +31,7 @@ import co.lujun.ghouse.bean.Config;
 /**
  * Created by lujun on 2015/3/16.
  */
-public class CaptureActivity extends ActionBarActivity implements Callback {
+public class CaptureActivity extends BaseActivity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;

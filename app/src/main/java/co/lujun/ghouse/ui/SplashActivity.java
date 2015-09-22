@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,6 +33,7 @@ import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
@@ -49,7 +49,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by lujun on 2015/7/30.
  */
-public class SplashActivity extends ActionBarActivity implements View.OnClickListener{
+public class SplashActivity extends BaseActivity implements View.OnClickListener{
 
     private static Dialog mDialog;
     private static View loginView;
@@ -164,7 +164,54 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<BaseJson<User>>() {
+            .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    if (winLoading.isShowing()) {
+                        winLoading.dismiss();
+                    }
+                    if (!mDialog.isShowing()) {
+                        mDialog.show();
+                    }
+                }
+
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
+                    if (winLoading.isShowing()){
+                        winLoading.dismiss();
+                    }
+                    User user;
+                    if ((user = userBaseJson.getData()) == null){
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        if (!mDialog.isShowing()){
+                            mDialog.show();
+                        }
+                        return;
+                    }
+                    // not Correct status
+                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
+                        SystemUtil.showToast(userBaseJson.getMessage());
+                        if (!mDialog.isShowing()){
+                            mDialog.show();
+                        }
+                        return;
+                    }
+                    try{
+                        DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
+                        PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
+                        PreferencesUtils.putInt(SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
+                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
+                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    mDialog.dismiss();
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
+            /*.subscribe(new Subscriber<BaseJson<User>>() {
                 @Override
                 public void onCompleted() {
                     Log.d(TAG, "onCompleted()");
@@ -215,7 +262,7 @@ public class SplashActivity extends ActionBarActivity implements View.OnClickLis
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 }
-            });
+            });*/
     }
 
     /**
