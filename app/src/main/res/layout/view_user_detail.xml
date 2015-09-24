@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_gptv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/activity_vertical_margin">
+
+            <co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView
+                android:id="@+id/iv_vud_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="8dp"
+                android:scaleType="fitCenter"
+                app:riv_border_width="0dp"
+                app:riv_corner_radius="0dp"
+                app:riv_mutate_background="true"
+                app:riv_oval="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_vud_uname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textStyle="italic"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_vud_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:singleLine="true"
+                    android:textStyle="italic"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

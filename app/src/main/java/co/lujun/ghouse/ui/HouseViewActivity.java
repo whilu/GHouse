@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import co.lujun.ghouse.ui.adapter.MemberAdapter;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.ui.listener.ViewClickListener;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
+import co.lujun.ghouse.ui.widget.UserViewWindow;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
@@ -67,6 +69,8 @@ public class HouseViewActivity extends BaseActivity
     private MemberAdapter mAdapter;
 
     private List<String> mAvatarList;
+
+    private List<User> mUserList;
 
     private final static String TAG = "HouseViewActivity";
 
@@ -108,13 +112,9 @@ public class HouseViewActivity extends BaseActivity
         hvAddMemberView = LayoutInflater.from(this).inflate(R.layout.view_hv_add_member, null, false);
 
         mAvatarList = new ArrayList<String>();
+        mUserList = new ArrayList<User>();
         mAdapter = new MemberAdapter(mAvatarList);
-        mAdapter.setViewOnClickListener(new ViewClickListener() {
-            @Override
-            public void onClick(int position) {
-                SystemUtil.showToast(position + "-------");
-            }
-        });
+        mAdapter.setViewOnClickListener(position -> showUserDetail(position));
         mRecyclerView.setAdapter(mAdapter);
 
         initDialog();
@@ -421,8 +421,10 @@ public class HouseViewActivity extends BaseActivity
         tvHouseIntro.setText(house.getHouseinfo());
         tvHouseOwner.setText(house.getReg_user());
         mAvatarList.clear();
+        mUserList.clear();
         for (User user : house.getMember()) {
             mAvatarList.add(user.getAvatar());
+            mUserList.add(user);
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -621,5 +623,17 @@ public class HouseViewActivity extends BaseActivity
                     onRequestData();
                 }
             });*/
+    }
+
+    /**
+     * show user information
+     * @param position
+     */
+    private void showUserDetail(int position){
+        UserViewWindow.init(this);
+        UserViewWindow.setUName(getString(R.string.tv_vud_name) + mUserList.get(position).getUsername());
+        UserViewWindow.setPhone(getString(R.string.tv_vud_phone) + mUserList.get(position).getPhone());
+        UserViewWindow.setAvatarUrl(mUserList.get(position).getAvatar());
+        UserViewWindow.show(mToolbar, Gravity.CENTER, 0, 0);
     }
 }

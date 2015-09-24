@@ -59,6 +59,8 @@
     <string name="tv_bd_confirmer">确认人</string>
     <string name="tv_bd_yes_confirm">已确认</string>
     <string name="tv_bd_no_confirm">未确认</string>
+    <string name="tv_vud_name">Name:&#160;</string>
+    <string name="tv_vud_phone">Phone:&#160;</string>
 
     <string name="rb_mt_hint_rmb">RMB</string>
     <string name="rb_mt_hint_dollar">Dollars</string>

@@ -33,7 +33,7 @@
                     android:layout_height="95.67dp"
                     android:layout_alignParentBottom="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/mine_bg" />
+                    android:src="@drawable/mine_bg_02" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
