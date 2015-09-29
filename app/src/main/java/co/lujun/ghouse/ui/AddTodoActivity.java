@@ -27,10 +27,20 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.bean.SignCarrier;
+import co.lujun.ghouse.bean.UploadToken;
+import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.util.ImageUtils;
+import co.lujun.ghouse.util.NetWorkUtils;
+import co.lujun.ghouse.util.PreferencesUtils;
+import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/7/30.
@@ -94,12 +104,12 @@ public class AddTodoActivity extends BaseActivity
             (ImageView) findViewById(R.id.iv_bill_image6)
         };
         rlBillImages = new RelativeLayout[]{
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv1),
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv2),
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv3),
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv4),
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv5),
-                (RelativeLayout) findViewById(R.id.rl_add_todo_iv6)
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv1),
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv2),
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv3),
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv4),
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv5),
+            (RelativeLayout) findViewById(R.id.rl_add_todo_iv6)
         };
 
         pMap = new HashMap<Integer, String>();
@@ -250,6 +260,10 @@ public class AddTodoActivity extends BaseActivity
         code = tilBillCode.getEditText().getText().toString();
         extra = tilBillExtra.getEditText().getText().toString();
 
+        if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_network_disconnect);
+            return;
+        }
         if (TextUtils.isEmpty(content) || TextUtils.isEmpty(total)){
             SystemUtil.showToast(R.string.msg_content_bill_not_null);
             return;
@@ -258,17 +272,55 @@ public class AddTodoActivity extends BaseActivity
             SystemUtil.showToast(R.string.msg_cost_type_not_null);
             return;
         }
-        if (!pMap.isEmpty()){// 有图片，先上传图片，再发表记录
-            onUploadImages();
+        if (!pMap.isEmpty()){// 有图片，先获取token，再上传图片，再发表记录
+            onGetUploadToken();
         }else {// 否则，直接发表记录
             onPublishRecord();
         }
     }
 
     /**
+     * get upload token from server
+     */
+    private void onGetUploadToken(){
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("validate", validate);
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService()
+            .onGetUploadToken(
+                signCarrier.getAppId(),
+                signCarrier.getNonce(),
+                signCarrier.getTimestamp(),
+                signCarrier.getSignature(),
+                validate
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new BaseSubscriber<BaseJson<UploadToken>>() {
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                }
+
+                @Override
+                public void onNext(BaseJson<UploadToken> tokenBaseJson) {
+                    super.onNext(tokenBaseJson);
+                    UploadToken token;
+                    if ((token = tokenBaseJson.getData()) == null){
+                        SystemUtil.showToast(R.string.msg_nullpointer_error);
+                        return;
+                    }
+                    onUploadImages(token.getToken());
+                }
+            });
+    }
+
+    /**
      * upload images to QiNiu
      */
-    private void onUploadImages(){
+    private void onUploadImages(String token){
+        Log.d(TAG, token);
         for (Map.Entry<Integer, String> entry : pMap.entrySet()) {
             Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
         }
