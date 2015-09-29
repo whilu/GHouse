@@ -20,11 +20,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.github.whilu.library.CustomRippleButton;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCancellationSignal;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadManager;
+import com.qiniu.android.storage.UploadOptions;
 import com.rey.material.widget.CheckBox;
 import com.rey.material.widget.RadioButton;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import co.lujun.ghouse.GlApplication;
@@ -33,8 +44,11 @@ import co.lujun.ghouse.bean.BaseJson;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.UploadToken;
+import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
+import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.ImageUtils;
+import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
@@ -61,6 +75,9 @@ public class AddTodoActivity extends BaseActivity
     private int costType;
     private int moneyType = 0;
     private String content, total, code, extra;
+    private User mUser;
+
+    private static UploadManager sUploadMananger = new UploadManager();
 
     private static final String TAG = "AddTodoActivity";
 
@@ -132,6 +149,15 @@ public class AddTodoActivity extends BaseActivity
             imageView.setOnClickListener(this);
         }
         btnBillCameraCode.setOnClickListener(this);
+        try{
+            List<User> users =
+                    DatabaseHelper.getDatabaseHelper(this).getDao(User.class).queryForAll();
+            if (users != null && users.size() > 0){
+                mUser = users.get(0);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -165,20 +191,26 @@ public class AddTodoActivity extends BaseActivity
 
     @Override public void onClick(View view) {
         if (view instanceof ImageView){
-            if (!ImageUtils.checkSDCardAvailable()){
+            if (mUser == null || !ImageUtils.checkSDCardAvailable()){
                 return;
             }
             billImageViewId = view.getId();
             imagePath = Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH;
-            imageName = System.currentTimeMillis() + ".png";
-            File file = new File(imagePath);
-            if (!file.exists()) {
-                file.mkdirs();
+            try {
+                imageName = MD5.getMD5(
+                        Long.toString(mUser.getUid()) + mUser.getHouseid()
+                                + System.currentTimeMillis()) + ".png";
+                File file = new File(imagePath);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                photoUri = Uri.fromFile(new File(file, imageName));
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
+            } catch (NoSuchAlgorithmException e){
+                e.printStackTrace();
             }
-            photoUri = Uri.fromFile(new File(file, imageName));
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
         }else if (view instanceof CustomRippleButton){
             startActivityForResult(
                     new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
@@ -207,32 +239,32 @@ public class AddTodoActivity extends BaseActivity
                 bitmap.recycle();
                 switch (billImageViewId){
                     case R.id.iv_bill_image1:
-                        pMap.put(1, imagePath + imageName);
+                        pMap.put(1, imageName);
                         ivBillImages[0].setImageURI(photoUri);
                         rlBillImages[1].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image2:
-                        pMap.put(2, imagePath + imageName);
+                        pMap.put(2, imageName);
                         ivBillImages[1].setImageURI(photoUri);
                         rlBillImages[2].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image3:
-                        pMap.put(3, imagePath + imageName);
+                        pMap.put(3, imageName);
                         ivBillImages[2].setImageURI(photoUri);
                         rlBillImages[3].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image4:
-                        pMap.put(4, imagePath + imageName);
+                        pMap.put(4, imageName);
                         ivBillImages[3].setImageURI(photoUri);
                         rlBillImages[4].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image5:
-                        pMap.put(5, imagePath + imageName);
+                        pMap.put(5, imageName);
                         ivBillImages[4].setImageURI(photoUri);
                         rlBillImages[5].setVisibility(View.VISIBLE);
                         break;
                     case R.id.iv_bill_image6:
-                        pMap.put(6, imagePath + imageName);
+                        pMap.put(6, imageName);
                         ivBillImages[5].setImageURI(photoUri);
                         break;
                     default:
@@ -304,9 +336,15 @@ public class AddTodoActivity extends BaseActivity
      * upload images to QiNiu
      */
     private void onUploadImages(String token){
-        Log.d(TAG, token);
         for (Map.Entry<Integer, String> entry : pMap.entrySet()) {
-            Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
+//            Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
+            String data = imagePath + entry.getValue();
+            String key = entry.getValue();
+            sUploadMananger.put(data, key, token, (s, responseInfo, jsonObject) -> {
+                Log.d(TAG, s + ", " + responseInfo + ", " + jsonObject);
+            }, new UploadOptions(null, null, false, (s, percent) -> {
+                Log.d(TAG, s + ":" + percent);
+            }, () -> false));
         }
 
     }
