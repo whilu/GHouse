@@ -33,7 +33,8 @@ public class GalleryWindow extends PopupWindow {
     private int imagesCount;// 账单图片数量
 
     public GalleryWindow(Context context){
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mView = inflater.inflate(R.layout.view_gallery, null);
         mViewPager = (GalleryViewPager) mView.findViewById(R.id.gvp_vg_gallery);
         tvIndicator = (TextView) mView.findViewById(R.id.tv_vg_indicator);
@@ -74,18 +75,11 @@ public class GalleryWindow extends PopupWindow {
         rlGptv.startAnimation(hideAnim);
         hideAnim.setAnimationListener(new Animation.AnimationListener() {
 
-            @Override
-            public void onAnimationStart(Animation animation) {
+            @Override public void onAnimationStart(Animation animation) {}
 
-            }
+            @Override public void onAnimationRepeat(Animation animation) {}
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
+            @Override public void onAnimationEnd(Animation animation) {
                 dismiss();
             }
         });
@@ -101,23 +95,19 @@ public class GalleryWindow extends PopupWindow {
         tvIndicator.setText("1/" + imagesCount);
         mImagesAdapter = new GalleryAdapter(images);
         mImagesAdapter.setOnGalleryTapListener(new GalleryAdapter.OnGalleryViewTapListener() {
-            @Override
-            public void onGalleryViewTap() {
+            @Override public void onGalleryViewTap() {
                 hide();
             }
         });
         mViewPager.setAdapter(mImagesAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-            @Override
-            public void onPageSelected(int position) {
+            @Override public void onPageSelected(int position) {
                 tvIndicator.setText((position + 1) + "/" + imagesCount);
             }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {}
+            @Override public void onPageScrollStateChanged(int state) {}
         });
     }
 }

@@ -16,18 +16,15 @@ import rx.Subscriber;
  */
 public abstract class BaseSubscriber<T> extends Subscriber<T> {
 
-    @Override
-    public void onCompleted() {
+    @Override public void onCompleted() {
         Log.d(getClass().getSimpleName(), "onCompleted()");
     }
 
-    @Override
-    public void onError(Throwable e) {
+    @Override public void onError(Throwable e) {
         Log.d(getClass().getSimpleName(), e.toString());
     }
 
-    @Override
-    public void onNext(T t) {
+    @Override public void onNext(T t) {
         if (t == null || !(t instanceof BaseJson)){
             SystemUtil.showToast(R.string.msg_request_error);
             return;

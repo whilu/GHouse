@@ -32,7 +32,8 @@ public class UserViewWindow extends PopupWindow {
     private static UserViewWindow mInstance;
 
     private UserViewWindow(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //关联布局文件
         mView = inflater.inflate(R.layout.view_user_detail, null);
         cvGptv = (CardView) mView.findViewById(R.id.cv_gptv);
@@ -64,8 +65,7 @@ public class UserViewWindow extends PopupWindow {
     //触摸在popupWindow上方则取消显示
     private class MenuItemOnTouchListener implements View.OnTouchListener {
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        @Override public boolean onTouch(View v, MotionEvent event) {
             int y = (int) event.getY();
             int x = (int) event.getX();
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -91,18 +91,11 @@ public class UserViewWindow extends PopupWindow {
         cvGptv.startAnimation(hideAnim);
         hideAnim.setAnimationListener(new Animation.AnimationListener() {
 
-            @Override
-            public void onAnimationStart(Animation animation) {
+            @Override public void onAnimationStart(Animation animation) {}
 
-            }
+            @Override public void onAnimationRepeat(Animation animation) {}
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
+            @Override public void onAnimationEnd(Animation animation) {
                 mInstance.dismiss();
             }
         });

@@ -33,7 +33,8 @@ public final class ImageUtils {
 	 * @return
 	 */
 	public static boolean checkSDCardAvailable(){
-		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		return android.os.Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED);
 	}
 	
 	/**

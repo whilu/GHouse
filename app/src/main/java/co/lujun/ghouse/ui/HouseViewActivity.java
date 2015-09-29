@@ -58,7 +58,8 @@ public class HouseViewActivity extends BaseActivity
     private TextView tvHouseId, tvMoneySurplus, tvHouseAddress, tvHouseIntro, tvHouseOwner;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilHouseAdd, tilHouseIntro, tilUName, tilUPwd;
+    private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilHouseAdd,
+            tilHouseIntro, tilUName, tilUPwd;
     private View hvUpdateView, hvAddMoneyView, hvUHouseView, hvAddMemberView;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
 
@@ -72,14 +73,13 @@ public class HouseViewActivity extends BaseActivity
 
     private List<User> mUserList;
 
-    private final static String TAG = "HouseViewActivity";
+    private static final String TAG = "HouseViewActivity";
 
     private LoadingWindow winLoading;
 
     private int moneyType = 0;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house);
         init();
@@ -106,10 +106,14 @@ public class HouseViewActivity extends BaseActivity
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        hvUpdateView = LayoutInflater.from(this).inflate(R.layout.view_hv_modify_info, null, false);
-        hvAddMoneyView = LayoutInflater.from(this).inflate(R.layout.view_hv_add_money, null, false);
-        hvUHouseView = LayoutInflater.from(this).inflate(R.layout.view_hv_change_house, null, false);
-        hvAddMemberView = LayoutInflater.from(this).inflate(R.layout.view_hv_add_member, null, false);
+        hvUpdateView = LayoutInflater.from(this)
+                .inflate(R.layout.view_hv_modify_info, null, false);
+        hvAddMoneyView = LayoutInflater.from(this)
+                .inflate(R.layout.view_hv_add_money, null, false);
+        hvUHouseView = LayoutInflater.from(this)
+                .inflate(R.layout.view_hv_change_house, null, false);
+        hvAddMemberView = LayoutInflater.from(this)
+                .inflate(R.layout.view_hv_add_member, null, false);
 
         mAvatarList = new ArrayList<String>();
         mUserList = new ArrayList<User>();
@@ -119,12 +123,14 @@ public class HouseViewActivity extends BaseActivity
 
         initDialog();
 
-        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
 
         srlHouse.setOnRefreshListener(() -> onRequestData());
         // read cache
         try {
-            List<House> houses = DatabaseHelper.getDatabaseHelper(this).getDao(House.class).queryForAll();
+            List<House> houses =
+                    DatabaseHelper.getDatabaseHelper(this).getDao(House.class).queryForAll();
             if (houses != null && houses.size() > 0){
                 onShowData(houses.get(0));
             }
@@ -143,7 +149,8 @@ public class HouseViewActivity extends BaseActivity
                 && hvUHouseView != null && hvAddMemberView != null){
             tilInfo = (TextInputLayout) hvUpdateView.findViewById(R.id.til_hv_modify_info);
             tilAddMoney = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money);
-            tilAddMoneyExtra = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money_extra);
+            tilAddMoneyExtra =
+                    (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money_extra);
             rbBillRmb = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_rmb);
             rbBillDollar = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_dollar);
             rbBillOther = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_other);
@@ -163,48 +170,47 @@ public class HouseViewActivity extends BaseActivity
             mUHouseDialog = new SimpleDialog(this);
             mAddMemberDialog = new SimpleDialog(this);
             mUpdateDialog.applyStyle(R.style.App_Dialog)
-                .positiveAction(R.string.action_update)
-                .negativeAction(R.string.action_back)
-                .contentView(hvUpdateView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> {
-                    if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
-                        onEditHouse(1);
-                    }else if ((Integer) tilInfo.getTag() == R.id.tv_house_intro){
-                        onEditHouse(2);
-                    }
-                })
-                .negativeActionClickListener(v -> mUpdateDialog.dismiss());
+                    .positiveAction(R.string.action_update)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvUpdateView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> {
+                        if ((Integer) tilInfo.getTag() == R.id.tv_house_address){
+                            onEditHouse(1);
+                        }else if ((Integer) tilInfo.getTag() == R.id.tv_house_intro){
+                            onEditHouse(2);
+                        }
+                    })
+                    .negativeActionClickListener(v -> mUpdateDialog.dismiss());
             //
             mAddMoneyDialog.applyStyle(R.style.App_Dialog)
-                .positiveAction(R.string.action_add)
-                .negativeAction(R.string.action_back)
-                .contentView(hvAddMoneyView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> onEditHouse(0))
-                .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
+                    .positiveAction(R.string.action_add)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvAddMoneyView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> onEditHouse(0))
+                    .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
             //
             mUHouseDialog.applyStyle(R.style.App_Dialog)
-                .title(getString(R.string.action_uhouse))
-                .positiveAction(R.string.action_uhouse)
-                .negativeAction(R.string.action_back)
-                .contentView(hvUHouseView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> {})
-                .negativeActionClickListener(v -> mUHouseDialog.dismiss());
+                    .title(getString(R.string.action_uhouse))
+                    .positiveAction(R.string.action_uhouse)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvUHouseView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> {})
+                    .negativeActionClickListener(v -> mUHouseDialog.dismiss());
             //
             mAddMemberDialog.applyStyle(R.style.App_Dialog)
-                .title(getString(R.string.action_add_member))
-                .positiveAction(R.string.action_add)
-                .negativeAction(R.string.action_back)
-                .contentView(hvAddMemberView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> onAddMember())
-                .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
+                    .title(getString(R.string.action_add_member))
+                    .positiveAction(R.string.action_add)
+                    .negativeAction(R.string.action_back)
+                    .contentView(hvAddMemberView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> onAddMember())
+                    .negativeActionClickListener(v -> mAddMemberDialog.dismiss());
         }
     }
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+    @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton instanceof RadioButton && b) {
             rbBillRmb.setChecked(rbBillRmb == compoundButton);
             rbBillDollar.setChecked(rbBillDollar == compoundButton);
@@ -294,19 +300,13 @@ public class HouseViewActivity extends BaseActivity
         Map<String, String> map = new HashMap<String, String>();
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onGetHouseData(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                validate
-            )
+        GlApplication.getApiService().onGetHouseData(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), validate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }
@@ -316,8 +316,7 @@ public class HouseViewActivity extends BaseActivity
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
+                @Override public void onNext(BaseJson<House> houseBaseJson) {
                     super.onNext(houseBaseJson);
                     House house;
                     if ((house = houseBaseJson.getData()) == null) {
@@ -456,21 +455,13 @@ public class HouseViewActivity extends BaseActivity
         map.put("password", upwd);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onAddMember(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                uname,
-                upwd,
-                validate
-            )
+        GlApplication.getApiService().onAddMember(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), uname, upwd, validate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }
@@ -480,8 +471,7 @@ public class HouseViewActivity extends BaseActivity
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
+                @Override public void onNext(BaseJson<User> userBaseJson) {
                     super.onNext(userBaseJson);
                     onRequestData();
                 }
@@ -563,23 +553,13 @@ public class HouseViewActivity extends BaseActivity
         map.put("remark", remark);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onEditHouse(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                Integer.toString(type),
-                value,
-                value1,
-                remark,
-                validate
-            )
+        GlApplication.getApiService().onEditHouse(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), Integer.toString(type), value, value1, remark, validate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }
@@ -587,8 +567,7 @@ public class HouseViewActivity extends BaseActivity
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
+                @Override public void onNext(BaseJson<House> houseBaseJson) {
                     super.onNext(houseBaseJson);
                     onRequestData();
                 }

@@ -58,20 +58,18 @@ public class BillListFragment extends Fragment {
     private List<Bill> mBills;
 
     private int current_page = 1;
-    private final static String TAG = "BillListFragment";
+    private static final String TAG = "BillListFragment";
 
     private int flag;
     private boolean hasMoreData;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, null);
         initView();
         return mView;
@@ -116,18 +114,15 @@ public class BillListFragment extends Fragment {
             IntentUtils.startPreviewActivity(getActivity(), intent);
         });
         mAdapter.setBillOperationListener(new BillAdapter.OnBillOperationListener() {
-            @Override
-            public void onConfirmBill(int position) {
+            @Override public void onConfirmBill(int position) {
                 onOperateBill(position, 1);
             }
 
-            @Override
-            public void onEditBill(int positin) {
+            @Override public void onEditBill(int positin) {
                 onUpdateBill(positin);
             }
 
-            @Override
-            public void onDeleteBill(int position) {
+            @Override public void onDeleteBill(int position) {
                 onOperateBill(position, 0);
             }
         });
@@ -161,8 +156,7 @@ public class BillListFragment extends Fragment {
      */
     private void initRecyclerView(){
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
@@ -178,8 +172,7 @@ public class BillListFragment extends Fragment {
                 }
             }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
                 int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -223,30 +216,21 @@ public class BillListFragment extends Fragment {
         map.put("validate", validate);
         map.put("type", type);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onGetBillList(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                page,
-                validate,
-                type
-            )
+        GlApplication.getApiService().onGetBillList(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), page, validate, type)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<BaseList<Bill>>>() {
 
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     super.onError(e);
                     if (mRefreshLayout.isRefreshing()) {
                         mRefreshLayout.setRefreshing(false);
                     }
                 }
 
-                @Override
-                public void onNext(BaseJson<BaseList<Bill>> baseListBaseJson) {
+                @Override public void onNext(BaseJson<BaseList<Bill>> baseListBaseJson) {
                     if (mRefreshLayout.isRefreshing()) {
                         mRefreshLayout.setRefreshing(false);
                     }
@@ -408,33 +392,24 @@ public class BillListFragment extends Fragment {
         map.put("validate", validate);
         map.put("bid", bid);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onOperateBill(
-                signCarrier.getAppId(),
-                    signCarrier.getNonce(),
-                    signCarrier.getTimestamp(),
-                    signCarrier.getSignature(),
-                    bid,
-                    Integer.toString(type),
-                    validate
-            )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
+        GlApplication.getApiService().onOperateBill(
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), bid, Integer.toString(type), validate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
 
-                @Override
-                public void onError(Throwable e) {
-                    super.onError(e);
-                    onRequestData(true);
-                }
+                    @Override public void onError(Throwable e) {
+                        super.onError(e);
+                        onRequestData(true);
+                    }
 
-                @Override
-                public void onNext(BaseJson<Bill> billBaseJson) {
-                    onRequestData(true);
-                    super.onNext(billBaseJson);
-                    SystemUtil.showToast(billBaseJson.getMessage());
-                }
-            });
+                    @Override public void onNext(BaseJson<Bill> billBaseJson) {
+                        onRequestData(true);
+                        super.onNext(billBaseJson);
+                        SystemUtil.showToast(billBaseJson.getMessage());
+                    }
+                });
             /*.subscribe(new Subscriber<BaseJson<Bill>>() {
                 @Override
                 public void onCompleted() {

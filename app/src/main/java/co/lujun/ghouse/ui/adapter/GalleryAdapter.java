@@ -23,13 +23,11 @@ public class GalleryAdapter extends PagerAdapter {
         mImages = list;
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
         return mImages.size();
     }
 
-    @Override
-    public View instantiateItem(ViewGroup container, int position) {
+    @Override public View instantiateItem(ViewGroup container, int position) {
         PhotoView photoView = new PhotoView(container.getContext());
         // add tap listener for when tap screen hide the popupWindow
         /*photoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
@@ -46,18 +44,17 @@ public class GalleryAdapter extends PagerAdapter {
             .into(photoView);
 
         // Now just add PhotoView to ViewPager and return it
-        container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        container.addView(photoView,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         return photoView;
     }
 
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    @Override public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
+    @Override public boolean isViewFromObject(View view, Object object) {
         return view == object;
     }
 

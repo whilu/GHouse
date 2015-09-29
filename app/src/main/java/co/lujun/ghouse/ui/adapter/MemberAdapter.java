@@ -25,29 +25,27 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         mList = list;
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mList.size();
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return super.getItemId(position);
     }
 
-    @Override
-    public MemberAdapter.MemberViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    @Override public MemberAdapter.MemberViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
-        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_house_member, viewGroup, false);
+        view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.view_house_member, viewGroup, false);
         return new MemberViewHolder(view, mListener);
     }
 
-    @Override
-    public void onBindViewHolder(MemberAdapter.MemberViewHolder recyclerViewHolder, int i) {
+    @Override public void onBindViewHolder(
+            MemberAdapter.MemberViewHolder recyclerViewHolder, int i) {
         Picasso.with(GlApplication.getContext())
-            .load(mList.get(i) == null ? "" : mList.get(i))
-            .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
-            .into(recyclerViewHolder.ivAvatar);
+                .load(mList.get(i) == null ? "" : mList.get(i))
+                .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
+                .into(recyclerViewHolder.ivAvatar);
     }
 
     static class MemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -62,8 +60,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             view.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             if (mViewClickListener != null){
                 mViewClickListener.onClick(getPosition());
             }

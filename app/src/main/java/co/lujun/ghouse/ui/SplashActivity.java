@@ -60,10 +60,9 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
     private LoadingWindow winLoading;
 
-    private final static String TAG = "SplashActivity";
+    private static final String TAG = "SplashActivity";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         init();
@@ -77,7 +76,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         btnReg = (CustomRippleButton) findViewById(R.id.btn_splash_reg);
         tvMainText = (TextView) findViewById(R.id.tv_splash_main_text);
         loginView = LayoutInflater.from(this).inflate(R.layout.view_login_and_reg, null, false);
-        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
         if (loginView != null){
             cbIsOwner = (CheckBox) loginView.findViewById(R.id.cb_splash_is_owner);
             tilUName = (TextInputLayout) loginView.findViewById(R.id.til_splash_uname);
@@ -103,8 +103,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         new Handler().postDelayed(() -> runAnim(), Config.APP_SPLASH_TIME);
     }
 
-    @Override
-    public void onClick(View view) {
+    @Override public void onClick(View view) {
         if (view.getId() == R.id.btn_splash_login){
             if (!mDialog.isShowing()){
                 mDialog.show();
@@ -152,21 +151,13 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         map.put("password", password);
         map.put("usertype", usertype);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onLogin(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                username,
-                password,
-                usertype
-            )
+        GlApplication.getApiService().onLogin(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), username, password, usertype)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     super.onError(e);
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
@@ -176,8 +167,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                     }
                 }
 
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
+                @Override public void onNext(BaseJson<User> userBaseJson) {
                     if (winLoading.isShowing()){
                         winLoading.dismiss();
                     }
@@ -198,11 +188,16 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                         return;
                     }
                     try{
-                        DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
-                        PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
-                        PreferencesUtils.putInt(SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
-                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
-                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                        DatabaseHelper.getDatabaseHelper(SplashActivity.this)
+                                .getDao(User.class).create(user);
+                        PreferencesUtils.putBoolean(
+                                SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
+                        PreferencesUtils.putInt(
+                                SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
+                        PreferencesUtils.putString(
+                                SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
+                        PreferencesUtils.putString(
+                                SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
                     }catch (SQLException e){
                         e.printStackTrace();
                     }
@@ -282,20 +277,17 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         tranAnimSet.setInterpolator(new AccelerateDecelerateInterpolator());
         tranAnimSet.setFillAfter(true);
         tranAnimSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+            @Override public void onAnimationStart(Animation animation) {
             }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
+            @Override public void onAnimationEnd(Animation animation) {
                 if (isLogin) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 }
             }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+            @Override public void onAnimationRepeat(Animation animation) {
             }
         });
 

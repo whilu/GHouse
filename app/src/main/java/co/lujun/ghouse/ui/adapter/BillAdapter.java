@@ -50,16 +50,14 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
         this.mItemClickListener = listener;
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         if (mList.size() == 0){
             return 0;
         }
         return mList.size() + 1;
     }
 
-    @Override
-    public int getItemViewType(int position) {
+    @Override public int getItemViewType(int position) {
         if (position == mList.size()){
             return TYPE_1;
         }else {
@@ -67,33 +65,32 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
         }
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return super.getItemId(position);
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
         if (i == TYPE_0){
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_bill_item, viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.view_bill_item, viewGroup, false);
             view.setTag(mList.get(i));
             return new BillItemViewHolder(view, mItemClickListener);
         }else {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_rv_footer, viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.view_rv_footer, viewGroup, false);
             return (rvFooterViewHolder = new RvFooterViewHolder(view));
         }
     }
 
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder recyclerViewHolder, final int i) {
+    @Override public void onBindViewHolder(
+            final RecyclerView.ViewHolder recyclerViewHolder, final int i) {
         if (getItemViewType(i) == TYPE_0){
             final BillItemViewHolder viewHolder = (BillItemViewHolder) recyclerViewHolder;
             viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
             viewHolder.mSwipeLayout.addSwipeListener(new SimpleSwipeListener() {
 
-                @Override
-                public void onOpen(SwipeLayout layout) {
+                @Override public void onOpen(SwipeLayout layout) {
                     super.onOpen(layout);
 //                Toast.makeText(GlApplication.getContext(), mList.get(i) + "--Open", Toast.LENGTH_SHORT).show();
                 }
@@ -223,8 +220,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             llBillItem.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(view, getPosition());
             }
@@ -259,8 +255,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
         }
     }
 
-    @Override
-    public int getSwipeLayoutResourceId(int i) {
+    @Override public int getSwipeLayoutResourceId(int i) {
         return R.id.swipe_bill_item;
     }
 

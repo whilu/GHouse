@@ -32,21 +32,26 @@ import co.lujun.ghouse.bean.Config;
  * Created by lujun on 2015/3/16.
  */
 public class CaptureActivity extends BaseActivity implements Callback {
+
 	private static final float BEEP_VOLUME = 0.10f;
+
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
 	private Vector<BarcodeFormat> decodeFormats;
 	private InactivityTimer inactivityTimer;
 	private MediaPlayer mediaPlayer;
+
 	private boolean vibrate;
 	private boolean hasSurface;
 	private boolean playBeep;
+
 	private String characterSet;
     private Toolbar mToolBar;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	/**
+     * Called when the activity is first created.
+     */
+	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan_code);
 		CameraManager.init(getApplication());
@@ -59,8 +64,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		hasSurface = false;
 	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home){
 			this.setResult(Config.ACTIVITY_RES_SCAN, null);
             finish();
@@ -69,8 +73,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-	protected void onResume() {
+    @Override protected void onResume() {
 		super.onResume();
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
@@ -92,8 +95,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		vibrate = true;
 	}
 
-	@Override
-	protected void onPause() {
+	@Override protected void onPause() {
 		super.onPause();
 		if (handler != null) {
 			handler.quitSynchronously();
@@ -103,8 +105,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		CameraManager.get().closeDriver();
 	}
 
-	@Override
-	protected void onDestroy() {
+	@Override protected void onDestroy() {
 		inactivityTimer.shutdown();
 		super.onDestroy();
 	}
@@ -118,7 +119,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
-		//TODO 扫码成功回调
+		// 扫码成功回调
 		Intent intent = new Intent();
 		intent.putExtra(Config.KEY_SCAN_CODE_RESULT, resultString);
 		this.setResult(Config.ACTIVITY_RES_SCAN, intent);
@@ -134,19 +135,15 @@ public class CaptureActivity extends BaseActivity implements Callback {
 			return;
 		}
 		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,
-					characterSet);
+			handler = new CaptureActivityHandler(this, decodeFormats, characterSet);
 		}
 	}
 
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+	@Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
 	}
 
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
+	@Override public void surfaceCreated(SurfaceHolder holder) {
 		if (!hasSurface) {
 			hasSurface = true;
 			initCamera(holder);
@@ -154,8 +151,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
 	}
 
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
+	@Override public void surfaceDestroyed(SurfaceHolder holder) {
 		hasSurface = false;
 
 	}
@@ -183,11 +179,10 @@ public class CaptureActivity extends BaseActivity implements Callback {
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mediaPlayer.setOnCompletionListener(beepListener);
 
-			AssetFileDescriptor file = getResources().openRawResourceFd(
-					R.raw.beep);
+			AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
 			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(),
-						file.getStartOffset(), file.getLength());
+				mediaPlayer.setDataSource(
+                        file.getFileDescriptor(), file.getStartOffset(), file.getLength());
 				file.close();
 				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
 				mediaPlayer.prepare();

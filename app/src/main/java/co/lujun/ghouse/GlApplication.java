@@ -16,16 +16,16 @@ public class GlApplication extends Application {
 
     private static Context sContext;
 
-    private static RestAdapter mRestAdapter;
-    private static ApiService mApiService;
+    private static RestAdapter sRestAdapter;
+    private static ApiService sApiService;
 
-    private static SimpleDateFormat mSimpleDateFormat;
+    private static SimpleDateFormat sSimpleDateFormat;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        sSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public static Context getContext(){
@@ -33,27 +33,26 @@ public class GlApplication extends Application {
     }
 
     public static RestAdapter getRestAdapter(){
-        if (mRestAdapter == null){
+        if (sRestAdapter == null){
             synchronized (GlApplication.class){
-                if (mRestAdapter == null){
-                    mRestAdapter = new RestAdapter.Builder()
-                            .setEndpoint(Api.API_HOST + Api.API_VERSION)
-                            .build();
+                if (sRestAdapter == null){
+                    sRestAdapter = new RestAdapter.Builder()
+                            .setEndpoint(Api.API_HOST + Api.API_VERSION).build();
                 }
             }
         }
-        return mRestAdapter;
+        return sRestAdapter;
     }
 
     public static ApiService getApiService(){
-        if (mApiService == null){
+        if (sApiService == null){
             synchronized (GlApplication.class){
-                if (mApiService == null){
-                    mApiService = getRestAdapter().create(ApiService.class);
+                if (sApiService == null){
+                    sApiService = getRestAdapter().create(ApiService.class);
                 }
             }
         }
-        return mApiService;
+        return sApiService;
     }
 
     /**
@@ -61,6 +60,6 @@ public class GlApplication extends Application {
      * @return
      */
     public static SimpleDateFormat getSimpleDateFormat(){
-        return mSimpleDateFormat;
+        return sSimpleDateFormat;
     }
 }

@@ -62,10 +62,9 @@ public class AddTodoActivity extends BaseActivity
     private int moneyType = 0;
     private String content, total, code, extra;
 
-    private final static String TAG = "AddTodoActivity";
+    private static final String TAG = "AddTodoActivity";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
         init();
@@ -135,8 +134,7 @@ public class AddTodoActivity extends BaseActivity
         btnBillCameraCode.setOnClickListener(this);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+    @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton instanceof RadioButton && b){
             rbBillRmb.setChecked(rbBillRmb == compoundButton);
             rbBillDollar.setChecked(rbBillDollar == compoundButton);
@@ -165,8 +163,7 @@ public class AddTodoActivity extends BaseActivity
     private Uri photoUri;
     private final static int BITMAP_SCALE = 5;
 
-    @Override
-    public void onClick(View view) {
+    @Override public void onClick(View view) {
         if (view instanceof ImageView){
             if (!ImageUtils.checkSDCardAvailable()){
                 return;
@@ -183,12 +180,12 @@ public class AddTodoActivity extends BaseActivity
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
         }else if (view instanceof CustomRippleButton){
-            startActivityForResult(new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
+            startActivityForResult(
+                    new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Config.ACTIVITY_REQ_SCAN){
             if (data != null){
@@ -200,15 +197,9 @@ public class AddTodoActivity extends BaseActivity
                 if (bitmap == null){
                     return;
                 }
-                ImageUtils.savePhotoToSDCard(
-                        ImageUtils.zoomBitmap(
-                                bitmap,
-                                bitmap.getWidth() / BITMAP_SCALE,
-                                bitmap.getHeight() / BITMAP_SCALE
-                        ),
-                        imagePath,
-                        imageName
-                );
+                ImageUtils.savePhotoToSDCard(ImageUtils.zoomBitmap(
+                        bitmap, bitmap.getWidth() / BITMAP_SCALE,
+                        bitmap.getHeight() / BITMAP_SCALE), imagePath, imageName);
                 // 刷新图库
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 intent.setData(photoUri);
@@ -287,33 +278,26 @@ public class AddTodoActivity extends BaseActivity
         Map<String, String> map = new HashMap<String, String>();
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onGetUploadToken(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                validate
-            )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<UploadToken>>() {
-                @Override
-                public void onError(Throwable e) {
-                    super.onError(e);
-                }
-
-                @Override
-                public void onNext(BaseJson<UploadToken> tokenBaseJson) {
-                    super.onNext(tokenBaseJson);
-                    UploadToken token;
-                    if ((token = tokenBaseJson.getData()) == null){
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
+        GlApplication.getApiService().onGetUploadToken(
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), validate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<UploadToken>>() {
+                    @Override public void onError(Throwable e) {
+                        super.onError(e);
                     }
-                    onUploadImages(token.getToken());
-                }
-            });
+
+                    @Override public void onNext(BaseJson<UploadToken> tokenBaseJson) {
+                        super.onNext(tokenBaseJson);
+                        UploadToken token;
+                        if ((token = tokenBaseJson.getData()) == null) {
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            return;
+                        }
+                        onUploadImages(token.getToken());
+                    }
+                });
     }
 
     /**
@@ -334,14 +318,12 @@ public class AddTodoActivity extends BaseActivity
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_todo, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
             return true;

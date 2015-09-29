@@ -28,8 +28,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super(context, DB_NAME, null, 1);
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+    @Override public void onCreate(
+            SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
             // create tables here
             TableUtils.createTableIfNotExists(connectionSource, User.class);
@@ -41,9 +41,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase,
-                          ConnectionSource connectionSource, int i, int i1) {
+    @Override public void onUpgrade(
+            SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
         try {
             // drop tables here
             TableUtils.dropTable(connectionSource, User.class, true);

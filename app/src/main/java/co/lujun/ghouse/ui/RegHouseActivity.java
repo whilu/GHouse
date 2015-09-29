@@ -38,10 +38,9 @@ public class RegHouseActivity extends BaseActivity {
     private TextInputLayout tilUName, tilPwd, tilPhone, tilAddress, tilIntro;
     private LoadingWindow winLoading;
 
-    private final static String TAG = "RegHouseActivity";
+    private static final String TAG = "RegHouseActivity";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg_house);
         init();
@@ -64,17 +63,16 @@ public class RegHouseActivity extends BaseActivity {
         tilIntro = (TextInputLayout) findViewById(R.id.til_rhouse_intro);
         tilIntro.setHint(getString(R.string.til_hint_rhouse_intro));
 
-        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_reg_house, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
             return true;
@@ -126,31 +124,20 @@ public class RegHouseActivity extends BaseActivity {
         map.put("houseinfo", houseinfo);
         map.put("password", password);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onRegisterHouse(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                username,
-                password,
-                phone,
-                houseaddress,
-                houseinfo
-            )
+        GlApplication.getApiService().onRegisterHouse(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
+                @Override public void onNext(BaseJson<House> houseBaseJson) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }

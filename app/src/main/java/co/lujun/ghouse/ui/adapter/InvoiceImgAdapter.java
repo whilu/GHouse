@@ -25,25 +25,24 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
         mList = list;
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mList.size();
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return super.getItemId(position);
     }
 
-    @Override
-    public InvoiceImgAdapter.MemberViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    @Override public InvoiceImgAdapter.MemberViewHolder onCreateViewHolder(
+            ViewGroup viewGroup, int i) {
         View view;
-        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_invoice, viewGroup, false);
+        view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.view_invoice, viewGroup, false);
         return new MemberViewHolder(view, mListener);
     }
 
-    @Override
-    public void onBindViewHolder(InvoiceImgAdapter.MemberViewHolder recyclerViewHolder, int i) {
+    @Override public void onBindViewHolder(
+            InvoiceImgAdapter.MemberViewHolder recyclerViewHolder, int i) {
         Picasso.with(GlApplication.getContext())
             .load(mList.get(i) == null ? "" : mList.get(i))
             .into(recyclerViewHolder.ivImage);
@@ -61,8 +60,7 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
             view.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
             if (mImageClicklistener != null){
                 mImageClicklistener.onClick(getPosition());
             }

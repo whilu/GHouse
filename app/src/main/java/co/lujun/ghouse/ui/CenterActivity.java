@@ -63,12 +63,11 @@ public class CenterActivity extends BaseActivity {
 
     private static Dialog mUpdatePhoneDialog, mUpdatePwdDialog;
 
-    private final static String TAG = "CenterActivity";
+    private static final String TAG = "CenterActivity";
 
     private LoadingWindow winLoading;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_center);
         init();
@@ -90,22 +89,25 @@ public class CenterActivity extends BaseActivity {
 
         btnLogout = (CustomRippleButton) findViewById(R.id.btn_set_logout);
 
-        winLoading = new LoadingWindow(LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
 
-        updatePhoneView = LayoutInflater.from(this).inflate(R.layout.view_center_change_phone, null, false);
-        updatePwdView = LayoutInflater.from(this).inflate(R.layout.view_center_update_pwd, null, false);
+        updatePhoneView = LayoutInflater.from(this)
+                .inflate(R.layout.view_center_change_phone, null, false);
+        updatePwdView = LayoutInflater.from(this)
+                .inflate(R.layout.view_center_update_pwd, null, false);
         if (updatePhoneView != null){
             tilPhone = (TextInputLayout) updatePhoneView.findViewById(R.id.til_center_phone);
             tilPhone.setHint(getString(R.string.tv_phone));
             mUpdatePhoneDialog = new SimpleDialog(this);
             mUpdatePhoneDialog.applyStyle(R.style.App_Dialog)
-                .title(getString(R.string.action_update_phone))
-                .positiveAction(R.string.action_update)
-                .negativeAction(R.string.action_back)
-                .contentView(updatePhoneView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> onEditUserData(0, mUpdatePhoneDialog))
-                .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
+                    .title(getString(R.string.action_update_phone))
+                    .positiveAction(R.string.action_update)
+                    .negativeAction(R.string.action_back)
+                    .contentView(updatePhoneView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> onEditUserData(0, mUpdatePhoneDialog))
+                    .negativeActionClickListener(v -> mUpdatePhoneDialog.dismiss());
         }
         if (updatePwdView != null){
             tilOldPwd = (TextInputLayout) updatePwdView.findViewById(R.id.til_center_opwd);
@@ -114,13 +116,13 @@ public class CenterActivity extends BaseActivity {
             tilNewPwd.setHint(getString(R.string.til_hint_center_npwd));
             mUpdatePwdDialog = new SimpleDialog(this);
             mUpdatePwdDialog.applyStyle(R.style.App_Dialog)
-                .title(getString(R.string.action_update_pwd))
-                .positiveAction(R.string.action_update)
-                .negativeAction(R.string.action_back)
-                .contentView(updatePwdView)
-                .cancelable(false)
-                .positiveActionClickListener(v -> onEditUserData(1, mUpdatePwdDialog))
-                .negativeActionClickListener(v -> mUpdatePwdDialog.dismiss());
+                    .title(getString(R.string.action_update_pwd))
+                    .positiveAction(R.string.action_update)
+                    .negativeAction(R.string.action_back)
+                    .contentView(updatePwdView)
+                    .cancelable(false)
+                    .positiveActionClickListener(v -> onEditUserData(1, mUpdatePwdDialog))
+                    .negativeActionClickListener(v -> mUpdatePwdDialog.dismiss());
         }
 
         llPhone.setOnClickListener(v -> {
@@ -129,8 +131,8 @@ public class CenterActivity extends BaseActivity {
             }
         });
         llHouseId.setOnClickListener(v ->
-            IntentUtils.startPreviewActivity(CenterActivity.this,
-                    new Intent(CenterActivity.this, HouseViewActivity.class))
+            IntentUtils.startPreviewActivity(
+                    CenterActivity.this, new Intent(CenterActivity.this, HouseViewActivity.class))
         );
         llUpdatePwd.setOnClickListener(v -> {
             if (mUpdatePwdDialog != null) {
@@ -140,7 +142,8 @@ public class CenterActivity extends BaseActivity {
         btnLogout.setOnClickListener(v -> onLogOut());
         // read cache
         try{
-            List<User> users = DatabaseHelper.getDatabaseHelper(this).getDao(User.class).queryForAll();
+            List<User> users =
+                    DatabaseHelper.getDatabaseHelper(this).getDao(User.class).queryForAll();
             if (users != null && users.size() > 0){
                 onShowData(users.get(0));
             }
@@ -151,8 +154,7 @@ public class CenterActivity extends BaseActivity {
         onRequestData();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
             return true;
@@ -172,24 +174,17 @@ public class CenterActivity extends BaseActivity {
         Map<String, String> map = new HashMap<String, String>();
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onGetUserData(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                validate
-            )
+        GlApplication.getApiService().onGetUserData(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), validate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
+                @Override public void onNext(BaseJson<User> userBaseJson) {
                     super.onNext(userBaseJson);
                     User user;
                     if ((user = userBaseJson.getData()) == null) {
@@ -258,9 +253,9 @@ public class CenterActivity extends BaseActivity {
         tvPhone.setText(user.getPhone() == null ? "" : user.getPhone());
         tvHouseId.setText(Long.toString(user.getHouseid()));
         Picasso.with(this)
-            .load(user.getAvatar() == null ? "" : user.getAvatar())
-            .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
-            .into(ivAvatar);
+                .load(user.getAvatar() == null ? "" : user.getAvatar())
+                .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
+                .into(ivAvatar);
     }
 
     /**
@@ -338,35 +333,26 @@ public class CenterActivity extends BaseActivity {
         map.put("value1", value1);
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
-        GlApplication.getApiService()
-            .onEditUserData(
-                signCarrier.getAppId(),
-                signCarrier.getNonce(),
-                signCarrier.getTimestamp(),
-                signCarrier.getSignature(),
-                Integer.toString(type),
-                value,
-                value1,
-                validate
-            )
+        GlApplication.getApiService().onEditUserData(
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), Integer.toString(type), value, value1, validate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override
-                public void onError(Throwable e) {
+                @Override public void onError(Throwable e) {
                     onShowAndHide(winLoading, false, dialog, true);
                     super.onError(e);
                 }
 
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
+                @Override public void onNext(BaseJson<User> userBaseJson) {
 //                    super.onNext(userBaseJson);
                     if (null == userBaseJson) {
                         onShowAndHide(winLoading, false, dialog, true);
                         SystemUtil.showToast(R.string.msg_nullpointer_error);
                         return;
                     }
-                    if (userBaseJson.getValidate() != null && !TextUtils.isEmpty(userBaseJson.getValidate())) {
+                    if (userBaseJson.getValidate() != null
+                            && !TextUtils.isEmpty(userBaseJson.getValidate())) {
                         PreferencesUtils.putString(CenterActivity.this,
                                 Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
                     }
@@ -421,7 +407,8 @@ public class CenterActivity extends BaseActivity {
      * @param dialog
      * @param isShow2
      */
-    private void onShowAndHide(LoadingWindow winLoading, boolean isShow1, Dialog dialog, boolean isShow2){
+    private void onShowAndHide(
+            LoadingWindow winLoading, boolean isShow1, Dialog dialog, boolean isShow2){
         if (isShow1){
             if (!winLoading.isShowing()) {
                 winLoading.showAsDropDown(mToolbar, 0, 0);

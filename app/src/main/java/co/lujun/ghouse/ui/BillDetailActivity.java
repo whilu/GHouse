@@ -36,12 +36,14 @@ public class BillDetailActivity extends BaseActivity {
     private LinearLayoutManager mLayoutManager;
     
     private TextView tvType, tv7securitycode, tvAddTime, tvLatestTime, tvContent, tvTotal,
-                        tvAddUser, tvConfUser, tvRemark, tvConfYes, tvConfNo, tvCode;
+            tvAddUser, tvConfUser, tvRemark, tvConfYes, tvConfNo, tvCode;
 
     private InvoiceImgAdapter mAdapter;
     private GalleryWindow mGalleryWindow;
     private Bill mBill;
     private List<String> mInvoiceImgList;
+
+    private static final String TAG = "BillDetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +83,8 @@ public class BillDetailActivity extends BaseActivity {
         mAdapter.setImageClickListener(position -> {
             if (mGalleryWindow != null) {
                 if (!mGalleryWindow.isShowing()) {
-                    mGalleryWindow.show(
-                        BillDetailActivity.this.findViewById(R.id.tv_popup_parent),
-                        0,
-                        0,
-                        position
-                    );
+                    mGalleryWindow.show(BillDetailActivity.this.findViewById(R.id.tv_popup_parent),
+                            0, 0, position);
                 }
             }
         });
@@ -96,7 +94,7 @@ public class BillDetailActivity extends BaseActivity {
             long bid = getIntent().getLongExtra(Config.KEY_OF_BID, 0);
             try{
                 List<Bill> bills = DatabaseHelper.getDatabaseHelper(this)
-                                    .getDao(Bill.class).queryBuilder().where().eq("bid", bid).query();
+                        .getDao(Bill.class).queryBuilder().where().eq("bid", bid).query();
                 if (bills != null && bills.size() > 0){
                     onUpdateUI(bills.get(0));
                 }
@@ -115,8 +113,10 @@ public class BillDetailActivity extends BaseActivity {
             return;
         }
 
-        String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
-        String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
+        String[] types = GlApplication.getContext()
+                .getResources().getStringArray(R.array.bill_type);
+        String[] bgDrawableTypes = GlApplication.getContext()
+                .getResources().getStringArray(R.array.bill_drawable_type);
         String type, bgDrawableType;
         if (bill.getType_id() >= 1 && bill.getType_id() < types.length + 1){
             type = types[bill.getType_id() - 1];
@@ -134,7 +134,8 @@ public class BillDetailActivity extends BaseActivity {
         }
         tvType.setText(type);
 
-        String[] moneyFlags = GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
+        String[] moneyFlags = GlApplication.getContext()
+                .getResources().getStringArray(R.array.money_flag);
         String moneyFlag;
         if (bill.getMoney_flag() >= 0 && bill.getMoney_flag() < moneyFlags.length){
             moneyFlag = moneyFlags[bill.getMoney_flag()];
