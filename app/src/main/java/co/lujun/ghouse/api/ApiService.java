@@ -137,8 +137,8 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
-    @POST("/add_record")
-    Observable<BaseJson<Bill>> onAddRecord(
+    @POST("/edit_record")
+    Observable<BaseJson<Bill>> onEditRecord(
         @Query("appid") String appid,
         @Query("nonce") String nonce,
         @Query("timestamp") String timestamp,
@@ -149,6 +149,8 @@ public interface ApiService {
         @Field("qcode") String qcode,
         @Field("remark") String remark,
         @Field("photos") String photos,
-        @Field("type") String type
+        @Field("bid") String bid,
+        @Field("type") String type,
+        @Field("mtype") String mtype
     );
 }

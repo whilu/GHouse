@@ -16,24 +16,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.GridView;
 
 import com.github.whilu.library.CustomRippleButton;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCancellationSignal;
-import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.rey.material.widget.CheckBox;
 import com.rey.material.widget.RadioButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +38,13 @@ import java.util.Map;
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
+import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
+import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.UploadToken;
 import co.lujun.ghouse.bean.User;
+import co.lujun.ghouse.ui.adapter.GridImageAdapter;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.ImageUtils;
@@ -67,15 +67,18 @@ public class AddTodoActivity extends BaseActivity
     private TextInputLayout tilBillContent, tilBillTotal, tilBillCode, tilBillExtra;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
     private CheckBox[] cbCostType;
-    private ImageView[] ivBillImages;
-    private RelativeLayout[] rlBillImages;
     private CustomRippleButton btnBillCameraCode;
+    private GridView gvPhotos;
 
-    private Map<Integer, String> pMap;
+    private List<String> mFileNameList;
+    private long bid;
     private int costType;
     private int moneyType = 0;
+    private int mDoneUploadTotal;
     private String content, total, code, extra;
     private User mUser;
+    private GridImageAdapter mPhotosAdapter;
+    private List<Uri> mUriList;
 
     private static UploadManager sUploadMananger = new UploadManager();
 
@@ -103,32 +106,15 @@ public class AddTodoActivity extends BaseActivity
         rbBillOther = (RadioButton) findViewById(R.id.rb_bill_other);
 
         cbCostType = new CheckBox[]{
-            (CheckBox) findViewById(R.id.cb_bill_eat),
-            (CheckBox) findViewById(R.id.cb_bill_wear),
-            (CheckBox) findViewById(R.id.cb_bill_live),
-            (CheckBox) findViewById(R.id.cb_bill_travel),
-            (CheckBox) findViewById(R.id.cb_bill_play),
-            (CheckBox) findViewById(R.id.cb_bill_other)
+                (CheckBox) findViewById(R.id.cb_bill_eat),
+                (CheckBox) findViewById(R.id.cb_bill_wear),
+                (CheckBox) findViewById(R.id.cb_bill_live),
+                (CheckBox) findViewById(R.id.cb_bill_travel),
+                (CheckBox) findViewById(R.id.cb_bill_play),
+                (CheckBox) findViewById(R.id.cb_bill_other)
         };
 
-        ivBillImages = new ImageView[]{
-            (ImageView) findViewById(R.id.iv_bill_image1),
-            (ImageView) findViewById(R.id.iv_bill_image2),
-            (ImageView) findViewById(R.id.iv_bill_image3),
-            (ImageView) findViewById(R.id.iv_bill_image4),
-            (ImageView) findViewById(R.id.iv_bill_image5),
-            (ImageView) findViewById(R.id.iv_bill_image6)
-        };
-        rlBillImages = new RelativeLayout[]{
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv1),
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv2),
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv3),
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv4),
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv5),
-            (RelativeLayout) findViewById(R.id.rl_add_todo_iv6)
-        };
-
-        pMap = new HashMap<Integer, String>();
+        gvPhotos = (GridView) findViewById(R.id.gv_activity_add_todo);
 
         btnBillCameraCode = (CustomRippleButton) findViewById(R.id.btn_bill_camera_code);
 
@@ -145,9 +131,6 @@ public class AddTodoActivity extends BaseActivity
             checkBox.setOnCheckedChangeListener(this);
         }
 
-        for (ImageView imageView: ivBillImages) {
-            imageView.setOnClickListener(this);
-        }
         btnBillCameraCode.setOnClickListener(this);
         try{
             List<User> users =
@@ -158,6 +141,27 @@ public class AddTodoActivity extends BaseActivity
         }catch (SQLException e){
             e.printStackTrace();
         }
+
+        imagePath = Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH;
+
+        mFileNameList = new ArrayList<String>();
+        mUriList = new ArrayList<Uri>();
+        mPhotosAdapter = new GridImageAdapter(this, mUriList);
+        mPhotosAdapter.setOnOperateListener(new GridImageAdapter.OnOperateListener() {
+            @Override
+            public void onAddImage() {
+                onAddPhoto();
+            }
+
+            @Override
+            public void onDeleteImage(int position) {
+                mUriList.remove(position);
+                mFileNameList.remove(position);
+            }
+        });
+        gvPhotos.setAdapter(mPhotosAdapter);
+
+        onEditLoadCache();
     }
 
     @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -185,33 +189,11 @@ public class AddTodoActivity extends BaseActivity
 
     private String imagePath;
     private String imageName;
-    private int billImageViewId;
     private Uri photoUri;
     private final static int BITMAP_SCALE = 5;
 
     @Override public void onClick(View view) {
-        if (view instanceof ImageView){
-            if (mUser == null || !ImageUtils.checkSDCardAvailable()){
-                return;
-            }
-            billImageViewId = view.getId();
-            imagePath = Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH;
-            try {
-                imageName = MD5.getMD5(
-                        Long.toString(mUser.getUid()) + mUser.getHouseid()
-                                + System.currentTimeMillis()) + ".png";
-                File file = new File(imagePath);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                photoUri = Uri.fromFile(new File(file, imageName));
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
-            } catch (NoSuchAlgorithmException e){
-                e.printStackTrace();
-            }
-        }else if (view instanceof CustomRippleButton){
+        if (view instanceof CustomRippleButton){
             startActivityForResult(
                     new Intent(this, CaptureActivity.class), Config.ACTIVITY_REQ_SCAN);
         }
@@ -237,40 +219,61 @@ public class AddTodoActivity extends BaseActivity
                 intent.setData(photoUri);
                 this.sendBroadcast(intent);
                 bitmap.recycle();
-                switch (billImageViewId){
-                    case R.id.iv_bill_image1:
-                        pMap.put(1, imageName);
-                        ivBillImages[0].setImageURI(photoUri);
-                        rlBillImages[1].setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.iv_bill_image2:
-                        pMap.put(2, imageName);
-                        ivBillImages[1].setImageURI(photoUri);
-                        rlBillImages[2].setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.iv_bill_image3:
-                        pMap.put(3, imageName);
-                        ivBillImages[2].setImageURI(photoUri);
-                        rlBillImages[3].setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.iv_bill_image4:
-                        pMap.put(4, imageName);
-                        ivBillImages[3].setImageURI(photoUri);
-                        rlBillImages[4].setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.iv_bill_image5:
-                        pMap.put(5, imageName);
-                        ivBillImages[4].setImageURI(photoUri);
-                        rlBillImages[5].setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.iv_bill_image6:
-                        pMap.put(6, imageName);
-                        ivBillImages[5].setImageURI(photoUri);
-                        break;
-                    default:
-                        break;
-                }
+
+                mUriList.add(photoUri);
+                mFileNameList.add(imageName);
+                mPhotosAdapter.notifyDataSetChanged();
             }
+        }
+    }
+
+    /**
+     * when eedit bill then load cache
+     */
+    private void onEditLoadCache(){
+        if (getIntent() != null){
+            bid = getIntent().getLongExtra(Config.KEY_OF_BID, 0);
+            try{
+                List<Bill> bills = DatabaseHelper.getDatabaseHelper(this)
+                        .getDao(Bill.class).queryBuilder().where().eq("bid", bid).query();
+                if (bills != null && bills.size() > 0){
+                    List<Image> images = DatabaseHelper.getDatabaseHelper(this)
+                            .getDao(Image.class).queryBuilder().where().eq("bid", bid).query();
+                    // bills.get(0)
+                    for (int i = 0; i < images.size(); i++) {
+                        // TODO check the array length
+                        mFileNameList.add(images.get(i).getLarge().split("//")[2]);
+                        // TODO check dir exist
+                        mUriList.add(Uri.fromFile(new File(new File(imagePath), imageName)));
+                    }
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * add one photo from camera
+     */
+    private void onAddPhoto(){
+        if (mUser == null || !ImageUtils.checkSDCardAvailable()){
+            return;
+        }
+        try {
+            imageName = MD5.getMD5(
+                    Long.toString(mUser.getUid()) + mUser.getHouseid()
+                            + System.currentTimeMillis()) + ".png";
+            File file = new File(imagePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            photoUri = Uri.fromFile(new File(file, imageName));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, Config.ACTIVITY_REQ_CAMERA);
+        } catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
         }
     }
 
@@ -295,10 +298,10 @@ public class AddTodoActivity extends BaseActivity
             SystemUtil.showToast(R.string.msg_cost_type_not_null);
             return;
         }
-        if (!pMap.isEmpty()){// 有图片，先获取token，再上传图片，再发表记录
+        if (!mFileNameList.isEmpty()){// 有图片，先获取token，再上传图片，再发表记录
             onGetUploadToken();
         }else {// 否则，直接发表记录
-            onPublishRecord();
+            onPublishRecord("");
         }
     }
 
@@ -336,24 +339,69 @@ public class AddTodoActivity extends BaseActivity
      * upload images to QiNiu
      */
     private void onUploadImages(String token){
-        for (Map.Entry<Integer, String> entry : pMap.entrySet()) {
-//            Log.d(TAG, "key = " + entry.getKey() + ", value = " + entry.getValue());
-            String data = imagePath + entry.getValue();
-            String key = entry.getValue();
+        mDoneUploadTotal = 0;
+        StringBuilder builder = new StringBuilder();
+        for (String name : mFileNameList) {
+            String data = imagePath + name;
+            String key = name;
             sUploadMananger.put(data, key, token, (s, responseInfo, jsonObject) -> {
-                Log.d(TAG, s + ", " + responseInfo + ", " + jsonObject);
+                try{
+                    if (jsonObject != null && jsonObject.getInt("status") == Config.STATUS_CODE_OK){
+                        JSONObject jsonData = jsonObject.getJSONObject("data");
+                        if (jsonData != null){
+                            builder.append(jsonData.get("file_name") + ",");
+                            mDoneUploadTotal++;
+                        }
+                    }
+                    if (mDoneUploadTotal == mFileNameList.size()){
+                        onPublishRecord(builder.substring(0, builder.length() - 1).toString());
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
             }, new UploadOptions(null, null, false, (s, percent) -> {
                 Log.d(TAG, s + ":" + percent);
             }, () -> false));
         }
-
     }
 
     /**
      * publish record
      */
-    private void onPublishRecord(){
+    private void onPublishRecord(String photos){
+        String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
+        String content = tilBillContent.getEditText().toString();
+        String total = tilBillTotal.getEditText().toString();
+        String qcode = tilBillCode.getEditText().toString();
+        String remark = tilBillExtra.getEditText().toString();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("content", content);
+        map.put("total", total);
+        map.put("qcode", qcode);
+        map.put("remark", remark);
+        map.put("photos", photos);
+        map.put("bid", Long.toString(bid));
+        map.put("type", Integer.toString(costType));
+        map.put("mtype", Integer.toString(moneyType));
 
+        SignCarrier signCarrier = SignatureUtil.getSignature(map);
+        GlApplication.getApiService().onEditRecord(
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), validate, content, total, qcode, remark, photos,
+                    Long.toString(bid), Integer.toString(costType), Integer.toString(moneyType))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
+                    @Override public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override public void onNext(BaseJson<Bill> billBaseJson) {
+                        super.onNext(billBaseJson);
+                        // TODO publish success
+                    }
+                });
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
