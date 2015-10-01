@@ -20,12 +20,14 @@ public class GlApplication extends Application {
     private static ApiService sApiService;
 
     private static SimpleDateFormat sSimpleDateFormat;
+    private static SimpleDateFormat sSimpleDateDotFormat;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
         sSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        sSimpleDateDotFormat = new SimpleDateFormat("yyyy.MM.dd");
     }
 
     public static Context getContext(){
@@ -61,5 +63,13 @@ public class GlApplication extends Application {
      */
     public static SimpleDateFormat getSimpleDateFormat(){
         return sSimpleDateFormat;
+    }
+
+    /**
+     * get SimpleDateFormat with dot split
+     * @return
+     */
+    public static SimpleDateFormat getSimpleDateDotFormat(){
+        return sSimpleDateDotFormat;
     }
 }

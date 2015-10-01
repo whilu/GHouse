@@ -35,7 +35,7 @@
         style="@style/Material.Drawable.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="0dp"
         android:gravity="center_vertical"
         android:text="@string/cb_hint_iam_owner" />
 

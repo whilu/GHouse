@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,15 +34,15 @@ import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.adapter.MemberAdapter;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
-import co.lujun.ghouse.ui.listener.ViewClickListener;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
+import co.lujun.ghouse.ui.widget.UpPayViewWindow;
 import co.lujun.ghouse.ui.widget.UserViewWindow;
+import co.lujun.ghouse.util.AppHelper;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -76,6 +75,8 @@ public class HouseViewActivity extends BaseActivity
     private static final String TAG = "HouseViewActivity";
 
     private LoadingWindow winLoading;
+
+    private UpPayViewWindow upPayViewWindow;
 
     private int moneyType = 0;
 
@@ -125,6 +126,8 @@ public class HouseViewActivity extends BaseActivity
 
         winLoading = new LoadingWindow(
                 LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
+
+        upPayViewWindow = new UpPayViewWindow(this);
 
         srlHouse.setOnRefreshListener(() -> onRequestData());
         // read cache
@@ -235,6 +238,7 @@ public class HouseViewActivity extends BaseActivity
         }
         int vid = v.getId();
         if (vid == R.id.ll_hv_money_surplus){
+            onCheckUserPerission();
             mAddMoneyDialog.title(R.string.tv_house_add_money);
             tilAddMoney.getEditText().setText("");
             tilAddMoney.getEditText().setHint(getResources().getString(R.string.tv_house_money_surplus)
@@ -242,19 +246,21 @@ public class HouseViewActivity extends BaseActivity
             tilAddMoneyExtra.setHint(getString(R.string.tv_house_intro));
             mAddMoneyDialog.show();
         }else if (vid == R.id.ll_hv_add_member){
+            onCheckUserPerission();
             if (hvAddMemberView != null && mAddMemberDialog != null){
                 tilUName.getEditText().setText("");
                 tilUPwd.getEditText().setText("");
                 mAddMemberDialog.show();
             }
         }else if (vid == R.id.ll_hv_house_moving){
+            onCheckUserPerission();
             if (hvUHouseView != null && mUHouseDialog != null){
                 tilHouseAdd.getEditText().setText("");
                 tilHouseIntro.getEditText().setText("");
                 mUHouseDialog.show();
             }
         }else if (vid == R.id.ll_action_find_am_record){
-            SystemUtil.showToast("交钱记录");
+            upPayViewWindow.show(mToolbar, Gravity.CENTER, 0, 0);
         }
     }
 
@@ -263,6 +269,7 @@ public class HouseViewActivity extends BaseActivity
      * @param v
      */
     public void updateInfo(View v){
+        onCheckUserPerission();
         if (hvUpdateView == null || mUpdateDialog == null){
             return;
         }
@@ -461,7 +468,8 @@ public class HouseViewActivity extends BaseActivity
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override public void onError(Throwable e) {
+                @Override
+                public void onError(Throwable e) {
                     if (winLoading.isShowing()) {
                         winLoading.dismiss();
                     }
@@ -471,7 +479,8 @@ public class HouseViewActivity extends BaseActivity
                     super.onError(e);
                 }
 
-                @Override public void onNext(BaseJson<User> userBaseJson) {
+                @Override
+                public void onNext(BaseJson<User> userBaseJson) {
                     super.onNext(userBaseJson);
                     onRequestData();
                 }
@@ -614,5 +623,15 @@ public class HouseViewActivity extends BaseActivity
         UserViewWindow.setPhone(getString(R.string.tv_vud_phone) + mUserList.get(position).getPhone());
         UserViewWindow.setAvatarUrl(mUserList.get(position).getAvatar());
         UserViewWindow.show(mToolbar, Gravity.CENTER, 0, 0);
+    }
+
+    /**
+     * check user permission
+     */
+    private void onCheckUserPerission(){
+        if (!AppHelper.onCheckPermission(this)){
+            SystemUtil.showToast(R.string.msg_have_confirmed);
+            return;
+        }
     }
 }

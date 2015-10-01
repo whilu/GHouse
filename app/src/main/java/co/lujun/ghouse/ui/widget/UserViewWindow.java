@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
+import co.lujun.ghouse.ui.listener.CustomAnimationListener;
 import co.lujun.ghouse.ui.widget.roundedimageview.RoundedImageView;
 
 /**
@@ -89,12 +90,7 @@ public class UserViewWindow extends PopupWindow {
         throwIfNotInit();
         cvGptv.clearAnimation();
         cvGptv.startAnimation(hideAnim);
-        hideAnim.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override public void onAnimationStart(Animation animation) {}
-
-            @Override public void onAnimationRepeat(Animation animation) {}
-
+        hideAnim.setAnimationListener(new CustomAnimationListener() {
             @Override public void onAnimationEnd(Animation animation) {
                 mInstance.dismiss();
             }
@@ -127,7 +123,7 @@ public class UserViewWindow extends PopupWindow {
 
     private static void throwIfNotInit() {
         if (mInstance == null) {
-            throw new IllegalStateException("AnnDetailView was't init, please init before use it!");
+            throw new IllegalStateException("UserViewWindow was't init, please init before use it!");
         }
     }
 }

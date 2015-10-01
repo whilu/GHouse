@@ -12,13 +12,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_money_type"
-            android:textColor="@color/deep_gray"
-            android:textSize="16sp" />
-
         <com.rey.material.widget.RadioButton
             android:id="@+id/rb_am_rmb"
             style="@style/Material.Drawable.RadioButton"
