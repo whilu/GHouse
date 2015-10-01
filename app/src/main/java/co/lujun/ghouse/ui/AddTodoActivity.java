@@ -73,9 +73,9 @@ public class AddTodoActivity extends BaseActivity
     private GridView gvPhotos;
 
     private List<String> mFileNameList;
+    private List<String> mCacheFileNameList;
+    private List<String> mOldUrList;
     private long bid;
-    private int costType;
-    private int moneyType = 0;
     private int mDoneUploadTotal;
     private String content, total, code, extra;
     private User mUser;
@@ -148,6 +148,8 @@ public class AddTodoActivity extends BaseActivity
         imagePath = Environment.getExternalStorageDirectory() + Config.APP_IMAGE_PATH;
 
         mFileNameList = new ArrayList<String>();
+        mCacheFileNameList = new ArrayList<String>();
+        mOldUrList = new ArrayList<String>();
         mUriList = new ArrayList<Uri>();
         mPhotosAdapter = new GridImageAdapter(this, mUriList);
         mPhotosAdapter.setOnOperateListener(new GridImageAdapter.OnOperateListener() {
@@ -170,21 +172,6 @@ public class AddTodoActivity extends BaseActivity
             rbBillRmb.setChecked(rbBillRmb == compoundButton);
             rbBillDollar.setChecked(rbBillDollar == compoundButton);
             rbBillOther.setChecked(rbBillOther == compoundButton);
-            if (rbBillRmb == compoundButton){
-                moneyType = 0;
-            }else if (rbBillDollar == compoundButton){
-                moneyType = 1;
-            }else if(rbBillOther == compoundButton){
-                moneyType = 2;
-            }
-        }
-        if (compoundButton instanceof CheckBox){
-            costType = 0;
-            for (int i = 0; i < cbCostType.length; i++){
-                if (cbCostType[i].isChecked()){
-                    costType += Math.pow(2, i);
-                }
-            }
         }
     }
 
@@ -243,13 +230,17 @@ public class AddTodoActivity extends BaseActivity
                     Bill bill = bills.get(0);
                     for (int i = 0; i < images.size(); i++) {
                         String[] tmpSplit;
-                        if ((tmpSplit = images.get(i).getLarge().split("//")) != null
-                                && tmpSplit.length == 3){
-                            mFileNameList.add(tmpSplit[2]);
-                        }
-                        File tmpFile = new File(imagePath, tmpSplit[2]);
-                        if (tmpFile.exists() && tmpFile.isFile()) {
-                            mUriList.add(Uri.fromFile(tmpFile));
+                        if ((tmpSplit = images.get(i).getLarge().split("/")) != null
+                                && tmpSplit.length == 4){
+                            mOldUrList.add(images.get(i).getLarge());
+                            mFileNameList.add(tmpSplit[3]);
+                            mCacheFileNameList.add(tmpSplit[3]);
+                            File tmpFile = new File(imagePath, tmpSplit[3]);
+                            if (tmpFile.exists() && tmpFile.isFile()) {
+                                mUriList.add(Uri.fromFile(tmpFile));
+                            }else {
+                                mUriList.add(Uri.fromFile(new File("")));
+                            }
                         }
                     }
                     mPhotosAdapter.notifyDataSetChanged();
@@ -321,10 +312,6 @@ public class AddTodoActivity extends BaseActivity
             SystemUtil.showToast(R.string.msg_content_bill_not_null);
             return;
         }
-        if (costType <= 0){
-            SystemUtil.showToast(R.string.msg_cost_type_not_null);
-            return;
-        }
         if (!mFileNameList.isEmpty()){// 有图片，先获取token，再上传图片，再发表记录
             onGetUploadToken();
         }else {// 否则，直接发表记录
@@ -368,28 +355,57 @@ public class AddTodoActivity extends BaseActivity
     private void onUploadImages(String token){
         mDoneUploadTotal = 0;
         StringBuilder builder = new StringBuilder();
-        for (String name : mFileNameList) {
-            String data = imagePath + name;
-            String key = name;
-            sUploadMananger.put(data, key, token, (s, responseInfo, jsonObject) -> {
-                try{
-                    if (jsonObject != null && jsonObject.getInt("status") == Config.STATUS_CODE_OK){
-                        JSONObject jsonData = jsonObject.getJSONObject("data");
-                        if (jsonData != null){
-                            builder.append(jsonData.get("file_name") + ",");
-                            mDoneUploadTotal++;
-                        }
-                    }
-                    if (mDoneUploadTotal == mFileNameList.size()){
-                        onPublishRecord(builder.substring(0, builder.length() - 1).toString());
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
+        // compore old url to save old url
+        for (String nurl : mFileNameList) {
+            for (String ourl : mOldUrList){
+                String[] tmpSplit;
+                if ((tmpSplit = ourl.split("/")) != null
+                        && tmpSplit.length == 4 && tmpSplit[3].equals(nurl)){
+                    builder.append(ourl + ",");
+                    mOldUrList.remove(ourl);
+                    break;
                 }
+            }
+        }
+//        Log.d(TAG, builder.toString());
 
-            }, new UploadOptions(null, null, false, (s, percent) -> {
-                Log.d(TAG, s + ":" + percent);
-            }, () -> false));
+        // remove the image which has uploaded
+        for (String cn1 : mCacheFileNameList){
+            for (String cn2 : mFileNameList) {
+                if (cn2.equals(cn1)){
+                    mFileNameList.remove(cn2);
+                    break;
+                }
+            }
+        }
+        if (mFileNameList.isEmpty()){
+            onPublishRecord(builder.substring(0, builder.length() - 1).toString());
+        }else {
+            for (String name : mFileNameList) {
+//                Log.d(TAG, mFileNameList.size() + "");
+                String data = imagePath + name;
+                String key = name;
+                sUploadMananger.put(data, key, token, (s, responseInfo, jsonObject) -> {
+                    try{
+                        if (jsonObject != null
+                                && jsonObject.getInt("status") == Config.STATUS_CODE_OK){
+                            JSONObject jsonData = jsonObject.getJSONObject("data");
+                            if (jsonData != null){
+                                builder.append(jsonData.get("file_name") + ",");
+                                mDoneUploadTotal++;
+                            }
+                        }
+                        if (mDoneUploadTotal == mFileNameList.size()){
+                            onPublishRecord(builder.substring(0, builder.length() - 1).toString());
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                }, new UploadOptions(null, null, false, (s, percent) -> {
+                    Log.d(TAG, s + ":" + percent);
+                }, () -> false));
+            }
         }
     }
 
@@ -398,17 +414,38 @@ public class AddTodoActivity extends BaseActivity
      */
     private void onPublishRecord(String photos){
         String validate = PreferencesUtils.getString(this, Config.KEY_OF_VALIDATE);
-        String content = tilBillContent.getEditText().toString();
-        String total = tilBillTotal.getEditText().toString();
-        String qcode = tilBillCode.getEditText().toString();
-        String remark = tilBillExtra.getEditText().toString();
+        String content = tilBillContent.getEditText().getText().toString();
+        String total = tilBillTotal.getEditText().getText().toString();
+        String qcode = tilBillCode.getEditText().getText().toString();
+        String remark = tilBillExtra.getEditText().getText().toString();
+        String sbid = bid <= 0 ? "" : Long.toString(bid);
+
+        int moneyType = 0;
+        for (int i = 0; i < rbMTypes.length; i++) {
+            if (rbMTypes[i].isChecked()){
+                moneyType = i;
+                break;
+            }
+        }
+        int costType = 0;
+        for (int i = 0; i < cbCostType.length; i++){
+            if (cbCostType[i].isChecked()){
+                costType += Math.pow(2, i);
+            }
+        }
+        if (costType <= 0){
+            SystemUtil.showToast(R.string.msg_cost_type_not_null);
+            return;
+        }
+
         Map<String, String> map = new HashMap<String, String>();
+        map.put("validate", validate);
         map.put("content", content);
         map.put("total", total);
         map.put("qcode", qcode);
         map.put("remark", remark);
         map.put("photos", photos);
-        map.put("bid", Long.toString(bid));
+        map.put("bid", sbid);
         map.put("type", Integer.toString(costType));
         map.put("mtype", Integer.toString(moneyType));
 
@@ -416,7 +453,7 @@ public class AddTodoActivity extends BaseActivity
         GlApplication.getApiService().onEditRecord(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), validate, content, total, qcode, remark, photos,
-                    Long.toString(bid), Integer.toString(costType), Integer.toString(moneyType))
+                    sbid, Integer.toString(costType), Integer.toString(moneyType))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
@@ -425,8 +462,11 @@ public class AddTodoActivity extends BaseActivity
                     }
 
                     @Override public void onNext(BaseJson<Bill> billBaseJson) {
+//                        Log.d(TAG, billBaseJson.getStatus() + "");
                         super.onNext(billBaseJson);
                         // TODO publish success
+                        SystemUtil.showToast(R.string.msg_publish_success);
+                        finish();
                     }
                 });
     }

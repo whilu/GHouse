@@ -37,4 +37,7 @@ public class Config {
     public static final int BILL_UNKNOW = 0x1000;
     public static final int BILL_FRAGMENT = 0x1001;
     public static final int TODO_FRAGMENT = 0x1002;
+
+    // broadcast intent filter action
+    public static final String ACTION_LOGOUT = "co.lujun.ghouse.action.logout";
 }

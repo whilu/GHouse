@@ -130,26 +130,19 @@ public class BillListFragment extends Fragment {
         mAdapter.setMode(Attributes.Mode.Single);
         initRecyclerView();
         // load cache
-        try {
-            List<Bill> tmpBills = null;
-            if (flag == Config.BILL_FRAGMENT){
-                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
-                        .queryForEq("confirm_status", 1);
-            }else if (flag == Config.TODO_FRAGMENT){
-                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
-                        .queryForEq("confirm_status", 0);
-            }
-            if (tmpBills != null && tmpBills.size() > 0) {
-                onShowData(tmpBills, true);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        onLoadCache();
         // refresh data
         mRefreshLayout.post(() -> {
             mRefreshLayout.setRefreshing(true);
             onRequestData(true);
         });
+    }
+
+    @Override public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden){
+            onLoadCache();
+        }
     }
 
     /**
@@ -185,6 +178,27 @@ public class BillListFragment extends Fragment {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    /**
+     * load cache
+     */
+    private void onLoadCache(){
+        try {
+            List<Bill> tmpBills = null;
+            if (flag == Config.BILL_FRAGMENT){
+                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
+                        .queryForEq("confirm_status", 1);
+            }else if (flag == Config.TODO_FRAGMENT){
+                tmpBills = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class)
+                        .queryForEq("confirm_status", 0);
+            }
+            if (tmpBills != null && tmpBills.size() > 0) {
+                onShowData(tmpBills, true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -334,11 +348,12 @@ public class BillListFragment extends Fragment {
                     tmpBills = billDao.queryForEq("confirm_status", 0);
                 }
                 for (Bill bill : tmpBills) {
-                    imageDao.deleteBuilder().where().eq("bid", bill.getBid());
-                    imageDao.deleteBuilder().delete();
+                    List<Image> images = imageDao.queryForEq("bid", bill.getBid());
+                    imageDao.delete(images);
                 }
                 billDao.delete(tmpBills);
             }
+            Log.d(TAG, bills.size() + "");
             for (Bill bill : bills) {
                 long bid = bill.getBid();
                 billDao.create(bill);

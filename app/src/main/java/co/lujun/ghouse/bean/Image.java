@@ -41,6 +41,14 @@ public class Image {
         this.bid = bid;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @DatabaseField(canBeNull = true, foreign = true, columnName = "bill", foreignAutoRefresh = true)
     private Bill bill;
     @DatabaseField(columnName = "small")
@@ -49,4 +57,6 @@ public class Image {
     private String large;
     @DatabaseField(columnName = "bid")
     private long bid;
+    @DatabaseField(generatedId = true)
+    private long id;
 }

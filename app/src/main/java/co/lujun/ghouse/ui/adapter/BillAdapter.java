@@ -29,6 +29,8 @@ import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Image;
+import co.lujun.ghouse.util.AppHelper;
+import co.lujun.ghouse.util.SystemUtil;
 
 /**
  * Created by lujun on 2015/8/4.
@@ -123,6 +125,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                 snackbar.getView().setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.background_floating_material_light));
                 snackbar.show();*/
                 if (mBillOperationListener != null){
+                    if (!AppHelper.onCheckPermission(GlApplication.getContext())){
+                        SystemUtil.showToast(R.string.msg_have_no_permission);
+                        mItemManger.closeAllItems();
+                        return;
+                    }
                     mBillOperationListener.onDeleteBill(i);
                     mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
                     mList.remove(i);
@@ -187,9 +194,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                         viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
                         Picasso.with(GlApplication.getContext())
                                 .load(invoiceImgList.get(0) == null ? "" : invoiceImgList.get(0))
+                                .placeholder(R.drawable.ic_image_grey600_48dp)
                                 .into(viewHolder.ivInvoiceL);
                         Picasso.with(GlApplication.getContext())
                                 .load(invoiceImgList.get(1) == null ? "" : invoiceImgList.get(1))
+                                .placeholder(R.drawable.ic_image_grey600_48dp)
                                 .into(viewHolder.ivInvoiceR);
                         break;
 

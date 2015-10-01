@@ -1,6 +1,9 @@
 package co.lujun.ghouse.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,7 @@ public class MainActivity extends BaseActivity {
     private Fragment curFragment;
     private Toolbar mToolbar;
     private FloatingActionButton fabAddBill;
+    private OnLogoutActionReceiver mReceiver;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,8 @@ public class MainActivity extends BaseActivity {
             billListFragment,
             todoListFragment
         };
+        mReceiver = new OnLogoutActionReceiver();
+        registerReceiver(mReceiver, new IntentFilter(Config.ACTION_LOGOUT));
         if (savedInstanceState == null){
             fragmentManager.beginTransaction().add(R.id.content_frame, fragments[0]).commit();
             curFragment = fragments[0];
@@ -77,6 +83,13 @@ public class MainActivity extends BaseActivity {
                         .hide(from).show(to).commit();
             }
             curFragment = to;
+        }
+    }
+
+    class OnLogoutActionReceiver extends BroadcastReceiver{
+
+        @Override public void onReceive(Context context, Intent intent) {
+            finish();
         }
     }
 
@@ -106,5 +119,10 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

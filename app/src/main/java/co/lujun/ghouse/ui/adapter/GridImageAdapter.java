@@ -84,7 +84,11 @@ public class GridImageAdapter extends BaseAdapter {
             }else {
                 holder = (ImageViewHolder) view.getTag();
             }
-            holder.imageView.setImageURI(mList.get(i));
+            if (mList.get(i) == null){
+                holder.imageView.setImageResource(R.drawable.imaginary_line_trbl);
+            }else {
+                holder.imageView.setImageURI(mList.get(i));
+            }
             holder.btnDelete.setOnClickListener(v -> {
                     if (mListener != null){
                         mListener.onDeleteImage(i);

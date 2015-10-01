@@ -1,5 +1,7 @@
 package co.lujun.ghouse.util;
 
+import android.util.Log;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
@@ -11,6 +13,8 @@ import co.lujun.ghouse.bean.Config;
  * Created by lujun on 2015/9/2.
  */
 public class SignatureUtil {
+
+    private static final String TAG = "SignatureUtil";
 
     public static SignCarrier getSignature(Map<String, String> map){
         SignCarrier signCarrier = new SignCarrier();
@@ -37,6 +41,7 @@ public class SignatureUtil {
             for (String string : values) {
                 builder.append(string);
             }
+//            Log.i(TAG, builder.toString());
 //            builder.append(SignCarrier.getAppToken());
             return MD5.getMD5(builder.toString());
         } catch (NoSuchAlgorithmException e) {

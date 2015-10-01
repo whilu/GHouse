@@ -271,14 +271,14 @@ public class CenterActivity extends BaseActivity {
 
             List<Bill> bills = billDao.queryForAll();
             for (Bill bill : bills) {
-                imageDao.deleteBuilder().where().eq("bid", bill.getBid());
-                imageDao.deleteBuilder().delete();
+                List<Image> images = imageDao.queryForEq("bid", bill.getBid());
+                imageDao.delete(images);
             }
             billDao.delete(bills);
             List<House> houses = houseDao.queryForAll();
             for (House house : houses) {
-                userDao.deleteBuilder().where().eq("houseid", house.getHid());
-                userDao.deleteBuilder().delete();
+                List<User> users = userDao.queryForEq("houseid", house.getHid());
+                userDao.delete(users);
             }
             houseDao.delete(houses);
 
@@ -297,6 +297,7 @@ public class CenterActivity extends BaseActivity {
             PreferencesUtils.putString(this, Config.KEY_OF_USER_NAME, "");
             PreferencesUtils.putString(this, Config.KEY_OF_VALIDATE, "");
 
+            sendBroadcast(new Intent(Config.ACTION_LOGOUT));
             startActivity(new Intent(this, SplashActivity.class));
             finish();
         }catch (SQLException e){

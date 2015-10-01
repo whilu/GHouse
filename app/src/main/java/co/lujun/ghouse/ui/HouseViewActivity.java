@@ -235,12 +235,15 @@ public class HouseViewActivity extends BaseActivity
      * @param v
      */
     public void addAction(View v) {
+        int vid = v.getId();
+        if (vid != R.id.ll_action_find_am_record && !AppHelper.onCheckPermission(this)){
+            SystemUtil.showToast(R.string.msg_have_no_permission);
+            return;
+        }
         if (hvAddMoneyView == null || mAddMoneyDialog == null){
             return;
         }
-        int vid = v.getId();
         if (vid == R.id.ll_hv_money_surplus){
-            onCheckUserPerission();
             mAddMoneyDialog.title(R.string.tv_house_add_money);
             tilAddMoney.getEditText().setText("");
             tilAddMoney.getEditText().setHint(getResources().getString(R.string.tv_house_money_surplus)
@@ -248,14 +251,12 @@ public class HouseViewActivity extends BaseActivity
             tilAddMoneyExtra.setHint(getString(R.string.tv_house_intro));
             mAddMoneyDialog.show();
         }else if (vid == R.id.ll_hv_add_member){
-            onCheckUserPerission();
             if (hvAddMemberView != null && mAddMemberDialog != null){
                 tilUName.getEditText().setText("");
                 tilUPwd.getEditText().setText("");
                 mAddMemberDialog.show();
             }
         }else if (vid == R.id.ll_hv_house_moving){
-            onCheckUserPerission();
             if (hvUHouseView != null && mUHouseDialog != null){
                 tilHouseAdd.getEditText().setText("");
                 tilHouseIntro.getEditText().setText("");
@@ -271,7 +272,10 @@ public class HouseViewActivity extends BaseActivity
      * @param v
      */
     public void updateInfo(View v){
-        onCheckUserPerission();
+        if (!AppHelper.onCheckPermission(this)){
+            SystemUtil.showToast(R.string.msg_have_no_permission);
+            return;
+        }
         if (hvUpdateView == null || mUpdateDialog == null){
             return;
         }
@@ -398,8 +402,8 @@ public class HouseViewActivity extends BaseActivity
                 userDao.delete(userDao.queryForAll());
             }else {
                 for (House tmpHouse : tmpHouses) {
-                    userDao.deleteBuilder().where().eq("houseid", tmpHouse.getHid());
-                    userDao.deleteBuilder().delete();
+                    List<User> users = userDao.queryForEq("houseid", tmpHouse.getHid());
+                    userDao.delete(users);
                 }
             }
             houseDao.delete(tmpHouses);
@@ -630,15 +634,5 @@ public class HouseViewActivity extends BaseActivity
         UserViewWindow.setPhone(getString(R.string.tv_vud_phone) + mUserList.get(position).getPhone());
         UserViewWindow.setAvatarUrl(mUserList.get(position).getAvatar());
         UserViewWindow.show(mToolbar, Gravity.CENTER, 0, 0);
-    }
-
-    /**
-     * check user permission
-     */
-    private void onCheckUserPerission(){
-        if (!AppHelper.onCheckPermission(this)){
-            SystemUtil.showToast(R.string.msg_have_confirmed);
-            return;
-        }
     }
 }
