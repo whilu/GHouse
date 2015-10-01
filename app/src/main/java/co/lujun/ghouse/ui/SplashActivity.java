@@ -34,6 +34,7 @@ import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
+import co.lujun.ghouse.ui.listener.CustomAnimationListener;
 import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.IntentUtils;
@@ -188,8 +189,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                         return;
                     }
                     try{
-                        DatabaseHelper.getDatabaseHelper(SplashActivity.this)
-                                .getDao(User.class).create(user);
                         PreferencesUtils.putBoolean(
                                 SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
                         PreferencesUtils.putInt(
@@ -198,6 +197,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                                 SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
                         PreferencesUtils.putString(
                                 SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                        DatabaseHelper.getDatabaseHelper(SplashActivity.this)
+                                .getDao(User.class).create(user);
                     }catch (SQLException e){
                         e.printStackTrace();
                     }
@@ -276,18 +277,12 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         tranAnimSet.addAnimation(translateAnim);
         tranAnimSet.setInterpolator(new AccelerateDecelerateInterpolator());
         tranAnimSet.setFillAfter(true);
-        tranAnimSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override public void onAnimationStart(Animation animation) {
-            }
-
+        tranAnimSet.setAnimationListener(new CustomAnimationListener() {
             @Override public void onAnimationEnd(Animation animation) {
                 if (isLogin) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 }
-            }
-
-            @Override public void onAnimationRepeat(Animation animation) {
             }
         });
 

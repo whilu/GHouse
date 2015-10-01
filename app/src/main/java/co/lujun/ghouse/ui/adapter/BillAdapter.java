@@ -16,14 +16,19 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.daimajia.swipe.implments.SwipeItemRecyclerMangerImpl;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Bill;
+import co.lujun.ghouse.bean.Image;
 
 /**
  * Created by lujun on 2015/8/4.
@@ -129,9 +134,10 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
             String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
             String type, bgDrawableType;
-            if (mList.get(i).getType_id() >= 1 && mList.get(i).getType_id() < types.length + 1){
-                type = types[mList.get(i).getType_id() - 1];
-                bgDrawableType = bgDrawableTypes[mList.get(i).getType_id() - 1];
+            int tmpCostType = (int)(Math.log((double)mList.get(i).getType_id()) / Math.log(2d));
+            if (tmpCostType >= 0 && tmpCostType < types.length){
+                type = types[tmpCostType];
+                bgDrawableType = bgDrawableTypes[tmpCostType];
             }else {
                 type = types[5];
                 bgDrawableType = bgDrawableTypes[5];
@@ -146,9 +152,11 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
             viewHolder.tvType.setText(type);
             viewHolder.tvSummary.setText(mList.get(i).getTitle());
-            String[] moneyFlags = GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
+            String[] moneyFlags =
+                    GlApplication.getContext().getResources().getStringArray(R.array.money_flag);
             String moneyFlag;
-            if (mList.get(i).getMoney_flag() >= 0 && mList.get(i).getMoney_flag() < moneyFlags.length){
+            if (mList.get(i).getMoney_flag() >= 0
+                    && mList.get(i).getMoney_flag() < moneyFlags.length){
                 moneyFlag = moneyFlags[mList.get(i).getMoney_flag()];
             }else {
                 moneyFlag = moneyFlags[0];
@@ -156,12 +164,18 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             viewHolder.tvTotal.setText(
                     GlApplication.getContext().getResources().getString(R.string.tv_total)
                             + moneyFlag + mList.get(i).getTotal());
-            viewHolder.tvTime.setText(GlApplication.getSimpleDateFormat().format(mList.get(i).getCreate_time()));
+            viewHolder.tvTime.setText(
+                    GlApplication.getSimpleDateFormat().format(mList.get(i).getCreate_time() * 1000));
             if (mList.get(i).getSecurity_code() != null
                     && mList.get(i).getSecurity_code().length() > 7){
                 viewHolder.tv7SecurityCode.setText(mList.get(i).getSecurity_code().substring(0, 7));
             }
             int voliceLength = mList.get(i).getPhotos().size();
+            Iterator<Image> iterator = mList.get(i).getPhotos().iterator();
+            List<String> invoiceImgList = new ArrayList<String>();
+            while (iterator.hasNext()){
+                invoiceImgList.add(iterator.next().getLarge());
+            }
             if (voliceLength >= 2){
                 voliceLength = 2;
             }
@@ -171,11 +185,21 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                     case 2:
                         viewHolder.ivInvoiceR.setVisibility(View.VISIBLE);
                         viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
+                        Picasso.with(GlApplication.getContext())
+                                .load(invoiceImgList.get(0) == null ? "" : invoiceImgList.get(0))
+                                .into(viewHolder.ivInvoiceL);
+                        Picasso.with(GlApplication.getContext())
+                                .load(invoiceImgList.get(1) == null ? "" : invoiceImgList.get(1))
+                                .into(viewHolder.ivInvoiceR);
                         break;
 
                     case 1:
                         viewHolder.ivInvoiceL.setVisibility(View.VISIBLE);
                         viewHolder.ivInvoiceR.setVisibility(View.GONE);
+                        Picasso.with(GlApplication.getContext())
+                                .load(invoiceImgList.get(0) == null ? "" : invoiceImgList.get(0))
+                                .placeholder(R.drawable.ic_image_grey600_48dp)
+                                .into(viewHolder.ivInvoiceL);
                         break;
 
                     default:

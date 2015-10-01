@@ -53,8 +53,8 @@ public class UpPayAdapter extends RecyclerView.Adapter<UpPayAdapter.UpPayItemVie
     }
 
     @Override public void onBindViewHolder(UpPayItemViewHolder holder, int position) {
-        holder.tvDate.setText(
-                GlApplication.getSimpleDateDotFormat().format(mList.get(position).getCreate_time()));
+        holder.tvDate.setText(GlApplication.getSimpleDateDotFormat()
+                .format(mList.get(position).getCreate_time() * 1000));
         holder.tvAmount.setText(GlApplication.getContext().getString(R.string.tv_plus)
                 + mList.get(position).getAmount());
         String uname = "";

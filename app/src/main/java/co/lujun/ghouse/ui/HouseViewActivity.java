@@ -19,6 +19,7 @@ import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
 import com.rey.material.widget.RadioButton;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import co.lujun.ghouse.ui.widget.UpPayViewWindow;
 import co.lujun.ghouse.ui.widget.UserViewWindow;
 import co.lujun.ghouse.util.AppHelper;
 import co.lujun.ghouse.util.DatabaseHelper;
+import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
@@ -448,6 +450,11 @@ public class HouseViewActivity extends BaseActivity
         if (TextUtils.isEmpty(uname) || TextUtils.isEmpty(upwd)){
             SystemUtil.showToast(R.string.msg_login_info_not_null);
             return;
+        }
+        try{
+            upwd = MD5.getMD5(upwd);
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
         }
         SystemUtil.showOrHideInputMethodManager(this);
         if (mAddMemberDialog.isShowing()){

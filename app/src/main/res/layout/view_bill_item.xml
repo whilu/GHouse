@@ -151,16 +151,18 @@
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:background="@color/material_red"
-                    android:scaleType="fitCenter"
+                    android:background="@drawable/imaginary_line_trbl"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_image_grey600_48dp"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_bi_invoice_r"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
-                    android:background="@color/material_blue"
-                    android:scaleType="fitCenter"
+                    android:background="@drawable/imaginary_line_trbl"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_image_grey600_48dp"
                     android:visibility="gone" />
 
             </LinearLayout>

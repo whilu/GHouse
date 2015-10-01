@@ -118,9 +118,10 @@ public class BillDetailActivity extends BaseActivity {
         String[] bgDrawableTypes = GlApplication.getContext()
                 .getResources().getStringArray(R.array.bill_drawable_type);
         String type, bgDrawableType;
-        if (bill.getType_id() >= 1 && bill.getType_id() < types.length + 1){
-            type = types[bill.getType_id() - 1];
-            bgDrawableType = bgDrawableTypes[bill.getType_id() - 1];
+        int tmpCostType = (int)(Math.log((double)bill.getType_id()) / Math.log(2d));
+        if (tmpCostType >= 0 && tmpCostType < types.length){
+            type = types[tmpCostType];
+            bgDrawableType = bgDrawableTypes[tmpCostType];
         }else {
             type = types[5];
             bgDrawableType = bgDrawableTypes[5];
@@ -145,8 +146,8 @@ public class BillDetailActivity extends BaseActivity {
         tvTotal.setText(moneyFlag + (bill.getTotal() == 0 ? 0 : bill.getTotal()));
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        tvAddTime.setText(format.format(bill.getCreate_time()));
-        tvLatestTime.setText(format.format(bill.getConfirm_time()));
+        tvAddTime.setText(format.format(bill.getCreate_time() * 1000));
+        tvLatestTime.setText(format.format(bill.getConfirm_time() * 1000));
 
         if (bill.getSecurity_code() != null
                 && bill.getSecurity_code().length() > 7){

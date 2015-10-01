@@ -31,6 +31,7 @@ import co.lujun.ghouse.bean.Bill;
 import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.Image;
 import co.lujun.ghouse.bean.SignCarrier;
+import co.lujun.ghouse.ui.AddTodoActivity;
 import co.lujun.ghouse.ui.BillDetailActivity;
 import co.lujun.ghouse.ui.adapter.BillAdapter;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
@@ -456,7 +457,13 @@ public class BillListFragment extends Fragment {
             SystemUtil.showToast(R.string.msg_have_no_permission);
             return;
         }
-
+        if (mBills.get(i).getConfirm_status() == 1){
+            SystemUtil.showToast(R.string.msg_have_confirmed);
+            return;
+        }
+        Intent intent = new Intent(getActivity(), AddTodoActivity.class);
+        intent.putExtra(Config.KEY_OF_BID, mBills.get(i).getBid());
+        startActivity(intent);
     }
 
     /**

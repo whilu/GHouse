@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class AddTodoActivity extends BaseActivity
 
     private TextInputLayout tilBillContent, tilBillTotal, tilBillCode, tilBillExtra;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
+    private RadioButton[] rbMTypes;
     private CheckBox[] cbCostType;
     private CustomRippleButton btnBillCameraCode;
     private GridView gvPhotos;
@@ -113,6 +115,7 @@ public class AddTodoActivity extends BaseActivity
                 (CheckBox) findViewById(R.id.cb_bill_play),
                 (CheckBox) findViewById(R.id.cb_bill_other)
         };
+        rbMTypes = new RadioButton[]{rbBillRmb, rbBillDollar, rbBillOther};
 
         gvPhotos = (GridView) findViewById(R.id.gv_activity_add_todo);
 
@@ -148,13 +151,11 @@ public class AddTodoActivity extends BaseActivity
         mUriList = new ArrayList<Uri>();
         mPhotosAdapter = new GridImageAdapter(this, mUriList);
         mPhotosAdapter.setOnOperateListener(new GridImageAdapter.OnOperateListener() {
-            @Override
-            public void onAddImage() {
+            @Override public void onAddImage() {
                 onAddPhoto();
             }
 
-            @Override
-            public void onDeleteImage(int position) {
+            @Override public void onDeleteImage(int position) {
                 mUriList.remove(position);
                 mFileNameList.remove(position);
             }
@@ -239,12 +240,38 @@ public class AddTodoActivity extends BaseActivity
                 if (bills != null && bills.size() > 0){
                     List<Image> images = DatabaseHelper.getDatabaseHelper(this)
                             .getDao(Image.class).queryBuilder().where().eq("bid", bid).query();
-                    // bills.get(0)
+                    Bill bill = bills.get(0);
                     for (int i = 0; i < images.size(); i++) {
-                        // TODO check the array length
-                        mFileNameList.add(images.get(i).getLarge().split("//")[2]);
-                        // TODO check dir exist
-                        mUriList.add(Uri.fromFile(new File(new File(imagePath), imageName)));
+                        String[] tmpSplit;
+                        if ((tmpSplit = images.get(i).getLarge().split("//")) != null
+                                && tmpSplit.length == 3){
+                            mFileNameList.add(tmpSplit[2]);
+                        }
+                        File tmpFile = new File(imagePath, tmpSplit[2]);
+                        if (tmpFile.exists() && tmpFile.isFile()) {
+                            mUriList.add(Uri.fromFile(tmpFile));
+                        }
+                    }
+                    mPhotosAdapter.notifyDataSetChanged();
+                    if (bill != null){
+                        tilBillContent.getEditText().setText(bill.getContent());
+                        tilBillTotal.getEditText().setText(Float.toString(bill.getTotal()));
+                        tilBillCode.getEditText().setText(bill.getQcode());
+                        tilBillExtra.getEditText().setText(bill.getRemark());
+                        int tmpMType = bill.getMoney_flag();
+                        if (0 <= tmpMType && tmpMType < rbMTypes.length){
+                            for (int i = 0; i < rbMTypes.length; i++) {
+                                if (i != tmpMType){
+                                    rbMTypes[i].setChecked(false);
+                                }else {
+                                    rbMTypes[i].setChecked(true);
+                                }
+                            }
+                        }
+                        int tmpCostType = (int)(Math.log((double)bill.getType_id()) / Math.log(2d));
+                        if (0 <= tmpCostType && tmpCostType < cbCostType.length){
+                            cbCostType[tmpCostType].setChecked(true);
+                        }
                     }
                 }
             }catch (SQLException e){

@@ -44,8 +44,9 @@ public class InvoiceImgAdapter extends RecyclerView.Adapter<InvoiceImgAdapter.Me
     @Override public void onBindViewHolder(
             InvoiceImgAdapter.MemberViewHolder recyclerViewHolder, int i) {
         Picasso.with(GlApplication.getContext())
-            .load(mList.get(i) == null ? "" : mList.get(i))
-            .into(recyclerViewHolder.ivImage);
+                .load(mList.get(i) == null ? "" : mList.get(i))
+                .placeholder(R.drawable.ic_image_grey600_48dp)
+                .into(recyclerViewHolder.ivImage);
     }
 
     static class MemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

@@ -39,9 +39,9 @@ public class GalleryAdapter extends PagerAdapter {
             }
         });*/
         Picasso.with(container.getContext())
-            .load(mImages.get(position))
-            .placeholder(R.drawable.ic_timer_auto_grey600_48dp)
-            .into(photoView);
+                .load(mImages.get(position))
+                .placeholder(R.drawable.ic_image_grey600_48dp)
+                .into(photoView);
 
         // Now just add PhotoView to ViewPager and return it
         container.addView(photoView,

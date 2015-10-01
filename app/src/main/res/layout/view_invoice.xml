@@ -4,18 +4,11 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="8dp">
 
-    <TextView
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:gravity="center"
-        android:text="@string/tv_house_image"
-        android:textColor="@color/gray_text"
-        android:background="@drawable/real_line_trbl"
-        android:textSize="14sp" />
-
     <ImageView
         android:id="@+id/iv_bd_voice"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        android:scaleType="fitXY" />
+        android:background="@drawable/imaginary_line_trbl"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_image_grey600_48dp" />
 </RelativeLayout>

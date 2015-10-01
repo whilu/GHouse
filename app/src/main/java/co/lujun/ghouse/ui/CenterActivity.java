@@ -282,6 +282,16 @@ public class CenterActivity extends BaseActivity {
             }
             houseDao.delete(houses);
 
+            // check and delete again
+            List<Image> images = imageDao.queryForAll();
+            if (!images.isEmpty()) {
+                imageDao.delete(images);
+            }
+            List<User> users = userDao.queryForAll();
+            if (!users.isEmpty()) {
+                userDao.delete(users);
+            }
+
             PreferencesUtils.putBoolean(this, Config.KEY_OF_LOGIN_FLAG, false);
             PreferencesUtils.putInt(this, Config.KEY_OF_USER_TYPE, -1);
             PreferencesUtils.putString(this, Config.KEY_OF_USER_NAME, "");
