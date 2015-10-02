@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -68,9 +69,11 @@ public class MainActivity extends BaseActivity {
         mAboutDialog.applyStyle(R.style.App_Dialog)
                 .title(R.string.action_about)
                 .positiveAction(R.string.action_confirm)
+                .negativeAction(R.string.action_evaluate)
                 .contentView(mAboutView == null ? new View(MainActivity.this) : mAboutView)
                 .cancelable(false)
-                .positiveActionClickListener(view -> mAboutDialog.dismiss());
+                .positiveActionClickListener(view -> mAboutDialog.dismiss())
+                .negativeActionClickListener(view -> onEvaluateApp());
 
         fragments = new Fragment[]{
             billListFragment,
@@ -135,10 +138,19 @@ public class MainActivity extends BaseActivity {
         }else if (id == R.id.action_center){
             IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
         }else if (id == R.id.action_about){
-
+            mAboutDialog.show();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Evaluate App
+     */
+    private void onEvaluateApp(){
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.setData(Uri.parse("market://details?id=" + getPackageName()));
+        startActivity(intent);
     }
 
     @Override protected void onDestroy() {

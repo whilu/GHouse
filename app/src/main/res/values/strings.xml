@@ -9,14 +9,15 @@
     <string name="action_about">关于</string>
     <string name="action_login">登录</string>
     <string name="action_confirm">确认</string>
+    <string name="action_evaluate">评价</string>
     <string name="action_update">更新</string>
     <string name="action_add">增加</string>
     <string name="action_scan">扫码</string>
     <string name="action_logout">退出登录</string>
     <string name="action_reg">注册</string>
     <string name="action_reg_house">注册房子</string>
-    <string name="action_house">House view</string>
-    <string name="action_bill_view">Bill view</string>
+    <string name="action_house">房子</string>
+    <string name="action_bill_view">账单</string>
     <string name="action_back">返回</string>
     <string name="action_uhouse">搬家</string>
     <string name="action_add_member">添加成员</string>
@@ -97,5 +98,6 @@
     <string name="msg_have_no_data">没有任何账单数据，添加一条吧!</string>
     <string name="msg_no_more_data">没有更多记录!</string>
 
-    <string name="tv_about">开发者：「MaxBox」团队\n源码：https://github.com/whilu/GHouse</string>
+    <!-- copyright info-->
+    <string name="tv_about">「MaxBox」团队作品\n源码：https://github.com/whilu/GHouse</string>
 </resources>
