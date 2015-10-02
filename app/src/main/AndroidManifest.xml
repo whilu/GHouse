@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".GlApplication"
@@ -45,6 +46,10 @@
         <activity
             android:name=".ui.CaptureActivity"
             android:screenOrientation="portrait" />
+
+        <!--umeng config-->
+        <meta-data android:value="560e5c44e0f55a8f22000129" android:name="UMENG_APPKEY" />
+        <meta-data android:value="GHouse" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

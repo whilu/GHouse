@@ -13,6 +13,9 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
@@ -21,13 +24,72 @@ android {
         applicationId "co.lujun.ghouse"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 101
+        versionName "1.0.1"
+
+        //dexMethod 65535
+        multiDexEnabled true
+        //default flavor
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "GHouse"]
     }
-    buildTypes {
+    lintOptions{
+        abortOnError false
+    }
+
+    signingConfigs {
+        debug{
+            //
+        }
         release {
+            keyAlias 'lujun'
+            keyPassword KEYPASSWORD
+            storeFile file('E:/Code/Android/Keystore/lujun.keystore')
+            storePassword STOREPASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            //don't show Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
             minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            //don't show Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            minifyEnabled true
+            zipAlignEnabled true
+            //remove unuse resources files
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all{variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // output apk name ghouse_v1.0.1_2015-01-15_Wandoujia.apk
+                        def fileName = "ghouse_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    productFlavors {
+        GHouse {}
+        Mi {}
+        Meizu {}
+        Yingyongbao {}
+        app360 {}
+        Wandoujia {}
+        productFlavors.all {
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
     }
 
@@ -54,6 +116,7 @@ dependencies {
     compile 'co.lujun:androidelasticview:1.0.9'
 //    compile 'co.lujun:tpsharelogin:1.0.2'
     compile 'com.qiniu:qiniu-android-sdk:7.0.1'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
 
 retrolambda {

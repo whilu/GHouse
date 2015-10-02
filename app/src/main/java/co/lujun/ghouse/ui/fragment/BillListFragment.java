@@ -238,14 +238,16 @@ public class BillListFragment extends Fragment {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<BaseList<Bill>>>() {
 
-                @Override public void onError(Throwable e) {
+                @Override
+                public void onError(Throwable e) {
                     super.onError(e);
                     if (mRefreshLayout.isRefreshing()) {
                         mRefreshLayout.setRefreshing(false);
                     }
                 }
 
-                @Override public void onNext(BaseJson<BaseList<Bill>> baseListBaseJson) {
+                @Override
+                public void onNext(BaseJson<BaseList<Bill>> baseListBaseJson) {
                     if (mRefreshLayout.isRefreshing()) {
                         mRefreshLayout.setRefreshing(false);
                     }
@@ -254,55 +256,26 @@ public class BillListFragment extends Fragment {
                         SystemUtil.showToast(R.string.msg_request_error);
                         return;
                     }
-                    if(baseListBaseJson.getData().getCount() == 0){// 没有任何数据
+                    if (baseListBaseJson.getData().getCount() == 0) {// 没有任何数据
                         //TODO show add content dialog
-                        if(isRefresh){
+                        if (isRefresh) {
                             SystemUtil.showToast(R.string.msg_have_no_data);
                         }
-                        return;
                     }
                     if (baseListBaseJson.getData().getLists().size() == 0) {// 加载更多没有更多数据
-                        if (!isRefresh){
+                        if (!isRefresh) {
                             hasMoreData = false;
                             SystemUtil.showToast(R.string.msg_no_more_data);
                             mAdapter.hideFooter();
                         }
-                        return;
                     }
-                    current_page = baseListBaseJson.getData().getCurrent_page() + 1;
+                    if (baseListBaseJson.getData().getCount() > 0
+                            && baseListBaseJson.getData().getLists().size() > 0){
+                        current_page = baseListBaseJson.getData().getCurrent_page() + 1;
+                    }
                     onCacheData(baseListBaseJson.getData().getLists(), isRefresh);
                 }
             });
-            /*.subscribe(new Subscriber<BaseJson<BaseList<Bill>>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (mRefreshLayout.isRefreshing()) {
-                        mRefreshLayout.setRefreshing(false);
-                    }
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<BaseList<Bill>> billListBaseJson) {
-                    if (mRefreshLayout.isRefreshing()) {
-                        mRefreshLayout.setRefreshing(false);
-                    }
-                    if (null == billListBaseJson
-                            || billListBaseJson.getStatus() != Config.STATUS_CODE_OK
-                            || billListBaseJson.getData().getLists() == null) {
-                        SystemUtil.showToast(R.string.msg_request_error);
-                        return;
-                    }
-                    current_page = billListBaseJson.getData().getCurrent_page() + 1;
-                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billListBaseJson.getValidate());
-                    onCacheData(billListBaseJson.getData().getLists(), isRefresh);
-                }
-            });*/
     }
 
     /**
@@ -311,7 +284,7 @@ public class BillListFragment extends Fragment {
      * @param isRefresh
      */
     private synchronized void onShowData(List<Bill> bills, boolean isRefresh){
-        if (bills == null || bills.size() == 0){
+        if (bills == null){
             return;
         }
         if (isRefresh){
@@ -330,13 +303,13 @@ public class BillListFragment extends Fragment {
         if (bills == null){
             return;
         }
-        if (bills.size() <= 0){
-            if (isRefresh){
-                // TODO show dialog with no data
-                SystemUtil.showToast(R.string.msg_have_no_data);
-            }
-            return;
-        }
+//        if (bills.size() <= 0){
+//            if (isRefresh){
+//                // TODO show dialog with no data
+//                SystemUtil.showToast(R.string.msg_have_no_data);
+//            }
+//            return;
+//        }
         try {
             Dao billDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Bill.class);
             Dao imageDao = DatabaseHelper.getDatabaseHelper(getActivity()).getDao(Image.class);
@@ -425,40 +398,6 @@ public class BillListFragment extends Fragment {
                         SystemUtil.showToast(billBaseJson.getMessage());
                     }
                 });
-            /*.subscribe(new Subscriber<BaseJson<Bill>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    onRequestData(true);
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<Bill> billBaseJson) {
-                    if (null == billBaseJson) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        onRequestData(true);
-                        return;
-                    }
-                    // not Correct status
-                    if (billBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        SystemUtil.showToast(billBaseJson.getMessage());
-                        onRequestData(true);
-                        return;
-                    }
-                    SystemUtil.showToast(billBaseJson.getMessage());
-                    PreferencesUtils.putString(getActivity(), Config.KEY_OF_VALIDATE, billBaseJson.getValidate());
-                    // delete success, delete cache
-                    if (type == 0) {
-                        onDeleteCacheById(billId);
-                    }
-                    onRequestData(true);
-                }
-            });*/
     }
 
     /**

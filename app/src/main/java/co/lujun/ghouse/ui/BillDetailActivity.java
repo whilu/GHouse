@@ -40,7 +40,6 @@ public class BillDetailActivity extends BaseActivity {
 
     private InvoiceImgAdapter mAdapter;
     private GalleryWindow mGalleryWindow;
-    private Bill mBill;
     private List<String> mInvoiceImgList;
 
     private static final String TAG = "BillDetailActivity";

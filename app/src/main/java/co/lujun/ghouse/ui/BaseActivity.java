@@ -3,6 +3,8 @@ package co.lujun.ghouse.ui;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
+import com.umeng.analytics.MobclickAgent;
+
 import co.lujun.ghouse.ui.widget.SlidingActivity;
 
 /**
@@ -16,13 +18,13 @@ public class BaseActivity extends SlidingActivity {
 
     @Override protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName());
+        MobclickAgent.onResume(this);
     }
 
     @Override protected void onPause() {
         super.onPause();
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
+        MobclickAgent.onPause(this);
     }
 }

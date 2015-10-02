@@ -125,53 +125,26 @@ public class RegHouseActivity extends BaseActivity {
         map.put("password", password);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onRegisterHouse(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                    @Override public void onError(Throwable e) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        super.onError(e);
                     }
-                    super.onError(e);
-                }
 
-                @Override public void onNext(BaseJson<House> houseBaseJson) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    @Override public void onNext(BaseJson<House> houseBaseJson) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        super.onNext(houseBaseJson);
+                        SystemUtil.showToast(R.string.msg_register_success);
+                        finish();
                     }
-                    super.onNext(houseBaseJson);
-                    SystemUtil.showToast(R.string.msg_register_success);
-                    finish();
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<House>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
-                    }
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
-                    }
-                    if (null == houseBaseJson || houseBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                        SystemUtil.showToast(R.string.msg_register_error);
-                        return;
-                    }
-                    SystemUtil.showToast(R.string.msg_register_success);
-                    finish();
-                }
-            });*/
+                });
     }
 }

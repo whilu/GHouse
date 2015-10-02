@@ -290,76 +290,37 @@ public class HouseViewActivity extends BaseActivity
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onGetHouseData(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), validate)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), validate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                    @Override public void onError(Throwable e) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        if (srlHouse.isRefreshing()) {
+                            srlHouse.setRefreshing(false);
+                        }
+                        super.onError(e);
                     }
-                    if (srlHouse.isRefreshing()) {
-                        srlHouse.setRefreshing(false);
-                    }
-                    super.onError(e);
-                }
 
-                @Override public void onNext(BaseJson<House> houseBaseJson) {
-                    super.onNext(houseBaseJson);
-                    House house;
-                    if ((house = houseBaseJson.getData()) == null) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
+                    @Override public void onNext(BaseJson<House> houseBaseJson) {
+                        super.onNext(houseBaseJson);
+                        House house;
+                        if ((house = houseBaseJson.getData()) == null) {
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            return;
+                        }
+                        onCacheData(house);
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        if (srlHouse.isRefreshing()){
+                            srlHouse.setRefreshing(false);
+                        }
                     }
-                    onCacheData(house);
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
-                    }
-                    if (srlHouse.isRefreshing()){
-                        srlHouse.setRefreshing(false);
-                    }
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<House>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
-                    }
-                    if (srlHouse.isRefreshing()){
-                        srlHouse.setRefreshing(false);
-                    }
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
-                    House house;
-                    if (null == houseBaseJson || (house = houseBaseJson.getData()) == null) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    // not Correct status
-                    if (houseBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        SystemUtil.showToast(houseBaseJson.getMessage());
-                        return;
-                    }
-                    PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, houseBaseJson.getValidate());
-                    onCacheData(house);
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
-                    }
-                    if (srlHouse.isRefreshing()){
-                        srlHouse.setRefreshing(false);
-                    }
-                }
-            });*/
+                });
     }
 
     /**
@@ -450,60 +411,28 @@ public class HouseViewActivity extends BaseActivity
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onAddMember(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), uname, upwd, validate)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), uname, upwd, validate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        if (!mAddMemberDialog.isShowing()) {
+                            mAddMemberDialog.show();
+                        }
+                        super.onError(e);
                     }
-                    if (!mAddMemberDialog.isShowing()) {
-                        mAddMemberDialog.show();
-                    }
-                    super.onError(e);
-                }
 
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
-                    super.onNext(userBaseJson);
-                    onRequestData();
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<User>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    @Override
+                    public void onNext(BaseJson<User> userBaseJson) {
+                        super.onNext(userBaseJson);
+                        onRequestData();
                     }
-                    if (!mAddMemberDialog.isShowing()) {
-                        mAddMemberDialog.show();
-                    }
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
-                    if (null == userBaseJson) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    // not Correct status
-                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        SystemUtil.showToast(userBaseJson.getMessage());
-                        return;
-                    }
-                    PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                    onRequestData();
-                }
-            });*/
+                });
     }
 
     /**
@@ -550,54 +479,24 @@ public class HouseViewActivity extends BaseActivity
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onEditHouse(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), Integer.toString(type), value, value1, remark, validate)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<House>>() {
-                @Override public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), Integer.toString(type), value, value1, remark, validate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<House>>() {
+                    @Override public void onError(Throwable e) {
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        SystemUtil.showToast(R.string.msg_update_error);
+                        super.onError(e);
                     }
-                    SystemUtil.showToast(R.string.msg_update_error);
-                    super.onError(e);
-                }
 
-                @Override public void onNext(BaseJson<House> houseBaseJson) {
-                    super.onNext(houseBaseJson);
-                    onRequestData();
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<House>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    @Override public void onNext(BaseJson<House> houseBaseJson) {
+                        super.onNext(houseBaseJson);
+                        onRequestData();
                     }
-                    Log.d(TAG, e.toString());
-                    SystemUtil.showToast(R.string.msg_update_error);
-                }
-
-                @Override
-                public void onNext(BaseJson<House> houseBaseJson) {
-                    if (null == houseBaseJson) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    // not Correct status
-                    if (houseBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        SystemUtil.showToast(houseBaseJson.getMessage());
-                        return;
-                    }
-                    PreferencesUtils.putString(HouseViewActivity.this, Config.KEY_OF_VALIDATE, houseBaseJson.getValidate());
-                    onRequestData();
-                }
-            });*/
+                });
     }
 
     /**

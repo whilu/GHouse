@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +42,6 @@ import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -175,52 +173,28 @@ public class CenterActivity extends BaseActivity {
         map.put("validate", validate);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onGetUserData(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), validate)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override public void onError(Throwable e) {
-                    super.onError(e);
-                }
-
-                @Override public void onNext(BaseJson<User> userBaseJson) {
-                    super.onNext(userBaseJson);
-                    User user;
-                    if ((user = userBaseJson.getData()) == null) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    onCacheData(user);
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<User>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
-                    User user;
-                    if (null == userBaseJson || (user = userBaseJson.getData()) == null) {
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    // not Correct status
-                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        SystemUtil.showToast(userBaseJson.getMessage());
-                        return;
-                    }
-                    PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                    onCacheData(user);
-                }
-            });*/
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), validate)
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(userBaseJson -> userBaseJson.getData())
+                .subscribe(user -> onCacheData(user), Throwable::printStackTrace);
+//        .subscribe(new BaseSubscriber<BaseJson<User>>() {
+//            @Override
+//            public void onError(Throwable e) {
+//                super.onError(e);
+//            }
+//
+//            @Override
+//            public void onNext(BaseJson<User> userBaseJson) {
+//                super.onNext(userBaseJson);
+//                User user;
+//                if ((user = userBaseJson.getData()) == null) {
+//                    SystemUtil.showToast(R.string.msg_nullpointer_error);
+//                    return;
+//                }
+//                onCacheData(user);
+//            }
+//        });
     }
 
     /**
@@ -378,37 +352,6 @@ public class CenterActivity extends BaseActivity {
                     onShowAndHide(winLoading, false, dialog, false);
                 }
             });
-            /*.subscribe(new Subscriber<BaseJson<User>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    onShowAndHide(winLoading, false, dialog, true);
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
-                    if (null == userBaseJson) {
-                        onShowAndHide(winLoading, false, dialog, true);
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        return;
-                    }
-                    // not Correct status
-                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK) {
-                        onShowAndHide(winLoading, false, dialog, true);
-                        SystemUtil.showToast(userBaseJson.getMessage());
-                        return;
-                    }
-                    SystemUtil.showToast(userBaseJson.getMessage());
-                    PreferencesUtils.putString(CenterActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                    onRequestData();
-                    onShowAndHide(winLoading, false, dialog, false);
-                }
-            });*/
     }
 
     /**

@@ -402,7 +402,7 @@ public class AddTodoActivity extends BaseActivity
         }else {
             mUpMap = new HashMap<String, Double>();
             for (String name : mFileNameList) {
-//                Log.d(TAG, mFileNameList.size() + "");
+//                Log.d(TAG, name + "");
                 mUpMap.put(name, 0.0d);
                 String data = imagePath + name;
                 String key = name;
@@ -412,6 +412,7 @@ public class AddTodoActivity extends BaseActivity
                                 && jsonObject.getInt("status") == Config.STATUS_CODE_OK){
                             JSONObject jsonData = jsonObject.getJSONObject("data");
                             if (jsonData != null){
+//                                Log.d(TAG, jsonObject + "");
                                 builder.append(jsonData.get("file_name") + ",");
                                 mDoneUploadTotal++;
                             }

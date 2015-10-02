@@ -16,3 +16,26 @@
 #   public *;
 #}
 -dontwarn com.squareup.okhttp.**
+
+-dontwarn com.umeng.**
+-keep class com.umeng*.** {*;}
+
+-dontwarn org.apache.**
+-keep class org.apache.** {*;}
+
+-dontwarn com.rey.material.**
+-keep class com.rey.material.** {*;}
+
+#umeng
+-keepattributes *Annotation*
+
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+-keep public class [co.lujun.ghouse].R$*{
+   public static final int *;
+}
+-keepclassmembers enum * {
+   public static **[] values();
+   public static ** valueOf(java.lang.String);
+}

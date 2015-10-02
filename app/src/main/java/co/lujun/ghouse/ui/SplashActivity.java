@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,8 @@ import com.github.whilu.library.CustomRippleButton;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.SimpleDialog;
 import com.rey.material.widget.CheckBox;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -73,6 +74,10 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
      * inti views & something
      */
     private void init(){
+        //umeng config
+        MobclickAgent.openActivityDurationTrack(false);
+        AnalyticsConfig.enableEncrypt(true);
+
         btnLogin = (CustomRippleButton) findViewById(R.id.btn_splash_login);
         btnReg = (CustomRippleButton) findViewById(R.id.btn_splash_reg);
         tvMainText = (TextView) findViewById(R.id.tv_splash_main_text);
@@ -153,112 +158,60 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         map.put("usertype", usertype);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onLogin(
-                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                signCarrier.getSignature(), username, password, usertype)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new BaseSubscriber<BaseJson<User>>() {
-                @Override public void onError(Throwable e) {
-                    super.onError(e);
-                    if (winLoading.isShowing()) {
-                        winLoading.dismiss();
+                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                    signCarrier.getSignature(), username, password, usertype)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<BaseJson<User>>() {
+                    @Override public void onError(Throwable e) {
+                        super.onError(e);
+                        if (winLoading.isShowing()) {
+                            winLoading.dismiss();
+                        }
+                        if (!mDialog.isShowing()) {
+                            mDialog.show();
+                        }
                     }
-                    if (!mDialog.isShowing()) {
-                        mDialog.show();
-                    }
-                }
 
-                @Override public void onNext(BaseJson<User> userBaseJson) {
-                    if (winLoading.isShowing()){
-                        winLoading.dismiss();
-                    }
-                    User user;
-                    if ((user = userBaseJson.getData()) == null){
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        if (!mDialog.isShowing()){
-                            mDialog.show();
+                    @Override public void onNext(BaseJson<User> userBaseJson) {
+                        if (winLoading.isShowing()){
+                            winLoading.dismiss();
                         }
-                        return;
-                    }
-                    // not Correct status
-                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                        SystemUtil.showToast(userBaseJson.getMessage());
-                        if (!mDialog.isShowing()){
-                            mDialog.show();
+                        User user;
+                        if ((user = userBaseJson.getData()) == null){
+                            SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            if (!mDialog.isShowing()){
+                                mDialog.show();
+                            }
+                            return;
                         }
-                        return;
-                    }
-                    try{
-                        PreferencesUtils.putBoolean(
-                                SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
-                        PreferencesUtils.putInt(
-                                SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
-                        PreferencesUtils.putString(
-                                SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
-                        PreferencesUtils.putString(
-                                SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                        DatabaseHelper.getDatabaseHelper(SplashActivity.this)
-                                .getDao(User.class).create(user);
-                    }catch (SQLException e){
-                        e.printStackTrace();
-                    }
-                    mDialog.dismiss();
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                }
-            });
-            /*.subscribe(new Subscriber<BaseJson<User>>() {
-                @Override
-                public void onCompleted() {
-                    Log.d(TAG, "onCompleted()");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (winLoading.isShowing()){
-                        winLoading.dismiss();
-                    }
-                    if (!mDialog.isShowing()){
-                        mDialog.show();
-                    }
-                    Log.d(TAG, e.toString());
-                }
-
-                @Override
-                public void onNext(BaseJson<User> userBaseJson) {
-                    if (winLoading.isShowing()){
-                        winLoading.dismiss();
-                    }
-                    User user;
-                    if (null == userBaseJson || (user = userBaseJson.getData()) == null){
-                        SystemUtil.showToast(R.string.msg_nullpointer_error);
-                        if (!mDialog.isShowing()){
-                            mDialog.show();
+                        // not Correct status
+                        if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
+                            SystemUtil.showToast(userBaseJson.getMessage());
+                            if (!mDialog.isShowing()){
+                                mDialog.show();
+                            }
+                            return;
                         }
-                        return;
-                    }
-                    // not Correct status
-                    if (userBaseJson.getStatus() != Config.STATUS_CODE_OK){
-                        SystemUtil.showToast(userBaseJson.getMessage());
-                        if (!mDialog.isShowing()){
-                            mDialog.show();
+                        try{
+                            PreferencesUtils.putBoolean(
+                                    SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
+                            PreferencesUtils.putInt(
+                                    SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
+                            PreferencesUtils.putString(
+                                    SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
+                            PreferencesUtils.putString(
+                                    SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
+                            DatabaseHelper.getDatabaseHelper(SplashActivity.this)
+                                    .getDao(User.class).create(user);
+                        }catch (SQLException e){
+                            e.printStackTrace();
                         }
-                        return;
+                        mDialog.dismiss();
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
                     }
-                    try{
-                        DatabaseHelper.getDatabaseHelper(SplashActivity.this).getDao(User.class).create(user);
-                        PreferencesUtils.putBoolean(SplashActivity.this, Config.KEY_OF_LOGIN_FLAG, true);
-                        PreferencesUtils.putInt(SplashActivity.this, Config.KEY_OF_USER_TYPE, user.getUsertype());
-                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_USER_NAME, user.getUsername());
-                        PreferencesUtils.putString(SplashActivity.this, Config.KEY_OF_VALIDATE, userBaseJson.getValidate());
-                    }catch (SQLException e){
-                        e.printStackTrace();
-                    }
-                    mDialog.dismiss();
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                }
-            });*/
+                });
     }
 
     /**
