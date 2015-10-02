@@ -353,7 +353,6 @@ public class BillListFragment extends Fragment {
                 }
                 billDao.delete(tmpBills);
             }
-            Log.d(TAG, bills.size() + "");
             for (Bill bill : bills) {
                 long bid = bill.getBid();
                 billDao.create(bill);

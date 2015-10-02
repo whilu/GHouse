@@ -9,8 +9,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.rey.material.app.Dialog;
+import com.rey.material.app.SimpleDialog;
 
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.Config;
@@ -26,6 +31,9 @@ public class MainActivity extends BaseActivity {
     private Toolbar mToolbar;
     private FloatingActionButton fabAddBill;
     private OnLogoutActionReceiver mReceiver;
+
+    private static Dialog mAboutDialog;
+    private static View mAboutView;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +61,16 @@ public class MainActivity extends BaseActivity {
         todoBundle.putInt(Config.KEY_OF_FRAGMENT, Config.TODO_FRAGMENT);
         Fragment todoListFragment = new BillListFragment();
         todoListFragment.setArguments(todoBundle);
+
+        mAboutView = LayoutInflater.from(this).inflate(R.layout.view_about, null, false);
+        mAboutDialog = new SimpleDialog(this);
+
+        mAboutDialog.applyStyle(R.style.App_Dialog)
+                .title(R.string.action_about)
+                .positiveAction(R.string.action_confirm)
+                .contentView(mAboutView == null ? new View(MainActivity.this) : mAboutView)
+                .cancelable(false)
+                .positiveActionClickListener(view -> mAboutDialog.dismiss());
 
         fragments = new Fragment[]{
             billListFragment,
@@ -116,6 +134,8 @@ public class MainActivity extends BaseActivity {
             curFragment = fragments[1];
         }else if (id == R.id.action_center){
             IntentUtils.startPreviewActivity(this, new Intent(this, CenterActivity.class));
+        }else if (id == R.id.action_about){
+
         }
 
         return super.onOptionsItemSelected(item);

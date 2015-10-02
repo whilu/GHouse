@@ -12,6 +12,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +49,7 @@ import co.lujun.ghouse.bean.UploadToken;
 import co.lujun.ghouse.bean.User;
 import co.lujun.ghouse.ui.adapter.GridImageAdapter;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
+import co.lujun.ghouse.ui.widget.LoadingWindow;
 import co.lujun.ghouse.util.DatabaseHelper;
 import co.lujun.ghouse.util.ImageUtils;
 import co.lujun.ghouse.util.MD5;
@@ -75,12 +78,15 @@ public class AddTodoActivity extends BaseActivity
     private List<String> mFileNameList;
     private List<String> mCacheFileNameList;
     private List<String> mOldUrList;
+    private Map<String, Double> mUpMap;
     private long bid;
+    private double mUploadProgress;
     private int mDoneUploadTotal;
     private String content, total, code, extra;
     private User mUser;
     private GridImageAdapter mPhotosAdapter;
     private List<Uri> mUriList;
+    private LoadingWindow winLoading;
 
     private static UploadManager sUploadMananger = new UploadManager();
 
@@ -116,6 +122,8 @@ public class AddTodoActivity extends BaseActivity
                 (CheckBox) findViewById(R.id.cb_bill_other)
         };
         rbMTypes = new RadioButton[]{rbBillRmb, rbBillDollar, rbBillOther};
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(this).inflate(R.layout.view_loading, null, false));
 
         gvPhotos = (GridView) findViewById(R.id.gv_activity_add_todo);
 
@@ -239,7 +247,8 @@ public class AddTodoActivity extends BaseActivity
                             if (tmpFile.exists() && tmpFile.isFile()) {
                                 mUriList.add(Uri.fromFile(tmpFile));
                             }else {
-                                mUriList.add(Uri.fromFile(new File("")));
+                                mUriList.add(null);
+//                                mUriList.add(Uri.fromFile(new File("")));
                             }
                         }
                     }
@@ -312,6 +321,9 @@ public class AddTodoActivity extends BaseActivity
             SystemUtil.showToast(R.string.msg_content_bill_not_null);
             return;
         }
+        if (!winLoading.isShowing()){
+            winLoading.showAtLocation(mToolbar, 0, 0, Gravity.CENTER);
+        }
         if (!mFileNameList.isEmpty()){// 有图片，先获取token，再上传图片，再发表记录
             onGetUploadToken();
         }else {// 否则，直接发表记录
@@ -335,6 +347,9 @@ public class AddTodoActivity extends BaseActivity
                 .subscribe(new BaseSubscriber<BaseJson<UploadToken>>() {
                     @Override public void onError(Throwable e) {
                         super.onError(e);
+                        if (winLoading.isShowing()){
+                            winLoading.dismiss();
+                        }
                     }
 
                     @Override public void onNext(BaseJson<UploadToken> tokenBaseJson) {
@@ -342,6 +357,9 @@ public class AddTodoActivity extends BaseActivity
                         UploadToken token;
                         if ((token = tokenBaseJson.getData()) == null) {
                             SystemUtil.showToast(R.string.msg_nullpointer_error);
+                            if (winLoading.isShowing()){
+                                winLoading.dismiss();
+                            }
                             return;
                         }
                         onUploadImages(token.getToken());
@@ -354,6 +372,7 @@ public class AddTodoActivity extends BaseActivity
      */
     private void onUploadImages(String token){
         mDoneUploadTotal = 0;
+        mUploadProgress = 0.0d;
         StringBuilder builder = new StringBuilder();
         // compore old url to save old url
         for (String nurl : mFileNameList) {
@@ -381,8 +400,10 @@ public class AddTodoActivity extends BaseActivity
         if (mFileNameList.isEmpty()){
             onPublishRecord(builder.substring(0, builder.length() - 1).toString());
         }else {
+            mUpMap = new HashMap<String, Double>();
             for (String name : mFileNameList) {
 //                Log.d(TAG, mFileNameList.size() + "");
+                mUpMap.put(name, 0.0d);
                 String data = imagePath + name;
                 String key = name;
                 sUploadMananger.put(data, key, token, (s, responseInfo, jsonObject) -> {
@@ -396,14 +417,34 @@ public class AddTodoActivity extends BaseActivity
                             }
                         }
                         if (mDoneUploadTotal == mFileNameList.size()){
+//                            Log.d(TAG, builder.substring(0, builder.length() - 1).toString());
                             onPublishRecord(builder.substring(0, builder.length() - 1).toString());
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
+                        if (winLoading.isShowing()){
+                            winLoading.dismiss();
+                        }
                     }
 
                 }, new UploadOptions(null, null, false, (s, percent) -> {
-                    Log.d(TAG, s + ":" + percent);
+//                    Log.d(TAG, s + ":" + percent);
+                    double progress = 0.0d;
+                    for (Map.Entry<String, Double> entry : mUpMap.entrySet()){
+                        if (entry.getKey().equals(s)){
+                            mUpMap.put(s, percent);
+                            progress += percent;
+                        }else {
+                            progress += entry.getValue();
+                        }
+                    }
+                    progress /= mFileNameList.size();
+                    if (mUploadProgress < progress){
+                        mUploadProgress = progress;
+                    }
+                    if (winLoading.isShowing()){
+                        winLoading.setProgressText((int)(mUploadProgress * 100) + "%");
+                    }
                 }, () -> false));
             }
         }
@@ -433,10 +474,7 @@ public class AddTodoActivity extends BaseActivity
                 costType += Math.pow(2, i);
             }
         }
-        if (costType <= 0){
-            SystemUtil.showToast(R.string.msg_cost_type_not_null);
-            return;
-        }
+        costType = costType == 0 ? 1 : costType;// 默认消费类型一
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("validate", validate);
@@ -459,12 +497,16 @@ public class AddTodoActivity extends BaseActivity
                 .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
                     @Override public void onError(Throwable e) {
                         super.onError(e);
+                        if (winLoading.isShowing()){
+                            winLoading.dismiss();
+                        }
                     }
 
                     @Override public void onNext(BaseJson<Bill> billBaseJson) {
-//                        Log.d(TAG, billBaseJson.getStatus() + "");
+                        if (winLoading.isShowing()){
+                            winLoading.dismiss();
+                        }
                         super.onNext(billBaseJson);
-                        // TODO publish success
                         SystemUtil.showToast(R.string.msg_publish_success);
                         finish();
                     }

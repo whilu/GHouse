@@ -59,12 +59,11 @@ public class HouseViewActivity extends BaseActivity
     private TextView tvHouseId, tvMoneySurplus, tvHouseAddress, tvHouseIntro, tvHouseOwner;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilHouseAdd,
-            tilHouseIntro, tilUName, tilUPwd;
-    private View hvUpdateView, hvAddMoneyView, hvUHouseView, hvAddMemberView;
+    private TextInputLayout tilInfo, tilAddMoney, tilAddMoneyExtra, tilUName, tilUPwd;
+    private View hvUpdateView, hvAddMoneyView, hvAddMemberView;
     private RadioButton rbBillRmb, rbBillDollar, rbBillOther;
 
-    private static Dialog mUpdateDialog, mAddMoneyDialog, mUHouseDialog, mAddMemberDialog;
+    private static Dialog mUpdateDialog, mAddMoneyDialog, mAddMemberDialog;
 
     private SwipeRefreshLayout srlHouse;
 
@@ -113,8 +112,6 @@ public class HouseViewActivity extends BaseActivity
                 .inflate(R.layout.view_hv_modify_info, null, false);
         hvAddMoneyView = LayoutInflater.from(this)
                 .inflate(R.layout.view_hv_add_money, null, false);
-        hvUHouseView = LayoutInflater.from(this)
-                .inflate(R.layout.view_hv_change_house, null, false);
         hvAddMemberView = LayoutInflater.from(this)
                 .inflate(R.layout.view_hv_add_member, null, false);
 
@@ -150,8 +147,7 @@ public class HouseViewActivity extends BaseActivity
      * init dialogs
      */
     private void initDialog(){
-        if (hvUpdateView != null && hvAddMoneyView != null
-                && hvUHouseView != null && hvAddMemberView != null){
+        if (hvUpdateView != null && hvAddMoneyView != null && hvAddMemberView != null){
             tilInfo = (TextInputLayout) hvUpdateView.findViewById(R.id.til_hv_modify_info);
             tilAddMoney = (TextInputLayout) hvAddMoneyView.findViewById(R.id.til_hv_add_money);
             tilAddMoneyExtra =
@@ -159,20 +155,15 @@ public class HouseViewActivity extends BaseActivity
             rbBillRmb = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_rmb);
             rbBillDollar = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_dollar);
             rbBillOther = (RadioButton) hvAddMoneyView.findViewById(R.id.rb_am_other);
-            tilHouseAdd = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_address);
-            tilHouseIntro = (TextInputLayout) hvUHouseView.findViewById(R.id.til_hv_house_info);
             tilUName = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_uname);
             tilUPwd = (TextInputLayout) hvAddMemberView.findViewById(R.id.til_hv_pwd);
             rbBillRmb.setOnCheckedChangeListener(this);
             rbBillDollar.setOnCheckedChangeListener(this);
             rbBillOther.setOnCheckedChangeListener(this);
-            tilHouseAdd.setHint(getString(R.string.til_hint_rhouse_address));
-            tilHouseIntro.setHint(getString(R.string.til_hint_rhouse_intro));
             tilUName.setHint(getString(R.string.til_hint_rhouse_name));
             tilUPwd.setHint(getString(R.string.til_hint_rhouse_pwd));
             mUpdateDialog = new SimpleDialog(this);
             mAddMoneyDialog = new SimpleDialog(this);
-            mUHouseDialog = new SimpleDialog(this);
             mAddMemberDialog = new SimpleDialog(this);
             mUpdateDialog.applyStyle(R.style.App_Dialog)
                     .positiveAction(R.string.action_update)
@@ -195,15 +186,6 @@ public class HouseViewActivity extends BaseActivity
                     .cancelable(false)
                     .positiveActionClickListener(v -> onEditHouse(0))
                     .negativeActionClickListener(v -> mAddMoneyDialog.dismiss());
-            //
-            mUHouseDialog.applyStyle(R.style.App_Dialog)
-                    .title(getString(R.string.action_uhouse))
-                    .positiveAction(R.string.action_uhouse)
-                    .negativeAction(R.string.action_back)
-                    .contentView(hvUHouseView)
-                    .cancelable(false)
-                    .positiveActionClickListener(v -> {})
-                    .negativeActionClickListener(v -> mUHouseDialog.dismiss());
             //
             mAddMemberDialog.applyStyle(R.style.App_Dialog)
                     .title(getString(R.string.action_add_member))
@@ -255,12 +237,6 @@ public class HouseViewActivity extends BaseActivity
                 tilUName.getEditText().setText("");
                 tilUPwd.getEditText().setText("");
                 mAddMemberDialog.show();
-            }
-        }else if (vid == R.id.ll_hv_house_moving){
-            if (hvUHouseView != null && mUHouseDialog != null){
-                tilHouseAdd.getEditText().setText("");
-                tilHouseIntro.getEditText().setText("");
-                mUHouseDialog.show();
             }
         }else if (vid == R.id.ll_action_find_am_record){
             upPayViewWindow.show(mToolbar, Gravity.CENTER, 0, 0);

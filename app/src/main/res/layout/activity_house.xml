@@ -312,66 +312,6 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/ll_hv_house_moving"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:onClick="addAction"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="2"
-                            android:gravity="center_vertical"
-                            android:text="@string/tv_house_moving"
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tv_house_moving"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="4dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|right"
-                            android:singleLine="true"
-                            android:text=""
-                            android:textColor="@color/material_grey"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="7dp"
-                            android:background="@drawable/ic_chevron_right_grey600_18dp"
-                            android:scaleType="fitCenter"
-                            android:src="@null" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/gray" />
-                </RelativeLayout>
-
-            </com.andexert.library.RippleView>
-
-            <com.andexert.library.RippleView
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:paddingTop="5dp"
-                app:rv_color="@color/material_grey"
-                app:rv_rippleDuration="800">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
                         android:id="@+id/ll_action_find_am_record"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

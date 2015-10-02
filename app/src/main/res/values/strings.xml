@@ -6,7 +6,9 @@
     <string name="action_todo">待办事项</string>
     <string name="action_add_todo">添加记录</string>
     <string name="action_center">个人中心</string>
+    <string name="action_about">关于</string>
     <string name="action_login">登录</string>
+    <string name="action_confirm">确认</string>
     <string name="action_update">更新</string>
     <string name="action_add">增加</string>
     <string name="action_scan">扫码</string>
@@ -94,4 +96,6 @@
     <string name="msg_have_confirmed">账单已经确认，无法进行此操作</string>
     <string name="msg_have_no_data">没有任何账单数据，添加一条吧!</string>
     <string name="msg_no_more_data">没有更多记录!</string>
+
+    <string name="tv_about">开发者：「MaxBox」团队\n源码：https://github.com/whilu/GHouse</string>
 </resources>
