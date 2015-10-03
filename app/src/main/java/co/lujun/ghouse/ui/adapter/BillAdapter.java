@@ -130,12 +130,14 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                         mItemManger.closeAllItems();
                         return;
                     }
-                    mBillOperationListener.onDeleteBill(i);
-                    mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
-                    mList.remove(i);
-                    notifyItemRemoved(i);
-                    notifyItemRangeChanged(i, mList.size());
-                    mItemManger.closeAllItems();
+                    if(mList.get(i) != null) {
+                        mBillOperationListener.onDeleteBill(i);
+                        mItemManger.removeShownLayouts(viewHolder.mSwipeLayout);
+                        mList.remove(i);
+                        notifyItemRemoved(i);
+                        notifyItemRangeChanged(i, 1);
+                        mItemManger.closeAllItems();
+                    }
                 }
             });
             String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
