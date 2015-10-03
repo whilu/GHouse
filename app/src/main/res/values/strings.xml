@@ -97,6 +97,7 @@
     <string name="msg_have_confirmed">账单已经确认，无法进行此操作</string>
     <string name="msg_have_no_data">没有任何账单数据，添加一条吧!</string>
     <string name="msg_no_more_data">没有更多记录!</string>
+    <string name="msg_empty_data">没有数据，点击&#160;「+」&#160;进行添加</string>
 
     <!-- copyright info-->
     <string name="tv_about">「MaxBox」团队作品\n源码：https://github.com/whilu/GHouse</string>

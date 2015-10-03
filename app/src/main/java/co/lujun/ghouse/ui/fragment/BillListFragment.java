@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.daimajia.swipe.util.Attributes;
 import com.j256.ormlite.dao.Dao;
@@ -57,6 +58,7 @@ public class BillListFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private BillAdapter mAdapter;
     private List<Bill> mBills;
+    private ScrollView svEmptyView;
 
     private int current_page = 1;
     private static final String TAG = "BillListFragment";
@@ -99,6 +101,7 @@ public class BillListFragment extends Fragment {
         }
         mRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.srl_home);
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.rv_home);
+        svEmptyView = (ScrollView) mView.findViewById(R.id.sv_empty_bill_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -257,10 +260,15 @@ public class BillListFragment extends Fragment {
                         return;
                     }
                     if (baseListBaseJson.getData().getCount() == 0) {// 没有任何数据
-                        //TODO show add content dialog
+                        // show add content dialog
                         if (isRefresh) {
-                            SystemUtil.showToast(R.string.msg_have_no_data);
+//                            SystemUtil.showToast(R.string.msg_have_no_data);
+                            mRecyclerView.setVisibility(View.GONE);
+                            svEmptyView.setVisibility(View.VISIBLE);
                         }
+                    }else {
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        svEmptyView.setVisibility(View.GONE);
                     }
                     if (baseListBaseJson.getData().getLists().size() == 0) {// 加载更多没有更多数据
                         if (!isRefresh) {
