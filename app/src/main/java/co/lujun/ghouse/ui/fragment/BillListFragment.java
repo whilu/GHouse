@@ -9,11 +9,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.daimajia.swipe.util.Attributes;
 import com.j256.ormlite.dao.Dao;
@@ -43,7 +43,6 @@ import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.PreferencesUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -58,7 +57,8 @@ public class BillListFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private BillAdapter mAdapter;
     private List<Bill> mBills;
-    private ScrollView svEmptyView;
+    private LinearLayout llEmptyData;
+    private Button btnReload;
 
     private int current_page = 1;
     private static final String TAG = "BillListFragment";
@@ -99,9 +99,10 @@ public class BillListFragment extends Fragment {
         if (mView == null){
             return;
         }
+        llEmptyData = (LinearLayout) mView.findViewById(R.id.ll_empty_data_list);
         mRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.srl_home);
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.rv_home);
-        svEmptyView = (ScrollView) mView.findViewById(R.id.sv_empty_bill_list);
+        btnReload = (Button) mView.findViewById(R.id.btn_reload_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -110,6 +111,14 @@ public class BillListFragment extends Fragment {
             if (mRefreshLayout.isRefreshing()) {
                 onRequestData(true);
             }
+        });
+        btnReload.setOnClickListener(v -> {
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            llEmptyData.setVisibility(View.GONE);
+            mRefreshLayout.post(() -> {
+                mRefreshLayout.setRefreshing(true);
+                onRequestData(true);
+            });
         });
         mAdapter = new BillAdapter(mBills);
         mAdapter.setItemClickListener((View view, int position) -> {
@@ -263,12 +272,12 @@ public class BillListFragment extends Fragment {
                         // show add content dialog
                         if (isRefresh) {
 //                            SystemUtil.showToast(R.string.msg_have_no_data);
-                            mRecyclerView.setVisibility(View.GONE);
-                            svEmptyView.setVisibility(View.VISIBLE);
+                            mRefreshLayout.setVisibility(View.GONE);
+                            llEmptyData.setVisibility(View.VISIBLE);
                         }
                     }else {
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        svEmptyView.setVisibility(View.GONE);
+                        mRefreshLayout.setVisibility(View.VISIBLE);
+                        llEmptyData.setVisibility(View.GONE);
                     }
                     if (baseListBaseJson.getData().getLists().size() == 0) {// 加载更多没有更多数据
                         if (!isRefresh) {

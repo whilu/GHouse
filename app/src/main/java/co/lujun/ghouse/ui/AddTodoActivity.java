@@ -313,6 +313,8 @@ public class AddTodoActivity extends BaseActivity
         code = tilBillCode.getEditText().getText().toString();
         extra = tilBillExtra.getEditText().getText().toString();
 
+        SystemUtil.showOrHideInputMethodManager(this);
+
         if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             SystemUtil.showToast(R.string.msg_network_disconnect);
             return;

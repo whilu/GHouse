@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/srl_home"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
@@ -16,8 +15,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
-        <include layout="@layout/view_empty_data" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    </RelativeLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/view_empty_data" />
+</RelativeLayout>

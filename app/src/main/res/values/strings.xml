@@ -24,6 +24,7 @@
     <string name="action_update_phone">修改手机号</string>
     <string name="action_update_pwd">修改密码</string>
     <string name="action_find_am_record">交钱记录</string>
+    <string name="action_reload">重新加载</string>
 
     <string name="tli_hint_uname">请输入用户名</string>
     <string name="tli_hint_pwd">请输入密码</string>
@@ -97,7 +98,7 @@
     <string name="msg_have_confirmed">账单已经确认，无法进行此操作</string>
     <string name="msg_have_no_data">没有任何账单数据，添加一条吧!</string>
     <string name="msg_no_more_data">没有更多记录!</string>
-    <string name="msg_empty_data">没有数据，点击&#160;「+」&#160;进行添加</string>
+    <string name="msg_empty_data">没有数据，点击&#160;「+」&#160;进行添加，或</string>
 
     <!-- copyright info-->
     <string name="tv_about">「MaxBox」团队作品\n源码：https://github.com/whilu/GHouse</string>
