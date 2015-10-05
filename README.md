@@ -3,9 +3,9 @@
 
 ### 截图
 <img src="/screenshots/Screenshot_2015-10-05-12-40-57.jpeg" alt="Screenshot_2015-10-05-12-40-57.jpeg" title="Screenshot_2015-10-05-12-40-57.jpeg"  width="270" height="486"/>
+<img src="/screenshots/Screenshot_2015-10-05-12-37-41.jpeg" alt="Screenshot_2015-10-05-12-37-41.jpeg" title="Screenshot_2015-10-05-12-37-41.jpeg"  width="270" height="486"/>
 <img src="/screenshots/Screenshot_2015-10-05-12-41-99.jpeg" alt="Screenshot_2015-10-05-12-41-99.jpeg" title="Screenshot_2015-10-05-12-41-99.jpeg"  width="270" height="486"/>
 <img src="/screenshots/Screenshot_2015-10-05-12-42-03.jpeg" alt="Screenshot_2015-10-05-12-42-03.jpeg" title="Screenshot_2015-10-05-12-42-03.jpeg"  width="270" height="486"/>
-<img src="/screenshots/Screenshot_2015-10-05-12-37-41.jpeg" alt="Screenshot_2015-10-05-12-37-41.jpeg" title="Screenshot_2015-10-05-12-37-41.jpeg"  width="270" height="486"/>
 
 ### APK下载
 http://www.wandoujia.com/apps/co.lujun.ghouse
