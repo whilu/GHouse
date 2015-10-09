@@ -49,7 +49,7 @@
 
         <!--umeng config-->
         <meta-data android:value="560e5c44e0f55a8f22000129" android:name="UMENG_APPKEY" />
-        <meta-data android:value="GHouse" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

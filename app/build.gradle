@@ -88,9 +88,10 @@ android {
         Yingyongbao {}
         app360 {}
         Wandoujia {}
-        productFlavors.all {
-            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-        }
+        Fir {}
+    }
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
     compileOptions {
