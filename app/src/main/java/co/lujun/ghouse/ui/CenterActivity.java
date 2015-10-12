@@ -321,7 +321,6 @@ public class CenterActivity extends BaseActivity {
         GlApplication.getApiService().onEditUserData(
                 signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                 signCarrier.getSignature(), Integer.toString(type), value, value1, validate)
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<User>>() {
                 @Override public void onError(Throwable e) {

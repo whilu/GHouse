@@ -292,7 +292,6 @@ public class HouseViewActivity extends BaseActivity
         GlApplication.getApiService().onGetHouseData(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), validate)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<House>>() {
                     @Override public void onError(Throwable e) {
@@ -413,7 +412,6 @@ public class HouseViewActivity extends BaseActivity
         GlApplication.getApiService().onAddMember(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), uname, upwd, validate)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<User>>() {
                     @Override
@@ -481,7 +479,6 @@ public class HouseViewActivity extends BaseActivity
         GlApplication.getApiService().onEditHouse(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), Integer.toString(type), value, value1, remark, validate)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<House>>() {
                     @Override public void onError(Throwable e) {

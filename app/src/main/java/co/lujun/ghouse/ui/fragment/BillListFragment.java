@@ -246,7 +246,6 @@ public class BillListFragment extends Fragment {
         GlApplication.getApiService().onGetBillList(
                 signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                 signCarrier.getSignature(), page, validate, type)
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new BaseSubscriber<BaseJson<BaseList<Bill>>>() {
 
@@ -400,7 +399,6 @@ public class BillListFragment extends Fragment {
         GlApplication.getApiService().onOperateBill(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), bid, Integer.toString(type), validate)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
 

@@ -127,7 +127,6 @@ public class RegHouseActivity extends BaseActivity {
         GlApplication.getApiService().onRegisterHouse(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<House>>() {
                     @Override public void onError(Throwable e) {

@@ -344,7 +344,6 @@ public class AddTodoActivity extends BaseActivity
         GlApplication.getApiService().onGetUploadToken(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), validate)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<UploadToken>>() {
                     @Override public void onError(Throwable e) {
@@ -495,7 +494,6 @@ public class AddTodoActivity extends BaseActivity
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), validate, content, total, qcode, remark, photos,
                     sbid, Integer.toString(costType), Integer.toString(moneyType))
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<Bill>>() {
                     @Override public void onError(Throwable e) {

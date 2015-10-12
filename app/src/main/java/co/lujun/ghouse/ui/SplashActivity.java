@@ -160,7 +160,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         GlApplication.getApiService().onLogin(
                     signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
                     signCarrier.getSignature(), username, password, usertype)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<User>>() {
                     @Override public void onError(Throwable e) {
