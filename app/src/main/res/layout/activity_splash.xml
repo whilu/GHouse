@@ -18,7 +18,7 @@
     <com.github.whilu.library.CustomRippleButton
         android:id="@+id/btn_splash_login"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="65dp"
         android:layout_marginLeft="40dp"
@@ -26,7 +26,6 @@
         android:text="@string/action_login"
         android:textColor="@color/deep_gray"
         android:textSize="14sp"
-        android:visibility="gone"
         app:ripple_color="@color/material_grey"
         app:ripple_duration="1000"
         app:round_radius="5dp"
@@ -36,7 +35,7 @@
     <com.github.whilu.library.CustomRippleButton
         android:id="@+id/btn_splash_reg"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="40dp"
@@ -44,7 +43,6 @@
         android:text="@string/action_reg_house"
         android:textColor="@color/deep_gray"
         android:textSize="14sp"
-        android:visibility="gone"
         app:ripple_color="@color/material_grey"
         app:ripple_duration="1000"
         app:round_radius="5dp"

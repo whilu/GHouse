@@ -270,7 +270,7 @@
                 <com.github.whilu.library.CustomRippleButton
                     android:id="@+id/btn_set_logout"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="20dp"

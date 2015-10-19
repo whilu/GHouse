@@ -143,7 +143,15 @@ public class CenterActivity extends BaseActivity {
             List<User> users =
                     DatabaseHelper.getDatabaseHelper(this).getDao(User.class).queryForAll();
             if (users != null && users.size() > 0){
-                onShowData(users.get(0));
+                String uname = PreferencesUtils.getString(this, Config.KEY_OF_USER_NAME);
+                if (uname == null || TextUtils.isEmpty(uname)){
+                    return;
+                }
+                for (User user : users) {
+                    if (user.getUsername().equals(uname)){
+                        onShowData(user);
+                    }
+                }
             }
         }catch (SQLException e){
             e.printStackTrace();
