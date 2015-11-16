@@ -1,6 +1,5 @@
 package co.lujun.ghouse.ui.adapter;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
@@ -21,7 +19,6 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,12 +42,16 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
     protected SwipeItemRecyclerMangerImpl mItemManger;
 
     private List<Bill> mList;
-
     private RvFooterViewHolder rvFooterViewHolder;
+
+    private static SimpleDateFormat sYMFormat;
 
     public BillAdapter(List<Bill> list){
         mList = list;
         mItemManger = new SwipeItemRecyclerMangerImpl(this);
+        sYMFormat = new SimpleDateFormat("yyyy"
+                + GlApplication.getContext().getString(R.string.unit_year)
+                +  "MM" + GlApplication.getContext().getString(R.string.unit_month));
     }
 
     public void setItemClickListener(BillItemViewHolder.ItemClickListener listener){
@@ -99,7 +100,6 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
                 @Override public void onOpen(SwipeLayout layout) {
                     super.onOpen(layout);
-//                Toast.makeText(GlApplication.getContext(), mList.get(i) + "--Open", Toast.LENGTH_SHORT).show();
                 }
             });
             viewHolder.btnConfirm.setOnClickListener(v -> {
@@ -140,8 +140,10 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
-            String[] types = GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
-            String[] bgDrawableTypes = GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
+            String[] types =
+                    GlApplication.getContext().getResources().getStringArray(R.array.bill_type);
+            String[] bgDrawableTypes =
+                    GlApplication.getContext().getResources().getStringArray(R.array.bill_drawable_type);
             String type, bgDrawableType;
             int tmpCostType = (int)(Math.log((double)mList.get(i).getType_id()) / Math.log(2d));
             if (tmpCostType >= 0 && tmpCostType < types.length){
@@ -159,6 +161,18 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
                 e.printStackTrace();
             }
 
+            if (i > 0){
+                String preDate = sYMFormat.format(mList.get(i - 1).getCreate_time() * 1000);
+                String curDate = sYMFormat.format(mList.get(i).getCreate_time() * 1000);
+                if (curDate.equals(preDate)){
+                    viewHolder.tvDate.setVisibility(View.GONE);
+                }else {
+                    viewHolder.tvDate.setVisibility(View.VISIBLE);
+                    viewHolder.tvDate.setText(curDate);
+                }
+            }else {
+                viewHolder.tvDate.setVisibility(View.GONE);
+            }
             viewHolder.tvType.setText(type);
             viewHolder.tvSummary.setText(mList.get(i).getTitle());
             String[] moneyFlags =
@@ -231,7 +245,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
         LinearLayout llBillItem;
         SwipeLayout mSwipeLayout;
         ImageButton btnConfirm, btnModify, btnDelete;
-        TextView tvType, tvSummary, tvTotal, tvTime, tv7SecurityCode;
+        TextView tvDate, tvType, tvSummary, tvTotal, tvTime, tv7SecurityCode;
         LinearLayout llInvoice;
         ImageView ivInvoiceL, ivInvoiceR;
         ItemClickListener mItemClickListener;
@@ -243,6 +257,7 @@ public class BillAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
             btnConfirm = (ImageButton) view.findViewById(R.id.btn_bi_confirm);
             btnModify = (ImageButton) view.findViewById(R.id.btn_bi_modify);
             btnDelete = (ImageButton) view.findViewById(R.id.btn_bi_delete);
+            tvDate = (TextView) view.findViewById(R.id.tv_bi_date);
             tvType = (TextView) view.findViewById(R.id.tv_bi_type);
             tvSummary = (TextView) view.findViewById(R.id.tv_bi_summary);
             tvTotal = (TextView) view.findViewById(R.id.tv_bi_total);

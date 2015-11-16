@@ -234,6 +234,9 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 if (isLogin) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
+                }else {
+                    btnLogin.setVisibility(View.VISIBLE);
+                    btnReg.setVisibility(View.VISIBLE);
                 }
             }
         });

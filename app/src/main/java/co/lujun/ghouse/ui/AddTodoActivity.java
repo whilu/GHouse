@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -313,7 +311,7 @@ public class AddTodoActivity extends BaseActivity
         code = tilBillCode.getEditText().getText().toString();
         extra = tilBillExtra.getEditText().getText().toString();
 
-        SystemUtil.showOrHideInputMethodManager(this);
+        SystemUtil.hideInputMethodManager(this);
 
         if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             SystemUtil.showToast(R.string.msg_network_disconnect);
