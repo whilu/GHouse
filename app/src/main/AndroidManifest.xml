@@ -47,9 +47,9 @@
             android:name=".ui.CaptureActivity"
             android:screenOrientation="portrait" />
 
-        <!--umeng config-->
-        <meta-data android:value="560e5c44e0f55a8f22000129" android:name="UMENG_APPKEY" />
-        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
+        <!--umeng -->
+        <meta-data android:value="${UMENG_APPKEY}" android:name="UMENG_APPKEY" />
+        <meta-data android:value="${UMENG_CHANNEL}" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

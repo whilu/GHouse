@@ -36,7 +36,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, House.class);
             TableUtils.createTableIfNotExists(connectionSource, Bill.class);
             TableUtils.createTableIfNotExists(connectionSource, Image.class);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -62,9 +62,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @return
      */
     public static DatabaseHelper getDatabaseHelper(Context context){
-        if (mDatabaseHelper == null){
-            synchronized (DatabaseHelper.class){
-                if (mDatabaseHelper == null){
+        if (mDatabaseHelper == null) {
+            synchronized (DatabaseHelper.class) {
+                if (mDatabaseHelper == null) {
                     mDatabaseHelper = new DatabaseHelper(context);
                 }
             }

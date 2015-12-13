@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import java.util.Map;
 import co.lujun.ghouse.GlApplication;
 import co.lujun.ghouse.R;
 import co.lujun.ghouse.bean.BaseJson;
-import co.lujun.ghouse.bean.Config;
 import co.lujun.ghouse.bean.House;
 import co.lujun.ghouse.bean.SignCarrier;
 import co.lujun.ghouse.ui.event.BaseSubscriber;
@@ -25,9 +23,7 @@ import co.lujun.ghouse.util.MD5;
 import co.lujun.ghouse.util.NetWorkUtils;
 import co.lujun.ghouse.util.SignatureUtil;
 import co.lujun.ghouse.util.SystemUtil;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/8/12.
@@ -125,8 +121,8 @@ public class RegHouseActivity extends BaseActivity {
         map.put("password", password);
         SignCarrier signCarrier = SignatureUtil.getSignature(map);
         GlApplication.getApiService().onRegisterHouse(
-                    signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
-                    signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
+                signCarrier.getAppId(), signCarrier.getNonce(), signCarrier.getTimestamp(),
+                signCarrier.getSignature(), username, password, phone, houseaddress, houseinfo)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<BaseJson<House>>() {
                     @Override public void onError(Throwable e) {

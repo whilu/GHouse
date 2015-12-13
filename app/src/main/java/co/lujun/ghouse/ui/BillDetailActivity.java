@@ -82,6 +82,7 @@ public class BillDetailActivity extends BaseActivity {
         mAdapter.setImageClickListener(position -> {
             if (mGalleryWindow != null) {
                 if (!mGalleryWindow.isShowing()) {
+                    mGalleryWindow.setImages(mInvoiceImgList);
                     mGalleryWindow.show(BillDetailActivity.this.findViewById(R.id.tv_popup_parent),
                             0, 0, position);
                 }
@@ -171,12 +172,10 @@ public class BillDetailActivity extends BaseActivity {
         while (iterator.hasNext()){
             mInvoiceImgList.add(iterator.next().getLarge());
         }
-        mGalleryWindow.setImages(mInvoiceImgList);
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
             return true;

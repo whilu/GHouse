@@ -1,20 +1,18 @@
 package co.lujun.ghouse.bean;
 
+import co.lujun.ghouse.BuildConfig;
+
 /**
  * Created by lujun on 2015/9/2.
  */
 public class SignCarrier {
 
-    //app request config information
-    private static final String APP_ID = "3";
-    private static final String APP_TOKEN = "b1a93bc94fce9d08bc9ca1e2a6fe883c";
-
     public static String getAppId() {
-        return APP_ID;
+        return BuildConfig.CLIENT_ID;
     }
 
     public static String getAppToken() {
-        return APP_TOKEN;
+        return BuildConfig.CLIENT_TOKEN;
     }
 
     public String getTimestamp() {

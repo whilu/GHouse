@@ -14,11 +14,10 @@ public class AppHelper {
      * @return true, user can operate confirm & delete, else have no permission
      */
     public static boolean onCheckPermission(Context context){
-        if (PreferencesUtils.getInt(context, Config.KEY_OF_USER_TYPE, 0) == 1){
+        if (PreferencesUtils.getInt(context, Config.KEY_OF_USER_TYPE, 0) == 1) {
             return true;
-        }else {
-            return false;
         }
+        return false;
     }
 
     /**

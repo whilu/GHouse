@@ -94,11 +94,7 @@ public class GalleryWindow extends PopupWindow {
         imagesCount = images.size();
         tvIndicator.setText("1/" + imagesCount);
         mImagesAdapter = new GalleryAdapter(images);
-        mImagesAdapter.setOnGalleryTapListener(new GalleryAdapter.OnGalleryViewTapListener() {
-            @Override public void onGalleryViewTap() {
-                hide();
-            }
-        });
+        mImagesAdapter.setOnGalleryTapListener(() -> hide());
         mViewPager.setAdapter(mImagesAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
